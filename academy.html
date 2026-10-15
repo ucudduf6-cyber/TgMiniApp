@@ -3,1081 +3,776 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f6f7fb">
-  <meta name="description" content="Киношкола Кадр: изучай кинопрофессии, теорию и практику кинопроизводства.">
+  <meta name="theme-color" content="#f7f7f5">
+  <meta name="description" content="Киношкола Кадр — изучайте профессии кино, этапы производства и навыки, необходимые для создания фильмов.">
   <title>Киношкола — Кадр</title>
   <style>
     :root {
-      --bg:#f6f7fb;
-      --surface:#fff;
-      --surface2:#eef0f6;
-      --text:#171923;
-      --muted:#6c7280;
-      --line:#e1e4ec;
-      --accent:#7357ff;
-      --accent2:#5b40e8;
-      --shadow:0 12px 35px rgba(29,32,50,.07);
-      --green:#16875d;
+      color-scheme: light;
+      --bg: #f7f7f5;
+      --surface: #ffffff;
+      --surface-2: #f0f0ed;
+      --text: #191919;
+      --muted: #70716e;
+      --line: #e3e3df;
+      --accent: #ec593d;
+      --accent-hover: #d94a30;
+      --accent-soft: #fff0eb;
+      --green: #287a5b;
+      --shadow: 0 12px 36px rgba(0, 0, 0, .045);
+      --radius: 20px;
     }
-    body.dark {
-      --bg:#111218;
-      --surface:#1a1c25;
-      --surface2:#242632;
-      --text:#f5f5fa;
-      --muted:#a5a8b8;
-      --line:#303341;
-      --accent:#a092ff;
-      --accent2:#b3a8ff;
-      --shadow:0 12px 35px rgba(0,0,0,.2);
-      --green:#57d9a2;
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #141513;
+      --surface: #1e201d;
+      --surface-2: #282a26;
+      --text: #f4f4f0;
+      --muted: #a5a69f;
+      --line: #373934;
+      --accent: #ff795e;
+      --accent-hover: #ff9079;
+      --accent-soft: #39251f;
+      --green: #79c5a2;
+      --shadow: 0 12px 36px rgba(0, 0, 0, .15);
     }
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-      line-height:1.65;
-      transition:background .2s,color .2s;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      transition: background .2s, color .2s;
     }
-    a { color:inherit;text-decoration:none; }
-    button,input,select { font:inherit; }
-    button { cursor:pointer; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button, a, input, select {
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:focus-visible, a:focus-visible, input:focus-visible,
+    select:focus-visible, summary:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
     .container {
-      width:min(1120px,calc(100% - 32px));
-      margin:0 auto;
+      width: min(1160px, calc(100% - 40px));
+      margin-inline: auto;
     }
-    header {
-      position:sticky;
-      top:0;
-      z-index:20;
-      background:var(--bg);
-      border-bottom:1px solid var(--line);
+    .topbar {
+      position: sticky;
+      z-index: 50;
+      top: 0;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg);
+      background: color-mix(in srgb, var(--bg) 91%, transparent);
+      backdrop-filter: blur(16px);
     }
     .nav {
-      min-height:72px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:15px;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
     }
     .brand {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-size:23px;
-      font-weight:850;
-      letter-spacing:-1px;
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 23px;
+      font-weight: 850;
+      letter-spacing: -1.1px;
+      flex-shrink: 0;
     }
-    .brand-icon {
-      width:38px;
-      height:38px;
-      display:grid;
-      place-items:center;
-      border-radius:13px;
-      background:var(--accent);
-      color:white;
-    }
-    .nav-links,.nav-tools {
-      display:flex;
-      align-items:center;
-      gap:13px;
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      color: #fff;
+      background: var(--accent);
+      border-radius: 12px;
+      font-size: 20px;
+      letter-spacing: -2px;
     }
     .nav-links {
-      font-size:14px;
-      color:var(--muted);
-      font-weight:700;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 14px;
+      color: var(--muted);
     }
-    .nav-links a:hover { color:var(--accent); }
-    .button {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:10px 15px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      background:var(--surface);
-      color:var(--text);
-      font-weight:750;
-      font-size:14px;
+    .nav-links a:hover { color: var(--accent); }
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .button.primary {
-      background:var(--accent);
-      color:#fff;
-      border-color:var(--accent);
+    .select, .icon-button {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text);
     }
-    .button:hover { border-color:var(--accent); }
-    .language {
-      width:auto;
-      max-width:78px;
-      padding:9px 5px;
-      border:1px solid var(--line);
-      border-radius:10px;
-      background:var(--surface);
-      color:var(--text);
+    .select {
+      padding: 0 10px;
+      max-width: 125px;
     }
-    .hero { padding:55px 0 30px; }
+    .icon-button {
+      min-width: 40px;
+      padding: 0 10px;
+      cursor: pointer;
+    }
+    .hero {
+      padding: 76px 0 42px;
+    }
     .eyebrow {
-      display:inline-block;
-      padding:6px 12px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:var(--surface);
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
     }
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 2px;
+      background: currentColor;
+    }
+    h1, h2, h3, p { margin-top: 0; }
     h1 {
-      margin:18px 0 12px;
-      font-size:clamp(38px,6vw,64px);
-      letter-spacing:-2.5px;
-      line-height:1.08;
+      max-width: 850px;
+      margin: 18px 0;
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 1.02;
+      letter-spacing: -4px;
+      font-weight: 850;
     }
-    .accent { color:var(--accent); }
-    .hero p {
-      max-width:650px;
-      color:var(--muted);
-      font-size:17px;
+    .accent-text { color: var(--accent); }
+    .hero-description {
+      max-width: 690px;
+      margin-bottom: 28px;
+      color: var(--muted);
+      font-size: clamp(16px, 2vw, 19px);
     }
-    .search-row {
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:25px;
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
     }
-    input,select {
-      padding:12px 14px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      background:var(--surface);
-      color:var(--text);
-      outline:none;
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 48px;
+      padding: 0 20px;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .15s, background .15s;
     }
-    input:focus,select:focus { border-color:var(--accent); }
-    #search {
-      flex:1;
-      min-width:200px;
+    .button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
     }
-    section { padding:25px 0 35px; }
-    .section-head {
-      display:flex;
-      align-items:end;
-      justify-content:space-between;
-      gap:18px;
-      margin-bottom:20px;
+    .button-secondary {
+      background: var(--surface);
+      border-color: var(--line);
+      color: var(--text);
     }
-    .section-head h2 {
-      margin:0;
-      font-size:clamp(25px,4vw,35px);
-      letter-spacing:-1px;
+    .button-secondary:hover {
+      background: var(--surface-2);
+      color: var(--text);
     }
-    .section-head p {
-      margin:5px 0 0;
-      color:var(--muted);
-      font-size:14px;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 38px 0 0;
     }
-    .categories {
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-bottom:22px;
+    .stat {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
     }
-    .filter {
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:8px 14px;
-      background:var(--surface);
-      color:var(--muted);
-      font-size:13px;
-      font-weight:750;
+    .stat-number {
+      display: block;
+      font-size: 29px;
+      font-weight: 850;
+      line-height: 1.2;
+      letter-spacing: -1px;
     }
-    .filter.active {
-      background:var(--accent);
-      border-color:var(--accent);
-      color:white;
+    .stat-label {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
     }
-    .grid {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:15px;
+    .section { padding: 48px 0; }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
     }
-    .card {
-      padding:21px;
-      background:var(--surface);
-      border:1px solid var(--line);
-      border-radius:21px;
-      box-shadow:var(--shadow);
+    .section-heading h2 {
+      margin: 8px 0 0;
+      font-size: clamp(27px, 4vw, 39px);
+      letter-spacing: -1.5px;
+      line-height: 1.15;
     }
-    .card-icon {
-      width:48px;
-      height:48px;
-      display:grid;
-      place-items:center;
-      border-radius:15px;
-      background:var(--surface2);
-      font-size:23px;
+    .section-heading p {
+      max-width: 430px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 14px;
     }
-    .card h3 { margin:13px 0 7px; }
-    .card p {
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
     }
-    .card-meta {
-      display:flex;
-      flex-wrap:wrap;
-      gap:7px;
-      margin:13px 0;
+    .workflow-step {
+      min-height: 155px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--surface);
     }
-    .tag {
-      padding:4px 9px;
-      border-radius:999px;
-      background:var(--surface2);
-      color:var(--muted);
-      font-size:11px;
-      font-weight:750;
+    .step-number {
+      display: grid;
+      place-items: center;
+      width: 31px;
+      height: 31px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 850;
     }
-    .text-link {
-      display:inline-block;
-      margin-top:15px;
-      color:var(--accent);
-      font-weight:800;
-      font-size:14px;
+    .workflow-step h3 {
+      margin-bottom: 6px;
+      font-size: 15px;
     }
-    .empty {
-      padding:35px 20px;
-      text-align:center;
-      border:1px dashed var(--line);
-      border-radius:20px;
-      color:var(--muted);
+    .workflow-step p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
     }
-    .course-content {
-      display:none;
-      margin-top:15px;
-      padding-top:15px;
-      border-top:1px solid var(--line);
+    .library { padding-top: 42px; }
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(200px, 1fr) minmax(190px, 245px);
+      gap: 12px;
+      margin-bottom: 13px;
     }
-    .course-card.open .course-content { display:block; }
-    .course-content h4 { margin:12px 0 5px; }
-    .course-content ul {
-      padding-left:20px;
-      color:var(--muted);
-      font-size:13px;
+    .search-wrap { position: relative; }
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      color: var(--muted);
+      transform: translateY(-50%);
+      pointer-events: none;
     }
-    .course-content li { margin:5px 0; }
-    .course-content p {
-      margin:7px 0;
-      font-size:13px;
+    .search-input, .filter-select {
+      width: 100%;
+      min-height: 49px;
+      padding: 0 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--surface);
+      color: var(--text);
     }
-    .checklist {
-      display:grid;
-      gap:10px;
+    .search-input { padding-left: 43px; }
+    .category-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 17px 0 22px;
     }
-    .check-item {
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding:13px;
-      background:var(--surface);
-      border:1px solid var(--line);
-      border-radius:13px;
+    .pill {
+      min-height: 36px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .check-item input {
-      width:18px;
-      min-width:18px;
-      margin-top:4px;
-      accent-color:var(--accent);
+    .pill:hover, .pill.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
     }
-    .check-item span { font-size:14px; }
-    .progress-track {
-      height:9px;
-      overflow:hidden;
-      border-radius:99px;
-      background:var(--surface2);
-      margin:12px 0;
+    .results-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
     }
-    .progress-bar {
-      height:100%;
-      width:0;
-      background:var(--accent);
-      transition:width .2s;
+    .profession-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
     }
-    .glossary {
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
+    .profession-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
     }
-    .term {
-      padding:15px;
-      border:1px solid var(--line);
-      border-radius:14px;
-      background:var(--surface);
+    .profession-card:hover {
+      transform: translateY(-3px);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      box-shadow: var(--shadow);
     }
-    .term strong { display:block;margin-bottom:4px; }
-    .term span {
-      color:var(--muted);
-      font-size:13px;
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 20px 20px 0;
     }
-    .callout {
-      padding:25px;
-      border-radius:22px;
-      background:var(--surface2);
+    .profession-icon {
+      display: grid;
+      place-items: center;
+      width: 47px;
+      height: 47px;
+      flex-shrink: 0;
+      border-radius: 14px;
+      background: var(--surface-2);
+      font-size: 23px;
     }
-    .callout p { color:var(--muted); }
+    .stage-label {
+      display: inline-block;
+      max-width: 150px;
+      padding: 5px 9px;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 800;
+      text-align: right;
+    }
+    .card-content {
+      flex: 1;
+      padding: 16px 20px 20px;
+    }
+    .card-content h3 {
+      margin-bottom: 8px;
+      font-size: 19px;
+      letter-spacing: -.4px;
+      line-height: 1.3;
+    }
+    .card-summary {
+      min-height: 66px;
+      margin-bottom: 15px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 17px;
+    }
+    .skill-tag {
+      padding: 5px 8px;
+      border-radius: 7px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 650;
+    }
+    details { border-top: 1px solid var(--line); }
+    details summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 20px;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      list-style: none;
+    }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::after {
+      content: "+";
+      color: var(--accent);
+      font-size: 19px;
+      line-height: 1;
+    }
+    details[open] summary::after { content: "−"; }
+    .details-content {
+      padding: 0 20px 20px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.75;
+    }
+    .details-content h4 {
+      margin: 15px 0 5px;
+      color: var(--text);
+      font-size: 12px;
+    }
+    .details-content h4:first-child { margin-top: 0; }
+    .details-content ul {
+      margin: 5px 0 0;
+      padding-left: 18px;
+    }
+    .details-content li { margin: 3px 0; }
+    .empty-state {
+      padding: 55px 20px;
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+      grid-column: 1 / -1;
+    }
+    .empty-state strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 19px;
+    }
+    .pathway {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      align-items: stretch;
+      margin: 30px 0;
+    }
+    .pathway-main {
+      padding: 30px;
+      border-radius: var(--radius);
+      background: var(--text);
+      color: var(--bg);
+    }
+    .pathway-main .eyebrow { color: #ff987f; }
+    .pathway-main h2 {
+      max-width: 450px;
+      margin: 12px 0;
+      font-size: clamp(26px, 4vw, 38px);
+      line-height: 1.18;
+      letter-spacing: -1.4px;
+    }
+    .pathway-main p {
+      max-width: 490px;
+      color: color-mix(in srgb, var(--bg) 75%, transparent);
+      font-size: 14px;
+    }
+    .pathway-list {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+    .pathway-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .pathway-check {
+      display: grid;
+      place-items: center;
+      width: 27px;
+      height: 27px;
+      flex-shrink: 0;
+      border-radius: 9px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 850;
+      font-size: 13px;
+    }
+    .pathway-item strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+    .pathway-item span:last-child {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .disclaimer {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      margin: 20px 0 55px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--surface);
+    }
+    .disclaimer-icon {
+      display: grid;
+      place-items: center;
+      width: 35px;
+      height: 35px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: var(--surface-2);
+    }
+    .disclaimer strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+    .disclaimer p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
     footer {
-      margin-top:35px;
-      padding:25px 0;
-      border-top:1px solid var(--line);
-      color:var(--muted);
-      font-size:13px;
+      padding: 25px 0;
+      border-top: 1px solid var(--line);
     }
-    .footer-row {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:12px;
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 12px;
     }
-    @media(max-width:900px) {
-      .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .nav-links { display:none; }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
     }
-    @media(max-width:560px) {
-      .container { width:calc(100% - 24px); }
-      .grid,.glossary { grid-template-columns:1fr; }
-      .hero { padding-top:35px; }
-      h1 { letter-spacing:-1.5px; }
-      .section-head { align-items:start;flex-direction:column; }
-      .card { padding:18px; }
+    .footer-links a:hover { color: var(--accent); }
+    @media (max-width: 950px) {
+      .nav-links { gap: 13px; }
+      .profession-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .workflow { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 680px) {
+      .container { width: min(100% - 28px, 1160px); }
+      .nav { min-height: 66px; gap: 10px; }
+      .brand { font-size: 20px; gap: 8px; }
+      .brand-mark { width: 34px; height: 34px; }
+      .nav-links { display: none; }
+      .nav-controls { gap: 6px; }
+      .select { min-height: 37px; max-width: 112px; font-size: 12px; }
+      .icon-button { min-width: 37px; min-height: 37px; }
+      .hero { padding: 54px 0 25px; }
+      h1 { letter-spacing: -2.4px; }
+      .hero-description { font-size: 16px; }
+      .stats { gap: 8px; margin-top: 28px; }
+      .stat { padding: 13px 10px; }
+      .stat-number { font-size: 23px; }
+      .stat-label { font-size: 11px; line-height: 1.45; }
+      .section { padding: 34px 0; }
+      .section-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .workflow { grid-template-columns: repeat(2, 1fr); }
+      .workflow-step { min-height: 130px; padding: 14px; }
+      .workflow-step:last-child { grid-column: 1 / -1; }
+      .step-number { margin-bottom: 12px; }
+      .filters { grid-template-columns: 1fr; }
+      .profession-grid { grid-template-columns: 1fr; }
+      .card-summary { min-height: 0; }
+      .pathway { grid-template-columns: 1fr; }
+      .pathway-main, .pathway-list { padding: 22px; }
+      .disclaimer { margin-bottom: 36px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 <body>
-<header>
-  <div class="container nav">
-    <a class="brand" href="index.html">
-      <span class="brand-icon">К</span>
-      <span>Кадр</span>
-    </a>
-    <nav class="nav-links">
-      <a href="index.html" data-i18n="home">Главная</a>
-      <a href="index.html#market" data-i18n="market">Биржа</a>
-      <a href="about.html" data-i18n="about">О проекте</a>
-    </nav>
-    <div class="nav-tools">
-      <select id="language" class="language" aria-label="Language">
-        <option value="ru">RU</option>
-        <option value="en">EN</option>
-        <option value="zh">中文</option>
-      </select>
-      <button class="button" id="themeButton" aria-label="Change theme">☾</button>
-    </div>
-  </div>
-</header>
-<main>
-  <section class="hero">
-    <div class="container">
-      <span class="eyebrow" data-i18n="eyebrow">ОБУЧЕНИЕ · ТЕОРИЯ · ПРАКТИКА</span>
-      <h1 data-i18n="title">Твоя <span class="accent">киношкола.</span><br>Без лишних барьеров.</h1>
-      <p data-i18n="intro">
-        Изучи профессии, пойми устройство съёмочной площадки и попробуй себя в разных направлениях кино.
-      </p>
-      <div class="search-row">
-        <input id="search" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Найти профессию или тему...">
-        <select id="level">
-          <option value="all" data-i18n="allLevels">Все уровни</option>
-          <option value="beginner" data-i18n="beginner">Начальный</option>
-          <option value="intermediate" data-i18n="intermediate">Средний</option>
-          <option value="advanced" data-i18n="advanced">Продвинутый</option>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="Кадр — главная">
+        <span class="brand-mark">К.</span>
+        <span>кадр</span>
+      </a>
+      <nav class="nav-links" aria-label="Основная навигация">
+        <a href="index.html" data-i18n="navHome">Главная</a>
+        <a href="academy.html" data-i18n="navAcademy">Киношкола</a>
+        <a href="about.html" data-i18n="navAbout">О проекте</a>
+        <a href="index.html#marketplace" data-i18n="navMarket">Биржа</a>
+      </nav>
+      <div class="nav-controls">
+        <select class="select" id="languageSelect" aria-label="Language">
+          <option value="ru">Русский</option>
+          <option value="en">English</option>
+          <option value="zh">中文</option>
         </select>
+        <button class="icon-button" id="themeToggle" type="button"
+          aria-label="Переключить тему" title="Переключить тему">☾</button>
       </div>
     </div>
-  </section>
-  <section id="professions">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2 data-i18n="professionsTitle">Выбери направление</h2>
-          <p data-i18n="professionsText">Открой карточку, чтобы изучить программу и задание.</p>
-        </div>
-        <span id="courseCount" class="tag"></span>
-      </div>
-      <div class="categories" id="categories"></div>
-      <div class="grid" id="courses"></div>
-      <div class="empty" id="noResults" hidden data-i18n="noResults">Ничего не найдено. Попробуй другой запрос.</div>
-    </div>
-  </section>
-  <section id="roadmap">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2 data-i18n="roadmapTitle">Твой первый фильм</h2>
-          <p data-i18n="roadmapText">Отметь пройденные шаги. Прогресс сохранится в этом браузере.</p>
-        </div>
-      </div>
-      <div class="card">
-        <strong id="progressLabel"></strong>
-        <div class="progress-track">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="checklist" id="checklist"></div>
-      </div>
-    </div>
-  </section>
-  <section id="glossarySection">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2 data-i18n="glossaryTitle">Словарь кинематографиста</h2>
-          <p data-i18n="glossaryText">Термины, которые встречаются на съёмочной площадке.</p>
-        </div>
-      </div>
-      <div class="glossary" id="glossary"></div>
-    </div>
-  </section>
-  <section>
-    <div class="container">
-      <div class="callout">
-        <h2 data-i18n="practiceTitle">Главное — практика</h2>
-        <p data-i18n="practiceText">
-          Не обязательно сразу покупать дорогую камеру. Начни со смартфона, хорошего наблюдения, ясной идеи и короткой истории.
+  </header>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow" data-i18n="heroEyebrow">Образовательная платформа «Кадр»</div>
+        <h1 data-i18n="heroTitle">У каждого фильма<br>есть <span class="accent-text">своя команда.</span></h1>
+        <p class="hero-description" data-i18n="heroDescription">
+          Изучай профессии кино, понимай устройство съёмочного процесса и находи направление, в котором захочешь создавать истории.
         </p>
-        <a class="button primary" href="index.html#market" data-i18n="findCrew">Найти команду →</a>
+        <div class="hero-actions">
+          <a href="#professions" class="button">
+            <span data-i18n="heroButton">Изучить профессии</span><span aria-hidden="true">↗</span>
+          </a>
+          <a href="#workflow" class="button button-secondary" data-i18n="workflowButton">Как создаётся фильм</a>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-number">18</span>
+            <span class="stat-label" data-i18n="stat1">кино-профессий для изучения</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">5</span>
+            <span class="stat-label" data-i18n="stat2">этапов производства фильма</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">3</span>
+            <span class="stat-label" data-i18n="stat3">языка интерфейса</span>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
-</main>
-<footer>
-  <div class="container footer-row">
-    <span>© <span id="year"></span> «Кадр»</span>
-    <span data-i18n="footer">Учись. Практикуйся. Снимай.</span>
-  </div>
-</footer>
-<script>
-const I18N = {
-  ru: {
-    home:"Главная", market:"Биржа", about:"О проекте",
-    eyebrow:"ОБУЧЕНИЕ · ТЕОРИЯ · ПРАКТИКА",
-    title:'Твоя <span class="accent">киношкола.</span><br>Без лишних барьеров.',
-    intro:"Изучи профессии, пойми устройство съёмочной площадки и попробуй себя в разных направлениях кино.",
-    searchPlaceholder:"Найти профессию или тему...",
-    allLevels:"Все уровни", beginner:"Начальный", intermediate:"Средний", advanced:"Продвинутый",
-    professionsTitle:"Выбери направление",
-    professionsText:"Открой карточку, чтобы изучить программу и задание.",
-    noResults:"Ничего не найдено. Попробуй другой запрос.",
-    roadmapTitle:"Твой первый фильм",
-    roadmapText:"Отметь пройденные шаги. Прогресс сохранится в этом браузере.",
-    glossaryTitle:"Словарь кинематографиста",
-    glossaryText:"Термины, которые встречаются на съёмочной площадке.",
-    practiceTitle:"Главное — практика",
-    practiceText:"Не обязательно сразу покупать дорогую камеру. Начни со смартфона, хорошего наблюдения, ясной идеи и короткой истории.",
-    findCrew:"Найти команду →", footer:"Учись. Практикуйся. Снимай.",
-    allCategories:"Все", catDirection:"Режиссура", catWriting:"Сценарий",
-    catCamera:"Камера", catPost:"Постпродакшн", catProduction:"Производство",
-    catPerformance:"Работа с актёрами", catDesign:"Художественный цех", catSound:"Звук",
-    openCourse:"Изучить программу ↓", closeCourse:"Свернуть программу ↑",
-    modules:"Что изучить", practice:"Практическое задание", result:"Результат",
-    beginnerTag:"Начальный", intermediateTag:"Средний", advancedTag:"Продвинутый",
-    progress:"Прогресс", steps:"шагов выполнено",
-    glossary:[
-      ["Кадр","Отдельное изображение или непрерывный фрагмент съёмки."],
-      ["План","Масштаб изображения: общий, средний, крупный и другие."],
-      ["Раскадровка","Последовательность рисунков, показывающая будущие кадры."],
-      ["Экспозиция","Количество света, попадающего на матрицу или плёнку."],
-      ["Диафрагма","Отверстие объектива, регулирующее поток света и глубину резкости."],
-      ["Фокусное расстояние","Параметр объектива, влияющий на угол обзора и перспективу."],
-      ["Монтаж","Отбор и соединение кадров в последовательность."],
-      ["Склейка","Переход от одного кадра к другому."],
-      ["Синхрон","Речь или звук, записанные одновременно с действием."],
-      ["Фоли","Специально записанные звуки шагов, одежды и предметов."],
-      ["Мизансцена","Расположение актёров и предметов в пространстве сцены."],
-      ["Блокинг","Планирование движений актёров и камеры в сцене."],
-      ["Продюсер","Организует ресурсы и отвечает за реализацию проекта."],
-      ["Лист вызова","Документ с расписанием и информацией на съёмочный день."],
-      ["Цветокоррекция","Настройка баланса, экспозиции и согласованности цвета."],
-      ["Хромакей","Цветной фон для последующей замены на изображение."]
-    ],
-    roadmap:[
-      "Сформулируй идею фильма одним предложением.",
-      "Напиши сценарий на 1–3 страницы.",
-      "Составь список сцен и сделай раскадровку.",
-      "Найди локацию и проверь доступ к ней.",
-      "Собери небольшую команду и распределите роли.",
-      "Подготовь план съёмки и список реквизита.",
-      "Сними материал, записывая чистый звук.",
-      "Смонтируй фильм и выполни базовую цветокоррекцию.",
-      "Покажи работу зрителям и собери обратную связь."
-    ]
-  },
-  en: {
-    home:"Home", market:"Marketplace", about:"About",
-    eyebrow:"LEARNING · THEORY · PRACTICE",
-    title:'Your <span class="accent">film school.</span><br>Start where you are.',
-    intro:"Explore film careers, understand how a set works, and try different filmmaking disciplines.",
-    searchPlaceholder:"Search a profession or topic...",
-    allLevels:"All levels", beginner:"Beginner", intermediate:"Intermediate", advanced:"Advanced",
-    professionsTitle:"Choose a discipline",
-    professionsText:"Open a card to explore the curriculum and practical assignment.",
-    noResults:"No results. Try another search.",
-    roadmapTitle:"Your first film",
-    roadmapText:"Check off completed steps. Progress is saved in this browser.",
-    glossaryTitle:"Filmmaking glossary",
-    glossaryText:"Essential terms you will hear on a film set.",
-    practiceTitle:"Practice matters most",
-    practiceText:"You do not need an expensive camera to begin. Start with a phone, observation, a clear idea, and a short story.",
-    findCrew:"Find a crew →", footer:"Learn. Practise. Shoot.",
-    allCategories:"All", catDirection:"Directing", catWriting:"Screenwriting",
-    catCamera:"Camera", catPost:"Post-production", catProduction:"Production",
-    catPerformance:"Performance", catDesign:"Art department", catSound:"Sound",
-    openCourse:"Explore curriculum ↓", closeCourse:"Close curriculum ↑",
-    modules:"Topics", practice:"Practical assignment", result:"Outcome",
-    beginnerTag:"Beginner", intermediateTag:"Intermediate", advancedTag:"Advanced",
-    progress:"Progress", steps:"steps completed",
-    glossary:[
-      ["Shot","A single image or a continuous recorded segment."],
-      ["Shot size","Framing scale: wide, medium, close-up, and more."],
-      ["Storyboard","Drawings that map out the planned shots."],
-      ["Exposure","The amount of light reaching the sensor or film."],
-      ["Aperture","The lens opening controlling light and depth of field."],
-      ["Focal length","A lens property affecting field of view and perspective."],
-      ["Editing","Selecting and joining shots into a sequence."],
-      ["Cut","A transition from one shot to another."],
-      ["Sync sound","Dialogue or sound recorded during the action."],
-      ["Foley","Custom-recorded sounds of footsteps, clothes, and objects."],
-      ["Mise-en-scène","The arrangement of performers and objects within a scene."],
-      ["Blocking","Planning actors' and camera movements within a scene."],
-      ["Producer","Coordinates resources and oversees project delivery."],
-      ["Call sheet","A document with schedule and daily production information."],
-      ["Color grading","Adjusting exposure, balance, and color consistency."],
-      ["Chroma key","A colored background replaced during post-production."]
-    ],
-    roadmap:[
-      "Write your film idea in one sentence.",
-      "Write a 1–3 page screenplay.",
-      "List the scenes and create a storyboard.",
-      "Find a location and confirm access.",
-      "Build a small crew and assign roles.",
-      "Prepare a shooting plan and props list.",
-      "Shoot the material and capture clean sound.",
-      "Edit the film and do basic color correction.",
-      "Show it to viewers and collect feedback."
-    ]
-  },
-  zh: {
-    home:"首页", market:"项目市场", about:"关于项目",
-    eyebrow:"学习 · 理论 · 实践",
-    title:'你的<span class="accent">电影学院。</span><br>从现在开始。',
-    intro:"探索电影职业，了解剧组如何运作，并尝试不同的电影制作方向。",
-    searchPlaceholder:"搜索职业或主题...",
-    allLevels:"所有级别", beginner:"入门", intermediate:"中级", advanced:"进阶",
-    professionsTitle:"选择学习方向",
-    professionsText:"打开课程卡片，查看学习内容和实践任务。",
-    noResults:"没有找到结果，请尝试其他关键词。",
-    roadmapTitle:"你的第一部电影",
-    roadmapText:"勾选已完成的步骤。进度保存在当前浏览器中。",
-    glossaryTitle:"电影术语词典",
-    glossaryText:"了解拍摄现场常用的专业术语。",
-    practiceTitle:"实践最重要",
-    practiceText:"开始学习不一定要购买昂贵的摄影机。你可以从手机、观察、清晰的创意和短故事开始。",
-    findCrew:"寻找团队 →", footer:"学习。实践。拍摄。",
-    allCategories:"全部", catDirection:"导演", catWriting:"编剧",
-    catCamera:"摄影", catPost:"后期制作", catProduction:"制片",
-    catPerformance:"表演", catDesign:"美术部门", catSound:"声音",
-    openCourse:"查看课程 ↓", closeCourse:"收起课程 ↑",
-    modules:"学习内容", practice:"实践任务", result:"学习成果",
-    beginnerTag:"入门", intermediateTag:"中级", advancedTag:"进阶",
-    progress:"进度", steps:"个步骤已完成",
-    glossary:[
-      ["镜头","单个画面或一段连续拍摄的影像。"],
-      ["景别","画面范围，例如远景、中景和特写。"],
-      ["分镜","用于规划电影镜头的一系列图画。"],
-      ["曝光","到达传感器或胶片的光量。"],
-      ["光圈","控制进光量和景深的镜头开口。"],
-      ["焦距","影响视角和透视关系的镜头参数。"],
-      ["剪辑","选择镜头并将它们组合成连贯序列。"],
-      ["切换","从一个镜头转到另一个镜头。"],
-      ["同期声","在表演或动作发生时录制的声音。"],
-      ["拟音","为脚步、衣物和物体专门录制的声音。"],
-      ["场面调度","安排演员与物体在场景中的位置。"],
-      ["走位设计","规划演员和摄影机在场景中的移动。"],
-      ["制片人","协调资源并推动项目完成。"],
-      ["通告单","包含拍摄日程和现场信息的文件。"],
-      ["调色","调整曝光、色彩平衡和整体色彩一致性。"],
-      ["色键","在后期制作中替换特定颜色背景的技术。"]
-    ],
-    roadmap:[
-      "用一句话写出电影创意。",
-      "完成一份1至3页的剧本。",
-      "列出场景并制作分镜。",
-      "寻找拍摄地点并确认使用许可。",
-      "组建小型剧组并分配职责。",
-      "准备拍摄计划和道具清单。",
-      "完成拍摄并录制清晰的声音。",
-      "剪辑影片并进行基础调色。",
-      "向观众展示作品并收集反馈。"
-    ]
-  }
-};
-const COURSES = [
-  {
-    id:"director", icon:"🎬", category:"direction", level:"beginner",
-    title:{ru:"Режиссура",en:"Directing",zh:"导演"},
-    desc:{ru:"Как превратить идею в выразительную экранную историю.",en:"Turn an idea into a compelling screen story.",zh:"将创意转化为有表现力的银幕故事。"},
-    modules:{
-      ru:["Роль режиссёра и авторское видение","Работа со сценарием и разбор сцены","Мизансцена и блокинг","Работа с актёрами","Выбор крупности и движения камеры","Подготовка режиссёрской экспликации"],
-      en:["The director's role and vision","Script analysis and scene breakdown","Mise-en-scène and blocking","Working with actors","Shot sizes and camera movement","Preparing a director's statement"],
-      zh:["导演的职责与创作视角","剧本分析与场景拆解","场面调度与走位","演员指导","景别与摄影机运动","撰写导演阐述"]
-    },
-    task:{ru:"Сними сцену продолжительностью 60–90 секунд, в которой персонаж чего-то хочет, но сталкивается с препятствием.",en:"Shoot a 60–90 second scene in which a character wants something but encounters an obstacle.",zh:"拍摄一段60至90秒的场景：角色想要某样东西，却遇到了阻碍。"},
-    result:{ru:"Короткая сцена с понятной целью, действием и изменением состояния героя.",en:"A short scene with a clear goal, action, and character change.",zh:"一段目标明确、行动清晰并展现角色变化的短场景。"}
-  },
-  {
-    id:"screenwriter", icon:"✍️", category:"writing", level:"beginner",
-    title:{ru:"Сценарист",en:"Screenwriting",zh:"编剧"},
-    desc:{ru:"История, персонажи, конфликт, диалоги и структура сценария.",en:"Story, characters, conflict, dialogue, and screenplay structure.",zh:"故事、人物、冲突、对白与剧本结构。"},
-    modules:{
-      ru:["Логлайн и тема истории","Цель героя и конфликт","Трёхактная структура и альтернативные модели","Сцены и поворотные точки","Подтекст и диалоги","Форматирование сценария"],
-      en:["Logline and theme","Character goals and conflict","Three-act structure and alternatives","Scenes and turning points","Subtext and dialogue","Screenplay formatting"],
-      zh:["故事核心与主题","角色目标与冲突","三幕结构及其他结构","场景与转折点","潜台词与对白","剧本格式"]
-    },
-    task:{ru:"Напиши короткометражный сценарий на 3–5 страниц с одним главным героем и ясным конфликтом.",en:"Write a 3–5 page short-film screenplay with one protagonist and a clear conflict.",zh:"创作一份3至5页的短片剧本，包含一位主角和明确的冲突。"},
-    result:{ru:"Сценарий, который можно прочитать вслух и подготовить к съёмке.",en:"A screenplay that can be read aloud and prepared for production.",zh:"一份可以朗读并进入拍摄筹备阶段的剧本。"}
-  },
-  {
-    id:"cinematographer", icon:"📷", category:"camera", level:"beginner",
-    title:{ru:"Оператор-постановщик",en:"Director of Photography",zh:"摄影指导"},
-    desc:{ru:"Визуальный язык фильма: свет, оптика, композиция и камера.",en:"Visual storytelling through light, lenses, composition, and camera.",zh:"通过灯光、镜头、构图与摄影机讲述故事。"},
-    modules:{
-      ru:["Размеры кадра и композиция","Фокусное расстояние и перспектива","Экспозиция, ISO, выдержка и диафрагма","Баланс белого и цветовая температура","Движение камеры и штатив","Визуальная концепция сцены"],
-      en:["Framing and composition","Focal length and perspective","Exposure, ISO, shutter, and aperture","White balance and color temperature","Camera movement and tripod use","Visual concept for a scene"],
-      zh:["构图与景别","焦距与透视","曝光、ISO、快门与光圈","白平衡与色温","摄影机运动与三脚架","场景视觉方案"]
-    },
-    task:{ru:"Сними один объект в пяти разных планах и объясни, как меняется ощущение от каждого.",en:"Film one subject in five different shot sizes and explain how each changes the feeling.",zh:"用五种不同景别拍摄同一对象，并说明每种景别带来的感受变化。"},
-    result:{ru:"Небольшая подборка кадров с осознанным выбором композиции.",en:"A small collection of shots with deliberate composition choices.",zh:"一组经过有意识构图设计的镜头。"}
-  },
-  {
-    id:"camera_operator", icon:"🎥", category:"camera", level:"beginner",
-    title:{ru:"Оператор камеры",en:"Camera Operator",zh:"摄影机操作员"},
-    desc:{ru:"Практическая работа с камерой, фокусом, движением и дублями.",en:"Practical camera operation, focus, movement, and takes.",zh:"摄影机操作、对焦、运动与多次拍摄。"},
-    modules:{
-      ru:["Подготовка камеры и проверка носителей","Ручной и автоматический фокус","Плавные панорамы и наклоны","Работа с плечевым ригом и стабилизатором","Повторяемость движения между дублями","Безопасность оборудования"],
-      en:["Camera preparation and media checks","Manual and autofocus","Smooth pans and tilts","Shoulder rigs and stabilizers","Repeatable movement between takes","Equipment safety"],
-      zh:["摄影机准备与存储检查","手动与自动对焦","平滑摇摄与俯仰","肩扛设备与稳定器","保持不同镜头间运动一致","设备安全"]
-    },
-    task:{ru:"Сними движение человека от начала до конца одним непрерывным кадром.",en:"Record a person's movement from beginning to end in one continuous shot.",zh:"用一个连续镜头拍摄一个人的完整移动。"},
-    result:{ru:"Стабильный кадр с осознанным движением и удержанием фокуса.",en:"A stable shot with deliberate movement and maintained focus.",zh:"运动设计明确、对焦稳定的镜头。"}
-  },
-  {
-    id:"gaffer", icon:"💡", category:"camera", level:"intermediate",
-    title:{ru:"Осветитель / гаффер",en:"Gaffer / Lighting",zh:"灯光师"},
-    desc:{ru:"Формирование объёма, настроения и направления взгляда с помощью света.",en:"Shape depth, mood, and attention through lighting.",zh:"利用灯光塑造空间、情绪与视觉重点。"},
-    modules:{
-      ru:["Жёсткий и мягкий свет","Ключевой, заполняющий и контровой свет","Рассеивание и отражение","Контроль смешанных цветовых температур","Безопасная прокладка кабелей","Схема света для интервью"],
-      en:["Hard and soft light","Key, fill, and backlight","Diffusion and bounce","Managing mixed color temperatures","Safe cable management","Lighting a simple interview"],
-      zh:["硬光与柔光","主光、补光与轮廓光","柔光与反射","混合色温控制","安全布线","简单采访布光"]
-    },
-    task:{ru:"Освети лицо одним источником, затем измени настроение, добавив отражатель или контровой свет.",en:"Light a face with one source, then change the mood using bounce or backlight.",zh:"先用一个光源照亮人脸，再通过反光板或轮廓光改变气氛。"},
-    result:{ru:"Две схемы освещения с разным эмоциональным эффектом.",en:"Two lighting setups with different emotional effects.",zh:"两种具有不同情绪效果的布光方案。"}
-  },
-  {
-    id:"editor", icon:"✂️", category:"post", level:"beginner",
-    title:{ru:"Монтажёр",en:"Film Editor",zh:"剪辑师"},
-    desc:{ru:"Ритм, непрерывность, драматургия и работа со звуком.",en:"Rhythm, continuity, storytelling, and sound editing.",zh:"节奏、连续性、叙事与声音剪辑。"},
-    modules:{
-      ru:["Организация файлов и резервные копии","Отбор дублей и синхронизация","Монтаж по действию и взгляду","Ритм и длительность плана","J-cut, L-cut и перебивки","Экспорт и контроль качества"],
-      en:["File organisation and backups","Selecting takes and syncing","Editing action and eyelines","Rhythm and shot duration","J-cuts, L-cuts, and cutaways","Export and quality control"],
-      zh:["文件管理与备份","选择镜头与同步","动作与视线剪辑","节奏与镜头时长","J-cut、L-cut与补充镜头","导出与质量检查"]
-    },
-    task:{ru:"Смонтируй минутную сцену из 8–12 кадров так, чтобы зритель понимал действие без объяснений.",en:"Edit a one-minute scene from 8–12 shots so the action is clear without explanation.",zh:"用8至12个镜头剪辑一分钟场景，让观众无需解释也能理解动作。"},
-    result:{ru:"Понятная сцена с ритмом и логичными переходами.",en:"A clear scene with rhythm and logical transitions.",zh:"节奏清晰、转场合理的场景。"}
-  },
-  {
-    id:"colorist", icon:"🎨", category:"post", level:"intermediate",
-    title:{ru:"Колорист",en:"Colorist",zh:"调色师"},
-    desc:{ru:"Техническая коррекция изображения и создание визуального стиля.",en:"Technical image correction and creation of a visual look.",zh:"图像技术校正与视觉风格塑造。"},
-    modules:{
-      ru:["Баланс белого и экспозиция","Согласование соседних кадров","Scopes: waveform и vectorscope","Первичная и вторичная коррекция","Маски и локальные изменения","Экспорт с правильным цветовым пространством"],
-      en:["White balance and exposure","Matching adjacent shots","Scopes: waveform and vectorscope","Primary and secondary correction","Masks and local adjustments","Export and color-space management"],
-      zh:["白平衡与曝光","镜头匹配","波形图与矢量示波器","一级与二级调色","蒙版与局部调整","色彩空间与导出"]
-    },
-    task:{ru:"Согласуй три кадра одной сцены, чтобы яркость и баланс цвета выглядели единообразно.",en:"Match three shots from the same scene so exposure and color feel consistent.",zh:"调整同一场景的三个镜头，使曝光与色彩保持一致。"},
-    result:{ru:"Согласованная последовательность без случайных цветовых скачков.",en:"A consistent sequence without distracting color jumps.",zh:"色彩一致、没有明显跳变的镜头序列。"}
-  },
-  {
-    id:"sound_recordist", icon:"🎙️", category:"sound", level:"beginner",
-    title:{ru:"Звукорежиссёр на площадке",en:"Production Sound Mixer",zh:"现场录音师"},
-    desc:{ru:"Чистая речь, микрофоны, запись атмосферы и контроль шума.",en:"Clean dialogue, microphones, room tone, and noise control.",zh:"清晰对白、麦克风、环境底噪与噪声控制。"},
-    modules:{
-      ru:["Петличные и направленные микрофоны","Расстояние до источника и отношение сигнал/шум","Мониторинг в наушниках","Пики и запас по уровню","Атмосфера локации и room tone","Организация и маркировка аудиофайлов"],
-      en:["Lavalier and shotgun microphones","Mic distance and signal-to-noise ratio","Headphone monitoring","Peaks and recording headroom","Location ambience and room tone","Audio file naming and organisation"],
-      zh:["领夹麦克风与枪式麦克风","麦克风距离与信噪比","耳机监听","峰值与录音余量","环境声与房间底噪","音频文件命名与管理"]
-    },
-    task:{ru:"Запиши короткий диалог и отдельно 30 секунд тишины помещения. Сравни шум и разборчивость.",en:"Record a short dialogue and 30 seconds of room tone. Compare noise and intelligibility.",zh:"录制一段简短对话和30秒房间底噪，并比较噪声与清晰度。"},
-    result:{ru:"Диалог, который можно использовать в монтаже без критических шумов.",en:"Dialogue usable in an edit without critical noise problems.",zh:"可用于剪辑且没有严重噪声问题的对白。"}
-  },
-  {
-    id:"sound_designer", icon:"🔊", category:"sound", level:"intermediate",
-    title:{ru:"Саунд-дизайнер",en:"Sound Designer",zh:"声音设计师"},
-    desc:{ru:"Звуковой мир фильма: эффекты, атмосфера, перспектива и тишина.",en:"Build a film's sonic world with effects, ambience, perspective, and silence.",zh:"通过音效、环境声、空间感与静默构建电影声音世界。"},
-    modules:{
-      ru:["Слои звука и звуковая перспектива","Запись и библиотека эффектов","Фоли и синхронизация","Атмосфера и драматическая тишина","Пространство и реверберация","Подготовка звуковых дорожек к сведению"],
-      en:["Sound layers and perspective","Recording and sound libraries","Foley and synchronisation","Atmosphere and dramatic silence","Space and reverberation","Preparing tracks for mixing"],
-      zh:["声音层次与空间感","音效录制与素材库","拟音与同步","氛围与戏剧性静默","空间与混响","混音前的音轨准备"]
-    },
-    task:{ru:"Создай звуковую сцену без диалогов: зритель должен понять место и настроение только по звуку.",en:"Create a dialogue-free sound scene that communicates place and mood through audio alone.",zh:"制作一段没有对白的声音场景，仅通过声音表现地点与情绪。"},
-    result:{ru:"Звуковая композиция с передним планом, атмосферой и глубиной.",en:"A sound composition with foreground, ambience, and depth.",zh:"具有前景声、环境声和空间深度的声音作品。"}
-  },
-  {
-    id:"producer", icon:"📋", category:"production", level:"intermediate",
-    title:{ru:"Продюсер",en:"Producer",zh:"制片人"},
-    desc:{ru:"Ресурсы, бюджет, команда, права, риски и организация производства.",en:"Resources, budget, crew, rights, risks, and production management.",zh:"资源、预算、团队、版权、风险与制作管理。"},
-    modules:{
-      ru:["Оценка масштаба проекта","Смета и резерв на непредвиденные расходы","Подбор команды и договорённости","Локации, разрешения и страховка","Права на музыку, сценарий и изображения","План производства и управление рисками"],
-      en:["Assessing project scale","Budgeting and contingency","Crew hiring and agreements","Locations, permits, and insurance","Rights to music, scripts, and images","Production planning and risk management"],
-      zh:["评估项目规模","预算与应急储备","组建团队与协商","场地、许可与保险","音乐、剧本和图像版权","制作计划与风险管理"]
-    },
-    task:{ru:"Составь одностраничный бюджет короткометражки, включив транспорт, питание, реквизит и резерв.",en:"Create a one-page short-film budget including transport, meals, props, and contingency.",zh:"为短片制作一页预算，包含交通、餐饮、道具和应急资金。"},
-    result:{ru:"Понятный бюджет и реалистичный план ресурсов.",en:"A clear budget and realistic resource plan.",zh:"清晰的预算与现实的资源计划。"}
-  },
-  {
-    id:"assistant_director", icon:"🗓️", category:"production", level:"intermediate",
-    title:{ru:"Второй режиссёр",en:"Assistant Director",zh:"副导演"},
-    desc:{ru:"Съёмочный план, расписание, координация людей и площадки.",en:"Shooting schedules, daily planning, and on-set coordination.",zh:"拍摄计划、日程安排与现场协调。"},
-    modules:{
-      ru:["Разбивка сценария на съёмочные элементы","Группировка сцен по локациям и актёрам","Съёмочный график и порядок сцен","Лист вызова","Координация перемещений и перерывов","Коммуникация и безопасность площадки"],
-      en:["Breaking down the script","Grouping scenes by location and cast","Shooting schedule and scene order","Call sheets","Coordinating moves and breaks","Set communication and safety"],
-      zh:["剧本拆解","按场景与演员安排拍摄","拍摄计划与场次顺序","通告单","协调转场与休息","现场沟通与安全"]
-    },
-    task:{ru:"Составь план съёмочного дня для трёх сцен в двух локациях с учётом переезда команды.",en:"Plan a shoot day for three scenes across two locations, accounting for company moves.",zh:"为两个场地的三个场景安排拍摄日程，并考虑剧组转场时间。"},
-    result:{ru:"Реалистичный порядок сцен с учётом логистики.",en:"A realistic scene order that accounts for logistics.",zh:"考虑实际调度需求的拍摄顺序。"}
-  },
-  {
-    id:"actor", icon:"🎭", category:"performance", level:"beginner",
-    title:{ru:"Актёр кино",en:"Film Acting",zh:"电影表演"},
-    desc:{ru:"Действие, цель персонажа, слушание, реакция и работа перед камерой.",en:"Objectives, listening, reactions, and performance for camera.",zh:"角色目标、倾听、反应与镜头前表演。"},
-    modules:{
-      ru:["Действие вместо демонстрации эмоций","Обстоятельства и цель персонажа","Слушание партнёра и реакция","Непрерывность игры между дублями","Работа с крупным планом","Самопробы и запись audition"],
-      en:["Actions instead of displaying emotion","Circumstances and character objectives","Listening and reacting","Continuity between takes","Performing for close-ups","Self-tapes and auditions"],
-      zh:["用行动代替情绪展示","情境与角色目标","倾听搭档并作出反应","保持不同镜头间表演连续","特写表演","试镜录像"]
-    },
-    task:{ru:"Сыграй одну и ту же короткую реплику с тремя разными целями персонажа. Сними крупным планом.",en:"Perform the same short line with three different character objectives and record close-ups.",zh:"以三个不同的角色目标表演同一句短台词，并拍摄特写。"},
-    result:{ru:"Три различающиеся интерпретации одной сцены.",en:"Three distinct interpretations of the same scene.",zh:"同一场景的三种不同演绎。"}
-  },
-  {
-    id:"casting", icon:"🧑‍🤝‍🧑", category:"performance", level:"intermediate",
-    title:{ru:"Кастинг-директор",en:"Casting Director",zh:"选角导演"},
-    desc:{ru:"Поиск исполнителей, проведение проб и подбор актёров под задачу.",en:"Finding performers, running auditions, and matching roles to actors.",zh:"寻找演员、组织试镜并为角色匹配合适人选。"},
-    modules:{
-      ru:["Разбор персонажей и требования к ролям","Поиск и коммуникация с кандидатами","Подготовка sides для проб","Проведение очных и онлайн-проб","Сравнение исполнителей по задаче сцены","Согласие на запись и хранение материалов"],
-      en:["Character breakdowns and role requirements","Finding and communicating with candidates","Preparing audition sides","In-person and remote auditions","Evaluating performances for the scene","Consent for recording and storing materials"],
-      zh:["角色分析与选角要求","寻找候选人与沟通","准备试镜片段","现场与远程试镜","根据场景需求评估表演","取得录像与资料保存许可"]
-    },
-    task:{ru:"Подготовь описание роли, короткий материал для проб и критерии выбора актёра.",en:"Prepare a role brief, a short audition scene, and actor evaluation criteria.",zh:"准备角色说明、简短试镜片段和演员评估标准。"},
-    result:{ru:"Структурированный пакет для проведения кастинга.",en:"A structured package for running a casting session.",zh:"一套完整的选角资料。"}
-  },
-  {
-    id:"production_design", icon:"🖼️", category:"design", level:"intermediate",
-    title:{ru:"Художник-постановщик",en:"Production Designer",zh:"美术指导"},
-    desc:{ru:"Визуальный мир фильма: пространство, цвет, фактура и предметы.",en:"Build the film's visual world through space, color, texture, and objects.",zh:"通过空间、色彩、材质与物件构建电影视觉世界。"},
-    modules:{
-      ru:["Анализ сценария для художественного решения","Референсы и мудборд","Цветовая палитра и фактуры","Подбор реквизита и декораций","Взаимодействие с оператором и костюмером","Контроль непрерывности деталей"],
-      en:["Script analysis for visual design","References and mood boards","Color palettes and textures","Props and set dressing","Working with cinematography and costume","Continuity of set details"],
-      zh:["从剧本提取美术需求","参考图与情绪板","色彩方案与材质","道具与布景","与摄影及服装部门合作","场景细节连续性"]
-    },
-    task:{ru:"Создай мудборд для одной сцены из 8–12 референсов и опиши цвет, фактуры и ключевые предметы.",en:"Create a mood board of 8–12 references for one scene and describe colors, textures, and key props.",zh:"为一个场景制作包含8至12张参考图的情绪板，并说明色彩、材质和关键道具。"},
-    result:{ru:"Визуальная концепция, которую можно передать команде.",en:"A visual concept that can be shared with the crew.",zh:"可与剧组共享的视觉概念方案。"}
-  },
-  {
-    id:"costume", icon:"🧵", category:"design", level:"beginner",
-    title:{ru:"Художник по костюмам",en:"Costume Designer",zh:"服装设计师"},
-    desc:{ru:"Костюм как часть характера, эпохи и визуальной драматургии.",en:"Costume as character, period, and visual storytelling.",zh:"服装如何呈现人物、时代与视觉叙事。"},
-    modules:{
-      ru:["Биография героя и социальный контекст","Силуэт, цвет и материал","Исследование эпохи","Подбор, примерка и адаптация","Непрерывность костюма","Согласование образа с художником и оператором"],
-      en:["Character background and social context","Silhouette, color, and fabric","Period research","Fitting and adaptation","Costume continuity","Coordinating looks with art and camera departments"],
-      zh:["角色背景与社会环境","轮廓、色彩与面料","时代研究","试装与调整","服装连续性","与美术及摄影部门协调造型"]
-    },
-    task:{ru:"Создай образ персонажа из имеющейся одежды и объясни, что каждая деталь рассказывает о нём.",en:"Build a character look from available clothes and explain what each detail reveals.",zh:"利用现有服装设计角色造型，并解释每个细节传递的信息。"},
-    result:{ru:"Образ, который поддерживает характер и историю.",en:"A look that supports the character and story.",zh:"能够支持人物与故事的造型。"}
-  },
-  {
-    id:"makeup", icon:"💄", category:"design", level:"beginner",
-    title:{ru:"Гримёр",en:"Makeup Artist",zh:"化妆师"},
-    desc:{ru:"Киногрим, визуальная непрерывность и подготовка актёра к съёмке.",en:"Screen makeup, continuity, and actor preparation.",zh:"影视化妆、连续性与演员拍摄准备。"},
-    modules:{
-      ru:["Подготовка кожи и гигиена инструментов","Естественный грим для камеры","Возрастной и характерный грим","Фотофиксация образа между дублями","Совместимость грима со светом","Безопасность материалов и тест на аллергию"],
-      en:["Skin preparation and tool hygiene","Natural makeup for camera","Ageing and character makeup","Photographing continuity between takes","Makeup under different lighting","Product safety and allergy checks"],
-      zh:["皮肤准备与工具卫生","镜头前的自然妆","年龄妆与角色妆","拍摄间隙记录妆容连续性","不同灯光下的妆效","产品安全与过敏测试"]
-    },
-    task:{ru:"Подготовь два варианта грима одного персонажа и сфотографируй результат при одинаковом свете.",en:"Create two makeup versions for one character and photograph them under the same light.",zh:"为同一角色设计两种妆容，并在相同光线下拍摄记录。"},
-    result:{ru:"Повторяемый образ с фотографиями для контроля непрерывности.",en:"A repeatable look with continuity reference photos.",zh:"可重复实现并有照片记录的妆容。"}
-  },
-  {
-    id:"vfx", icon:"✨", category:"post", level:"advanced",
-    title:{ru:"VFX и композитинг",en:"VFX and Compositing",zh:"视觉特效与合成"},
-    desc:{ru:"Создание визуальных эффектов и соединение нескольких изображений.",en:"Create visual effects and combine multiple image elements.",zh:"制作视觉特效并合成多个图像元素。"},
-    modules:{
-      ru:["Планирование эффекта до съёмки","Маркеры, трекинг и движение камеры","Маски и ротоскопинг","Keying и работа с хромакеем","Слои, альфа-канал и композитинг","Цветовое согласование и финальный рендер"],
-      en:["Planning effects before shooting","Markers, tracking, and camera motion","Masks and rotoscoping","Keying and chroma key","Layers, alpha channels, and compositing","Color matching and final rendering"],
-      zh:["拍摄前规划特效","跟踪标记与摄影机运动","遮罩与逐帧抠像","色键与绿幕","图层、透明通道与合成","色彩匹配与最终渲染"]
-    },
-    task:{ru:"Создай простой композит: отдели объект от фона и помести его в другое изображение.",en:"Create a simple composite by separating an object from its background and placing it in another image.",zh:"制作简单合成：将物体从背景中分离，再放入另一张图像。"},
-    result:{ru:"Согласованное изображение без заметных краёв маски.",en:"A composite without obvious mask edges.",zh:"边缘自然、没有明显抠像痕迹的合成图像。"}
-  },
-  {
-    id:"script_supervisor", icon:"📝", category:"production", level:"advanced",
-    title:{ru:"Скрипт-супервайзер",en:"Script Supervisor",zh:"场记"},
-    desc:{ru:"Контроль непрерывности действий, реквизита, текста и экранного времени.",en:"Track continuity of action, props, dialogue, and screen time.",zh:"记录动作、道具、对白和镜头时长的连续性。"},
-    modules:{
-      ru:["Разбивка сценария и нумерация сцен","Контроль реквизита и движений","Отметки по дублям и удачным моментам","Направление взгляда и ось действия","Заметки для монтажёра","Фотоотчёты и журнал непрерывности"],
-      en:["Script breakdown and scene numbering","Tracking props and movements","Take notes and preferred moments","Eyelines and the action axis","Notes for the editor","Continuity photos and reports"],
-      zh:["剧本拆解与场次编号","道具与动作记录","镜头记录与优选片段","视线与动作轴线","给剪辑师的备注","连续性照片与报告"]
-    },
-    task:{ru:"Запиши непрерывность короткой сцены: положение предметов, руки героя, направление взгляда и действия.",en:"Track continuity in a short scene: prop positions, hand movements, eyelines, and actions.",zh:"记录短场景的连续性，包括道具位置、手部动作、视线方向与行为。"},
-    result:{ru:"Журнал, который помогает избежать ошибок между дублями.",en:"A log that helps prevent continuity errors between takes.",zh:"一份能减少不同镜头之间连续性错误的记录。"}
-  },
-  {
-    id:"documentary", icon:"🌍", category:"direction", level:"intermediate",
-    title:{ru:"Документальное кино",en:"Documentary Filmmaking",zh:"纪录片制作"},
-    desc:{ru:"Исследование темы, доверие герою, наблюдение и этика.",en:"Research, trust, observational storytelling, and ethics.",zh:"主题研究、人物信任、观察式叙事与伦理。"},
-    modules:{
-      ru:["Исследовательский вопрос и гипотеза","Поиск героев и проверка фактов","Интервью и активное слушание","Наблюдение и съёмка реальных событий","Согласие героя и приватность","Структура фильма на основе материала"],
-      en:["Research questions and hypotheses","Finding contributors and verifying facts","Interviewing and active listening","Observational filming","Participant consent and privacy","Structuring a film from recorded material"],
-      zh:["研究问题与假设","寻找人物与核实事实","采访与积极倾听","观察式拍摄","受访者同意与隐私","根据素材构建影片结构"]
-    },
-    task:{ru:"Сними короткий портрет человека за его обычным занятием, предварительно объяснив цель съёмки и получив согласие.",en:"Film a short portrait of someone doing an everyday activity after explaining the project and obtaining consent.",zh:"在说明拍摄目的并取得同意后，为一位正在进行日常活动的人拍摄短纪录片。"},
-    result:{ru:"Небольшой документальный портрет с уважением к герою и его приватности.",en:"A short documentary portrait that respects the subject and their privacy.",zh:"尊重拍摄对象与隐私的短纪录片人物肖像。"}
-  },
-  {
-    id:"music_video", icon:"🎵", category:"direction", level:"intermediate",
-    title:{ru:"Режиссёр музыкальных клипов",en:"Music Video Director",zh:"音乐视频导演"},
-    desc:{ru:"Визуальная концепция, ритм музыки и постановочные образы.",en:"Visual concepts, musical rhythm, and stylised imagery.",zh:"视觉概念、音乐节奏与风格化影像。"},
-    modules:{
-      ru:["Анализ музыки и драматургии трека","Концепция и визуальные референсы","Синхронизация действий с музыкой","Постановка и хореография камеры","Съёмочный план при ограниченном бюджете","Монтаж по музыкальным акцентам"],
-      en:["Analysing the track and its emotional arc","Concept and visual references","Synchronising action to music","Staging and camera choreography","Planning on a limited budget","Editing to musical accents"],
-      zh:["分析音乐与情绪变化","概念与视觉参考","动作与音乐同步","场面调度与摄影机设计","低预算拍摄计划","根据音乐重音剪辑"]
-    },
-    task:{ru:"Создай концепцию клипа на 30 секунд и сними три визуально разных фрагмента.",en:"Develop a 30-second music video concept and shoot three visually distinct sections.",zh:"设计30秒音乐视频概念，并拍摄三个视觉风格不同的片段。"},
-    result:{ru:"Короткий ролик с единым стилем и монтажом, связанным с музыкой.",en:"A short video with a coherent look and music-driven editing.",zh:"风格统一、剪辑与音乐相呼应的短片。"}
-  },
-  {
-    id:"location_manager", icon:"📍", category:"production", level:"beginner",
-    title:{ru:"Менеджер локаций",en:"Location Manager",zh:"外景协调"},
-    desc:{ru:"Поиск мест для съёмок, согласования, логистика и оценка рисков.",en:"Finding locations, securing permissions, logistics, and risk checks.",zh:"寻找拍摄场地、申请许可、物流与风险评估。"},
-    modules:{
-      ru:["Разбор требований сценария к локации","Поиск и фотосъёмка мест","Шум, электричество и доступ","Согласования с владельцами","Транспорт, парковка и санитарные зоны","План безопасности и резервная локация"],
-      en:["Extracting location needs from a script","Scouting and photographing places","Noise, power, and access","Permissions from property owners","Transport, parking, and facilities","Safety plans and backup locations"],
-      zh:["从剧本提取场地需求","勘景与拍照","噪声、电力与通行","业主许可","交通、停车与设施","安全方案与备用场地"]
-    },
-    task:{ru:"Подбери две возможные локации для короткой сцены и сравни доступность, звук, свет и разрешения.",en:"Find two possible locations for a short scene and compare access, sound, light, and permissions.",zh:"为短场景寻找两个候选地点，并比较通行、声音、光线与许可条件。"},
-    result:{ru:"Таблица сравнения локаций и обоснованный выбор.",en:"A location comparison and a justified recommendation.",zh:"一份场地对比表与有依据的推荐。"}
-  },
-  {
-    id:"scriptwriter_tv", icon:"📺", category:"writing", level:"advanced",
-    title:{ru:"Сценарист сериалов",en:"TV Writing",zh:"剧集编剧"},
-    desc:{ru:"Арки персонажей, эпизодическая структура и сезонная драматургия.",en:"Character arcs, episodic structure, and season-long storytelling.",zh:"人物弧线、单集结构与整季叙事。"},
-    modules:{
-      ru:["Концепция сериала и формат эпизода","Арка сезона и арки персонажей","Сюжетные линии A, B и C","Клиффхэнгеры и точки входа","Командная сценарная комната","Библия сериала и синопсис пилота"],
-      en:["Series concept and episode format","Season and character arcs","A, B, and C storylines","Cliffhangers and entry points","Collaborative writers' room","Series bible and pilot synopsis"],
-      zh:["剧集概念与单集格式","季节与人物弧线","A、B、C故事线","悬念与观众入口","编剧室协作","剧集圣经与试播集梗概"]
-    },
-    task:{ru:"Составь концепцию сериала, арку главного героя и краткие описания первых трёх эпизодов.",en:"Create a series concept, a protagonist arc, and short summaries of the first three episodes.",zh:"设计剧集概念、主角人物弧线，并撰写前三集的简要梗概。"},
-    result:{ru:"Краткая библия сериала с потенциалом развития истории.",en:"A concise series bible showing how the story can develop.",zh:"一份展示故事发展潜力的简明剧集设定文档。"}
-  },
-  {
-    id:"production_coordinator", icon:"📑", category:"production", level:"intermediate",
-    title:{ru:"Координатор производства",en:"Production Coordinator",zh:"制作协调员"},
-    desc:{ru:"Документы, расписания, коммуникация и управление рабочими процессами.",en:"Documents, schedules, communication, and workflow management.",zh:"文件、日程、沟通与工作流程管理。"},
-    modules:{
-      ru:["Организация производственных документов","Версии сценария и контроль изменений","Списки контактов и расписания","Заказы транспорта и оборудования","Протоколы встреч и задачи","Хранение документов и защита персональных данных"],
-      en:["Organising production documents","Script versions and change tracking","Contact lists and schedules","Transport and equipment bookings","Meeting notes and task tracking","Document handling and personal data protection"],
-      zh:["制作文件管理","剧本版本与变更追踪","联系人清单与日程","交通与设备预订","会议纪要与任务追踪","文件管理与个人信息保护"]
-    },
-    task:{ru:"Создай структуру папок проекта и таблицу с задачами, ответственными, сроками и статусом.",en:"Create a project folder structure and a task tracker with owners, deadlines, and status.",zh:"创建项目文件夹结构，并制作包含负责人、截止日期和状态的任务表。"},
-    result:{ru:"Понятная система организации, которой может пользоваться вся команда.",en:"An organised system the whole team can use.",zh:"全体团队成员都能使用的清晰管理系统。"}
-  }
-];
-const $ = id => document.getElementById(id);
-const savedLanguage = localStorage.getItem("kadr-language") || "ru";
-let language = ["ru","en","zh"].includes(savedLanguage) ? savedLanguage : "ru";
-let activeCategory = "all";
-const checkedSteps = new Set(
-  JSON.parse(localStorage.getItem("kadr-academy-progress") || "[]")
-);
-function tr(key) {
-  return I18N[language][key] || I18N.ru[key] || key;
-}
-function courseText(value) {
-  return value[language] || value.ru || "";
-}
-function safeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[c]);
-}
-const CATEGORY_KEYS = {
-  all:"allCategories",
-  direction:"catDirection",
-  writing:"catWriting",
-  camera:"catCamera",
-  post:"catPost",
-  production:"catProduction",
-  performance:"catPerformance",
-  design:"catDesign",
-  sound:"catSound"
-};
-const LEVEL_KEYS = {
-  beginner:"beginnerTag",
-  intermediate:"intermediateTag",
-  advanced:"advancedTag"
-};
-function renderCategories() {
-  $("categories").innerHTML = Object.entries(CATEGORY_KEYS).map(([key,label]) => `
-    <button class="filter ${activeCategory === key ? "active" : ""}"
-      data-category="${key}">${safeHTML(tr(label))}</button>
-  `).join("");
-  $("categories").querySelectorAll("[data-category]").forEach(button => {
-    button.addEventListener("click", () => {
-      activeCategory = button.dataset.category;
-      renderCategories();
-      renderCourses();
-    });
-  });
-}
-function renderCourses() {
-  const query = $("search").value.trim().toLowerCase();
-  const level = $("level").value;
-  const filtered = COURSES.filter(course => {
-    const categoryMatch = activeCategory === "all" || course.category === activeCategory;
-    const levelMatch = level === "all" || course.level === level;
-    const searchText = [
-      courseText(course.title),
-      courseText(course.desc),
-      ...(course.modules[language] || course.modules.ru)
-    ].join(" ").toLowerCase();
-    return categoryMatch && levelMatch && searchText.includes(query);
-  });
-  $("courseCount").textContent = String(filtered.length);
-  $("noResults").hidden = filtered.length > 0;
-  $("courses").innerHTML = filtered.map(course => {
-    const modules = course.modules[language] || course.modules.ru;
-    const task = courseText(course.task);
-    const result = courseText(course.result);
-    const isOpen = $("courses").querySelector(`[data-course="${course.id}"]`)?.classList.contains("open");
-    return `
-      <article class="card course-card ${isOpen ? "open" : ""}" data-course="${course.id}">
-        <div class="card-icon">${course.icon}</div>
-        <h3>${safeHTML(courseText(course.title))}</h3>
-        <p>${safeHTML(courseText(course.desc))}</p>
-        <div class="card-meta">
-          <span class="tag">${safeHTML(tr(LEVEL_KEYS[course.level]))}</span>
+    </section>
+    <section class="section" id="workflow">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow" data-i18n="workflowEyebrow">От идеи до зрителя</div>
+            <h2 data-i18n="workflowTitle">Пять этапов создания фильма</h2>
+          </div>
+          <p data-i18n="workflowDescription">
+            Кино — командная работа. Каждый этап требует своих решений, специалистов и времени.
+          </p>
         </div>
-        <button class="button course-toggle" type="button" data-toggle="${course.id}">
-          ${safeHTML(isOpen ? tr("closeCourse") : tr("openCourse"))}
-        </button>
-        <div class="course-content">
-          <h4>${safeHTML(tr("modules"))}</h4>
-          <ul>${modules.map(module => `<li>${safeHTML(module)}</li>`).join("")}</ul>
-          <h4>${safeHTML(tr("practice"))}</h4>
-          <p>${safeHTML(task)}</p>
-          <h4>${safeHTML(tr("result"))}</h4>
-          <p>${safeHTML(result)}</p>
+        <div class="workflow" id="workflowSteps"></div>
+      </div>
+    </section>
+    <section class="section library" id="professions">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow" data-i18n="libraryEyebrow">Карта профессий</div>
+            <h2 data-i18n="libraryTitle">Найди своё место в кино</h2>
+          </div>
+          <p data-i18n="libraryDescription">
+            Изучай задачи специалистов, ключевые навыки и первые шаги для старта.
+          </p>
         </div>
-      </article>
-    `;
-  }).join("");
-  $("courses").querySelectorAll("[data-toggle]").forEach(button => {
-    button.addEventListener("click", () => {
-      const card = $("courses").querySelector(`[data-course="${button.dataset.toggle}"]`);
-      card.classList.toggle("open");
-      button.textContent = card.classList.contains("open")
-        ? tr("closeCourse")
-        : tr("openCourse");
-    });
-  });
-}
-function renderChecklist() {
-  const steps = tr("roadmap");
-  const total = steps.length;
-  const complete = steps.filter((_, index) => checkedSteps.has(index)).length;
-  $("progressLabel").textContent =
-    `${tr("progress")}: ${complete}/${total} — ${complete} ${tr("steps")}`;
-  $("progressBar").style.width = `${total ? complete / total * 100 : 0}%`;
-  $("checklist").innerHTML = steps.map((step, index) => `
-    <label class="check-item">
-      <input type="checkbox" data-step="${index}" ${checkedSteps.has(index) ? "checked" : ""}>
-      <span>${safeHTML(step)}</span>
-    </label>
-  `).join("");
-  $("checklist").querySelectorAll("[data-step]").forEach(input => {
-    input.addEventListener("change", () => {
-      const index = Number(input.dataset.step);
-      if (input.checked) checkedSteps.add(index);
-      else checkedSteps.delete(index);
-      localStorage.setItem(
-        "kadr-academy-progress",
-        JSON.stringify([...checkedSteps])
-      );
-      renderChecklist();
-    });
-  });
-}
-function renderGlossary() {
-  const terms = tr("glossary");
-  $("glossary").innerHTML = terms.map(([term,description]) => `
-    <article class="term">
-      <strong>${safeHTML(term)}</strong>
-      <span>${safeHTML(description)}</span>
-    </article>
-  `).join("");
-}
-function applyLanguage() {
-  document.documentElement.lang = language;
-  $("language").value = language;
-  document.querySelectorAll("[data-i18n]").forEach(element => {
-    const key = element.dataset.i18n;
-    if (tr(key)) element.innerHTML = tr(key);
-  });
-  document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
-    const key = element.dataset.i18nPlaceholder;
-    if (tr(key)) element.placeholder = tr(key);
-  });
-  const levelOptions = $("level").options;
-  levelOptions[0].textContent = tr("allLevels");
-  levelOptions[1].textContent = tr("beginner");
-  levelOptions[2].textContent = tr("intermediate");
-  levelOptions[3].textContent = tr("advanced");
-  document.title = language === "en"
-    ? "Film Academy — Kadr"
-    : language === "zh"
-      ? "电影学院 — Кадр"
-      : "Киношкола — Кадр";
-  localStorage.setItem("kadr-language", language);
-  renderCategories();
-  renderCourses();
-  renderChecklist();
-  renderGlossary();
-}
-$("language").value = language;
-$("language").addEventListener("change", event => {
-  language = event.target.value;
-  applyLanguage();
-});
-function applyTheme(theme) {
-  document.body.classList.toggle("dark", theme === "dark");
-  $("themeButton").textContent = theme === "dark" ? "☀" : "☾";
-  document.querySelector('meta[name="theme-color"]').content =
-    theme === "dark" ? "#111218" : "#f6f7fb";
-  localStorage.setItem("kadr-theme", theme);
-}
-applyTheme(localStorage.getItem("kadr-theme") || "light");
-$("themeButton").addEventListener("click", () => {
-  applyTheme(document.body.classList.contains("dark") ? "light" : "dark");
-});
-$("search").addEventListener("input", renderCourses);
-$("level").addEventListener("change", renderCourses);
-$("year").textContent = new Date().getFullYear();
-applyLanguage();
-</script>
-</body>
-</html>
+        <div class="filters">
+          <div class="search-wrap">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input class="search-input" id="searchInput" type="search"
+              data-i18n-placeholder="searchPlaceholder"
+              placeholder="Поиск по профессиям и навыкам..."
+              autocomplete="off">
+          </div>
+          <select class="filter-select" id="stageSelect" aria-label="Фильтр по этапу">
+            <option value="all" data-i18n="filterAllStages">Все этапы производства</option>
+            <option value="development" data-i18n="stageDevelopment">Разработка</option>
+            <option value="preproduction" data-i18n="stagePreproduction">Подготовка</option>
+            <option value="production" data-i18n="stageProduction">Съёмки</option>
+            <option value="postproduction" data-i18n="stagePostproduction">Постпродакшн</option>
+            <option value="distribution" data-i18n="stageDistribution">Продвижение</option>
+          </select>
+        </div>
+        <div class="category-pills" id="categoryPills" aria-label="Категории профессий"></div>
+        <div class="results-row">
+          <span id="resultsCount" aria-live="polite">18 профессий</span>
+          <span data-i18n="resultsHint">Нажми на карточку, чтобы узнать больше</span>
+        </div>
+        <div class="profession-grid" id="professionGrid"></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="pathway">
+          <div class="pathway-main">
+            <div class="eyebrow" data-i18n="startEyebrow">Твой первый шаг</div>
+            <h2 data-i18n="startTitle">Не жди идеальных условий. Начни с короткой истории.</h2>
+            <p data-i18n="startDescription">
+              Чтобы понять кино изнутри, попробуй пройти весь путь самостоятельно — от идеи до готового видео.
+            </p>
+            <a class="button" href="index.html#marketplace">
+              <span data-i18n="startButton">Найти команду</span><span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div class="pathway-list">
+            <div class="pathway-item">
+              <span class="pathway-check">1</span>
+              <div>
+                <strong data-i18n="start1Title">Придумай идею</strong>
+                <span data-i18n="start1Text">Опиши историю, которую можно рассказать за одну-две минуты.</span>
+              </div>
+            </div>
+            <div class="pathway-item">
+              <span class="pathway-check">2</span>
+              <div>
+                <strong data-i18n="start2Title">Собери маленькую команду</strong>
+                <span data-i18n="start2Text">Найди актёра, оператора или друга, готового попробовать новую роль.</span>
+              </div>
+            </div>
+            <div class="pathway-item">
+              <span class="pathway-check">3</span>
+              <div>
+                <strong data-i18n="start3Title">Сними и смонтируй</strong>
+                <span data-i18n="start3Text">Используй доступную камеру, естественный свет и простой монтаж.</span>
+              </div>
+            </div>
+            <div class="pathway-item">
+              <span class="pathway-check">4</span>
+              <div>
+                <strong data-i18n="start4Title">Покажи результат</strong>
+                <span data-i18n="start4Text">Собери обратную связь, сделай выводы и добавь работу в портфолио.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="disclaimer">
+          <div class="disclaimer-icon" aria-hidden="true">ⓘ</div>
+          <div>
+            <strong data-i18n="disclaimerTitle">Важно знать</strong>
+            <p data-i18n="disclaimerText">
+              Эта киношкола — вводная образовательная база для самостоятельного изучения профессий. Материалы помогают понять задачи и начать практиковаться, но не заменяют реальную работу на площадке, профессиональное наставничество, специализированные курсы или формальное образование. Конкретные обязанности могут различаться в зависимости от страны, проекта и масштаба производства.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main
