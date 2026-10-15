@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Scenarist.PRO</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json">
+  <!-- Иконки -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="light-theme">
+
+  <!-- Шапка с настройками -->
+  <header class="glass-header">
+    <div class="logo">🎬 Scenarist<span class="accent">.PRO</span></div>
+    
+    <div class="controls">
+      <!-- Переключатель темы -->
+      <button id="theme-toggle" class="icon-btn" aria-label="Toggle Theme">
+        <i class="fas fa-moon"></i>
+      </button>
+      
+      <!-- Переключатель языка -->
+      <div class="lang-selector">
+        <button id="lang-btn" class="icon-btn">
+          <i class="fas fa-globe"></i> <span id="current-lang">RU</span>
+        </button>
+        <div class="lang-dropdown" id="lang-menu">
+          <div onclick="setLanguage('ru')">🇺 Русский</div>
+          <div onclick="setLanguage('en')">🇺🇸 English</div>
+          <div onclick="setLanguage('zh')">🇨🇳 中文</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Главный экран -->
+    <section id="hero">
+      <h1 data-key="hero_title">Профессиональные документы для кино — за 2 минуты</h1>
+      <p data-key="hero_subtitle">Сценарии, брифы, ТЗ. Бесплатно. Без регистрации.</p>
+      <button class="primary-btn" onclick="startGenerator()" data-key="btn_start">Начать сейчас</button>
+    </section>
+
+    <!-- Выбор шаблона -->
+    <section id="templates" style="display:none;">
+      <h2 data-key="select_template">Выберите тип документа</h2>
+      <div class="grid">
+        <div class="card glass-card" onclick="openTemplate('script')">
+          <div class="icon"><i class="fas fa-scroll"></i></div>
+          <h3 data-key="type_script">Сценарий</h3>
+          <p data-key="desc_script">Стандарты индустрии</p>
+        </div>
+        <div class="card glass-card" onclick="openTemplate('brief')">
+          <div class="icon"><i class="fas fa-file-contract"></i></div>
+          <h3 data-key="type_brief">Бриф</h3>
+          <p data-key="desc_brief">Для заказчика</p>
+        </div>
+        <div class="card glass-card" onclick="openTemplate('tz')">
+          <div class="icon"><i class="fas fa-tasks"></i></div>
+          <h3 data-key="type_tz">Тех. задание</h3>
+          <p data-key="desc_tz">Для съемочной группы</p>
+        </div>
+        <div class="card glass-card" onclick="openTemplate('content')">
+          <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+          <h3 data-key="type_content">Контент-план</h3>
+          <p data-key="desc_content">Для соцсетей</p>
+        </div>
+      </div>
+      <button class="secondary-btn" onclick="goHome()" data-key="btn_back">Назад</button>
+    </section>
+
+    <!-- Генератор -->
+    <section id="generator" style="display:none;">
+      <h2 id="template-title">Редактирование</h2>
+      <form id="doc-form" class="glass-form"></form>
+      <div class="actions">
+        <button class="primary-btn" onclick="generateDocument()" data-key="btn_generate">Сгенерировать</button>
+        <button class="secondary-btn" onclick="closeGenerator()" data-key="btn_cancel">Отмена</button>
+      </div>
+    </section>
+
+    <!-- Результат -->
+    <section id="result" style="display:none;">
+      <h2 data-key="res_title">Ваш документ готов!</h2>
+      <div id="preview" class="glass-preview"></div>
+      <div class="actions">
+        <button class="primary-btn" onclick="exportPDF()" data-key="btn_pdf"><i class="fas fa-file-pdf"></i> PDF</button>
+        <button class="secondary-btn" onclick="shareLink()" data-key="btn_share"><i class="fas fa-share-alt"></i> Ссылка</button>
+        <button class="premium-btn" onclick="upgradePro()" data-key="btn_pro">Upgrade PRO</button>
+      </div>
+      <button class="text-btn" onclick="closeResult()" data-key="btn_new">Создать новый</button>
+    </section>
+
+    <!-- Тарифы -->
+    <section id="pricing">
+      <h2 data-key="pricing_title">Тарифы</h2>
+      <div class="grid">
+        <div class="card glass-card">
+          <h3>Free</h3>
+          <p class="price">0 ₽</p>
+          <ul>
+            <li data-key="feat_basic">Базовые шаблоны</li>
+            <li data-key="feat_export">Экспорт PDF</li>
+          </ul>
+        </div>
+        <div class="card glass-card premium-card">
+          <div class="badge">POPULAR</div>
+          <h3>Pro</h3>
+          <p class="price">299 ₽<span>/мес</span></p>
+          <ul>
+            <li data-key="feat_all">Все шаблоны</li>
+            <li data-key="feat_logo">Свой логотип</li>
+            <li data-key="feat_support">Приоритет</li>
+          </ul>
+          <button class="primary-btn" onclick="buyPro()" data-key="btn_buy">Купить</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Scenarist.PRO by Vlad Rozhentsev</p>
+  </footer>
+
+  <!-- Подключаем библиотеки -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <script src="translations.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
