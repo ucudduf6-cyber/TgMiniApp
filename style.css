@@ -1,0 +1,113 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: #0f0f1a;
+  color: #e0e0ff;
+  line-height: 1.6;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #1a1a2e;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff4d4d;
+}
+
+nav a {
+  color: #ccc;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #ff4d4d;
+}
+
+main {
+  padding: 2rem;
+}
+
+#hero {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+#hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+#hero p {
+  font-size: 1.1rem;
+  color: #aaa;
+}
+
+section {
+  margin-bottom: 3rem;
+}
+
+section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #ff4d4d;
+}
+
+.card {
+  background: #1a1a2e;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: #bbb;
+  margin-bottom: 1rem;
+}
+
+button {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #cc0000;
+}
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: #777;
+  font-size: 0.9rem;
+}
