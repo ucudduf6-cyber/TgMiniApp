@@ -2,32 +2,34 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f6f7fb">
-  <meta name="description" content="Кадр — проект для людей, которые любят кино и хотят создавать его вместе.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <meta name="description" content="Кадр — пространство для людей кино. Узнай больше о проекте и его создателе.">
   <title>О проекте — Кадр</title>
 
   <style>
     :root {
-      --bg: #f6f7fb;
+      color-scheme: light;
+      --bg: #f7f7f4;
       --surface: #fff;
-      --surface2: #eef0f6;
-      --text: #171923;
-      --muted: #6c7280;
-      --line: #e1e4ec;
-      --accent: #7357ff;
-      --shadow: 0 12px 35px rgba(29,32,50,.07);
+      --surface-2: #efefea;
+      --text: #171815;
+      --muted: #70716b;
+      --border: #dedfd7;
+      --accent: #d8ff54;
+      --shadow: 0 12px 40px rgba(20, 24, 12, .06);
     }
 
     body.dark {
-      --bg: #111218;
-      --surface: #1a1c25;
-      --surface2: #242632;
-      --text: #f5f5fa;
-      --muted: #a5a8b8;
-      --line: #303341;
-      --accent: #a092ff;
-      --shadow: 0 12px 35px rgba(0,0,0,.2);
+      color-scheme: dark;
+      --bg: #151612;
+      --surface: #20211c;
+      --surface-2: #2a2b24;
+      --text: #f5f5ed;
+      --muted: #a5a69b;
+      --border: #393a32;
+      --accent: #d8ff54;
+      --shadow: 0 12px 40px rgba(0, 0, 0, .18);
     }
 
     * { box-sizing: border-box; }
@@ -40,271 +42,454 @@
       color: var(--text);
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
         Roboto, Arial, sans-serif;
-      line-height: 1.65;
-      transition: background .2s, color .2s;
+      line-height: 1.6;
+      transition: background .2s ease, color .2s ease;
     }
 
     a { color: inherit; text-decoration: none; }
 
-    button, select { font: inherit; cursor: pointer; }
+    button, select { font: inherit; }
+
+    button:focus-visible, a:focus-visible, select:focus-visible {
+      outline: 3px solid #8ab600;
+      outline-offset: 3px;
+    }
 
     .container {
-      width: min(1050px, calc(100% - 32px));
+      width: min(1080px, calc(100% - 40px));
       margin: 0 auto;
     }
 
-    header {
+    .topbar {
       position: sticky;
       top: 0;
       z-index: 10;
+      border-bottom: 1px solid var(--border);
       background: var(--bg);
-      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(16px);
     }
 
     .nav {
       min-height: 74px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      justify-content: space-between;
+      gap: 20px;
     }
 
     .brand {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 10px;
-      font-size: 23px;
-      font-weight: 850;
+      font-size: 24px;
+      font-weight: 900;
       letter-spacing: -1px;
     }
 
-    .brand-icon {
-      display: grid;
-      place-items: center;
+    .brand-mark {
       width: 38px;
       height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
       background: var(--accent);
-      color: white;
-      border-radius: 13px;
+      color: #171815;
     }
 
-    .nav-right {
+    .accent { color: #789d00; }
+
+    body.dark .accent { color: var(--accent); }
+
+    .nav-links, .nav-actions {
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 18px;
     }
 
     .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 20px;
       color: var(--muted);
       font-size: 14px;
-      font-weight: 650;
+      font-weight: 700;
     }
 
-    .nav-links a:hover, .social-link:hover { color: var(--accent); }
+    .nav-links a:hover { color: var(--text); }
+
+    .select-control, .icon-button {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .select-control { padding: 9px; }
+
+    .icon-button {
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .hero { padding: 90px 0 70px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #85b900;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 24px 0;
+      font-size: clamp(48px, 8vw, 88px);
+      line-height: .99;
+      letter-spacing: -5px;
+    }
+
+    .hero-description {
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 19px;
+    }
+
+    .hero-art {
+      position: relative;
+      min-height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      overflow: hidden;
+      margin-top: 42px;
+      padding: 35px;
+      border-radius: 28px;
+      background: var(--accent);
+      color: #171815;
+    }
+
+    .hero-art h2 {
+      max-width: 550px;
+      margin: 0;
+      font-size: clamp(30px, 5vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+    }
+
+    .hero-art-icon {
+      flex-shrink: 0;
+      font-size: clamp(65px, 10vw, 115px);
+      transform: rotate(-8deg);
+    }
+
+    .section { padding: 58px 0; }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h2.section-title {
+      margin: 0 0 16px;
+      font-size: clamp(32px, 5vw, 48px);
+      line-height: 1.1;
+      letter-spacing: -2px;
+    }
+
+    .section-intro {
+      max-width: 650px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .value-card {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--surface);
+    }
+
+    .value-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 20px;
+      border-radius: 15px;
+      background: var(--surface-2);
+      font-size: 23px;
+    }
+
+    .value-card h3 {
+      margin: 0 0 9px;
+      font-size: 20px;
+    }
+
+    .value-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .founder {
+      display: grid;
+      grid-template-columns: .7fr 1.3fr;
+      gap: 35px;
+      align-items: center;
+      padding: 32px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: var(--surface);
+    }
+
+    .founder-portrait {
+      min-height: 290px;
+      display: grid;
+      place-items: center;
+      border-radius: 22px;
+      background: var(--surface-2);
+      font-size: 85px;
+    }
+
+    .founder h2 {
+      margin: 0 0 8px;
+      font-size: clamp(30px, 4vw, 43px);
+      line-height: 1.1;
+      letter-spacing: -1.8px;
+    }
+
+    .founder-role {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .founder-description {
+      color: var(--muted);
+    }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
+      margin-top: 28px;
+    }
+
+    .social-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 19px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--surface);
+      transition: transform .15s ease, background .15s ease;
+    }
+
+    .social-card:hover {
+      transform: translateY(-2px);
+      background: var(--surface-2);
+    }
+
+    .social-left {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .social-icon {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--surface-2);
+      font-size: 21px;
+    }
+
+    .social-name { font-weight: 850; }
+
+    .social-description {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .social-arrow { font-size: 19px; }
+
+    .contact-band {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 30px;
+      border-radius: 25px;
+      background: var(--surface-2);
+    }
+
+    .contact-band h2 {
+      margin: 0;
+      font-size: clamp(25px, 4vw, 35px);
+      letter-spacing: -1px;
+    }
+
+    .contact-band p {
+      max-width: 520px;
+      color: var(--muted);
+    }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
-      padding: 10px 15px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--surface);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 750;
+      flex-shrink: 0;
+      min-height: 46px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: var(--accent);
+      color: #171815;
+      font-weight: 850;
     }
 
-    .button:hover { border-color: var(--accent); }
-
-    .language {
-      max-width: 80px;
-      padding: 9px 5px;
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 10px;
+    footer {
+      margin-top: 30px;
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
     }
 
-    .hero { padding: 76px 0 48px; }
-
-    .eyebrow {
-      display: inline-block;
-      padding: 6px 12px;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      border-radius: 100px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    h1 {
-      margin: 19px 0;
-      max-width: 800px;
-      font-size: clamp(40px, 7vw, 72px);
-      line-height: 1.06;
-      letter-spacing: -3px;
-    }
-
-    .accent { color: var(--accent); }
-
-    .lead {
-      max-width: 690px;
-      color: var(--muted);
-      font-size: 18px;
-    }
-
-    section { padding: 26px 0 38px; }
-
-    .section-title {
-      margin: 0 0 18px;
-      font-size: clamp(26px, 4vw, 36px);
-      letter-spacing: -1px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 17px;
-    }
-
-    .card {
-      padding: 26px;
-      border: 1px solid var(--line);
-      border-radius: 23px;
-      background: var(--surface);
-      box-shadow: var(--shadow);
-    }
-
-    .card h3 { margin: 0 0 9px; font-size: 21px; }
-
-    .card p {
-      color: var(--muted);
-      margin: 0;
-    }
-
-    .icon {
-      display: grid;
-      place-items: center;
-      width: 48px;
-      height: 48px;
-      margin-bottom: 17px;
-      border-radius: 15px;
-      background: var(--surface2);
-      font-size: 23px;
-    }
-
-    .founder {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .portrait-placeholder {
-      display: grid;
-      place-items: center;
-      width: 130px;
-      height: 130px;
-      border-radius: 25px;
-      background: var(--surface2);
-      font-size: 48px;
-    }
-
-    .role {
-      color: var(--accent);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .founder h3 { margin: 4px 0 10px; font-size: 26px; }
-
-    .social-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .social-link {
+    .footer-content {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 15px;
-      background: var(--surface);
-      font-weight: 750;
-      transition: border-color .2s;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
-    .social-link:hover { border-color: var(--accent); }
-
-    .social-link span:last-child { color: var(--muted); }
-
-    .contact-box {
-      padding: 32px;
-      border-radius: 25px;
-      background: var(--surface2);
-    }
-
-    .contact-box p { color: var(--muted); }
-
-    footer {
-      margin-top: 40px;
-      padding: 25px 0;
-      border-top: 1px solid var(--line);
+    .footer-note, .footer-links {
       color: var(--muted);
       font-size: 13px;
     }
 
-    .footer-row {
+    .footer-links {
       display: flex;
-      justify-content: space-between;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 18px;
     }
 
-    @media(max-width:720px) {
-      .nav-links { display: none; }
-      .hero { padding-top: 46px; }
-      h1 { letter-spacing: -1.7px; }
-      .grid { grid-template-columns: 1fr; }
-      .founder { grid-template-columns: 1fr; }
-      .social-list { grid-template-columns: 1fr; }
-      .portrait-placeholder { width: 100px; height: 100px; }
-      .card { padding: 21px; }
+    @media (max-width: 760px) {
+      .nav {
+        flex-wrap: wrap;
+        padding: 10px 0;
+      }
+
+      .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: space-around;
+      }
+
+      .hero { padding: 55px 0 40px; }
+
+      h1 { letter-spacing: -3px; }
+
+      .hero-art { padding: 24px; }
+
+      .values-grid { grid-template-columns: 1fr; }
+
+      .founder {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+
+      .founder-portrait { min-height: 190px; }
+
+      .contact-band {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container { width: calc(100% - 28px); }
+
+      .brand { font-size: 21px; }
+
+      .select-control {
+        max-width: 94px;
+        padding: 8px 4px;
+        font-size: 12px;
+      }
+
+      .hero-art {
+        min-height: 190px;
+        gap: 10px;
+      }
+
+      .hero-art-icon { font-size: 60px; }
+
+      .social-grid { grid-template-columns: 1fr; }
+
+      .section { padding: 40px 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <header>
+  <header class="topbar">
     <div class="container nav">
-      <a class="brand" href="index.html">
-        <span class="brand-icon">К</span>
-        <span>Кадр</span>
+      <a class="brand" href="index.html" aria-label="Кадр — главная">
+        <span class="brand-mark">К</span>
+        <span>кадр<span class="accent">.</span></span>
       </a>
 
-      <nav class="nav-links">
+      <nav class="nav-links" aria-label="Main navigation">
         <a href="index.html" data-i18n="home">Главная</a>
-        <a href="index.html#market" data-i18n="market">Биржа</a>
         <a href="academy.html" data-i18n="academy">Киношкола</a>
+        <a href="index.html#marketplace" data-i18n="market">Биржа</a>
       </nav>
 
-      <div class="nav-right">
-        <select id="language" class="language" aria-label="Language">
-          <option value="ru">RU</option>
-          <option value="en">EN</option>
+      <div class="nav-actions">
+        <select id="language" class="select-control" aria-label="Language">
+          <option value="ru">Русский</option>
+          <option value="en">English</option>
           <option value="zh">中文</option>
         </select>
-        <button class="button" id="themeButton" aria-label="Change theme">☾</button>
+        <button id="themeToggle" class="icon-button" type="button"
+          aria-label="Переключить тему">☾</button>
       </div>
     </div>
   </header>
@@ -312,244 +497,400 @@
   <main>
     <section class="hero">
       <div class="container">
-        <span class="eyebrow" data-i18n="eyebrow">О проекте</span>
-        <h1 data-i18n="title">Мы создаём пространство<br>для <span class="accent">людей кино.</span></h1>
-        <p class="lead" data-i18n="lead">
-          «Кадр» — проект для тех, кто хочет изучать кино, находить единомышленников и воплощать свои идеи в жизнь.
+        <span class="eyebrow">
+          <span class="dot"></span>
+          <span data-i18n="eyebrow">О проекте</span>
+        </span>
+
+        <h1>
+          <span data-i18n="heroLine1">Больше, чем</span><br>
+          <span class="accent" data-i18n="heroLine2">просто кино.</span>
+        </h1>
+
+        <p class="hero-description" data-i18n="heroDescription">
+          «Кадр» — пространство для людей, которые создают кино, хотят научиться этому
+          или ищут единомышленников для своих идей.
         </p>
-        <a href="index.html" class="button" data-i18n="back">← На главную</a>
+
+        <div class="hero-art">
+          <h2 data-i18n="artTitle">Каждая большая история начинается с команды.</h2>
+          <span class="hero-art-icon" aria-hidden="true">🎬</span>
+        </div>
       </div>
     </section>
 
-    <section>
+    <section class="section">
       <div class="container">
-        <h2 class="section-title" data-i18n="missionTitle">Наша идея</h2>
+        <p class="section-kicker" data-i18n="missionKicker">Наша идея</p>
+        <h2 class="section-title" data-i18n="missionTitle">Сделать путь в кино понятнее.</h2>
+        <p class="section-intro" data-i18n="missionText">
+          В кино много разных профессий, процессов и возможностей. Мы хотим собрать
+          полезные знания и инструменты в одном месте, чтобы новичкам было проще
+          разобраться в индустрии, а профессионалам — находить проекты и людей.
+        </p>
 
-        <div class="grid">
-          <article class="card">
-            <div class="icon">🎬</div>
-            <h3 data-i18n="mission1Title">Кино доступнее</h3>
-            <p data-i18n="mission1Text">
-              Мы хотим собрать полезные знания о кинопроизводстве в одном месте — от сценария до финального монтажа.
+        <div class="values-grid">
+          <article class="value-card">
+            <div class="value-icon" aria-hidden="true">🎓</div>
+            <h3 data-i18n="value1Title">Знания</h3>
+            <p data-i18n="value1Text">
+              Объясняем кино-профессии и процессы производства понятным языком.
             </p>
           </article>
 
-          <article class="card">
-            <div class="icon">🤝</div>
-            <h3 data-i18n="mission2Title">Люди находят людей</h3>
-            <p data-i18n="mission2Text">
-              Кино создаётся командой. «Кадр» задуман как место, где можно искать специалистов и делиться проектами.
+          <article class="value-card">
+            <div class="value-icon" aria-hidden="true">🤝</div>
+            <h3 data-i18n="value2Title">Связи</h3>
+            <p data-i18n="value2Text">
+              Помогаем людям находить участников команды и возможности для сотрудничества.
             </p>
           </article>
 
-          <article class="card">
-            <div class="icon">📚</div>
-            <h3 data-i18n="mission3Title">Учиться на практике</h3>
-            <p data-i18n="mission3Text">
-              Помимо теории, мы хотим предлагать упражнения, творческие задачи и материалы для самостоятельной работы.
-            </p>
-          </article>
-
-          <article class="card">
-            <div class="icon">🌱</div>
-            <h3 data-i18n="mission4Title">Расти вместе</h3>
-            <p data-i18n="mission4Text">
-              Проект развивается постепенно. Мы открыты к идеям, обратной связи и сотрудничеству.
+          <article class="value-card">
+            <div class="value-icon" aria-hidden="true">🎬</div>
+            <h3 data-i18n="value3Title">Практика</h3>
+            <p data-i18n="value3Text">
+              Развиваем пространство, где идеи могут становиться реальными проектами.
             </p>
           </article>
         </div>
       </div>
     </section>
 
-    <section>
+    <section class="section">
       <div class="container">
-        <h2 class="section-title" data-i18n="teamTitle">Создатель проекта</h2>
+        <p class="section-kicker" data-i18n="founderKicker">Кто стоит за проектом</p>
 
-        <article class="card founder">
-          <div class="portrait-placeholder" aria-hidden="true">🎥</div>
+        <article class="founder">
+          <div class="founder-portrait" aria-hidden="true">🎞️</div>
 
           <div>
-            <div class="role" data-i18n="role">Создатель и генеральный директор</div>
-            <h3>Владислав Роженцев</h3>
-            <p data-i18n="founderText">
-              Владислав Роженцев — создатель и генеральный директор проекта «Кадр». Цель проекта — объединить обучение кинопрофессиям, поиск команды и развитие авторских кинопроектов в одном пространстве.
+            <h2>Владислав Роженцев</h2>
+            <p class="founder-role" data-i18n="founderRole">
+              Создатель и генеральный директор проекта «Кадр»
+            </p>
+            <p class="founder-description" data-i18n="founderText">
+              Владислав основал «Кадр» как пространство для развития кино-сообщества,
+              обмена знаниями и поиска творческих партнёров. Цель проекта — сделать
+              киноиндустрию доступнее для тех, кто хочет в ней работать и создавать.
             </p>
           </div>
         </article>
       </div>
     </section>
 
-    <section>
+    <section class="section" id="socials">
       <div class="container">
-        <h2 class="section-title" data-i18n="socialTitle">Мы в интернете</h2>
-        <p style="color:var(--muted)" data-i18n="socialText">
-          Добавь официальные ссылки на свои страницы, чтобы пользователи могли следить за развитием проекта.
+        <p class="section-kicker" data-i18n="socialKicker">Остаёмся на связи</p>
+        <h2 class="section-title" data-i18n="socialTitle">Следи за «Кадром»</h2>
+        <p class="section-intro" data-i18n="socialDescription">
+          Выбирай удобную платформу, чтобы следить за новостями и развитием проекта.
         </p>
 
-        <!-- ЗАМЕНИ ССЫЛКИ НИЖЕ НА СВОИ ОФИЦИАЛЬНЫЕ АККАУНТЫ -->
-        <div class="social-list">
-          <a class="social-link" href="https://t.me/rvkinos" target="_blank" rel="noopener noreferrer">
-            <span>✈ Telegram</span><span>↗</span>
+        <!--
+          ЗАМЕНИ ссылки # на настоящие адреса страниц проекта.
+          Пока адреса не указаны, карточки показывают уведомление
+          вместо перехода на случайный или чужой аккаунт.
+        -->
+
+        <div class="social-grid">
+          <a class="social-card" href="#" data-social="telegram">
+            <span class="social-left">
+              <span class="social-icon" aria-hidden="true">✈</span>
+              <span>
+                <span class="social-name">Telegram</span><br>
+                <span class="social-description" data-i18n="telegramDescription">
+                  Новости и сообщество
+                </span>
+              </span>
+            </span>
+            <span class="social-arrow" aria-hidden="true">↗</span>
           </a>
 
-          <a class="social-link" href="https://vk.com/" target="_blank" rel="noopener noreferrer">
-            <span>Ⓥ VK</span><span>↗</span>
+          <a class="social-card" href="#" data-social="instagram">
+            <span class="social-left">
+              <span class="social-icon" aria-hidden="true">◎</span>
+              <span>
+                <span class="social-name">Instagram</span><br>
+                <span class="social-description" data-i18n="instagramDescription">
+                  Визуальные истории проекта
+                </span>
+              </span>
+            </span>
+            <span class="social-arrow" aria-hidden="true">↗</span>
           </a>
 
-          <a class="social-link" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
-            <span>▶ YouTube</span><span>↗</span>
+          <a class="social-card" href="#" data-social="youtube">
+            <span class="social-left">
+              <span class="social-icon" aria-hidden="true">▶</span>
+              <span>
+                <span class="social-name">YouTube</span><br>
+                <span class="social-description" data-i18n="youtubeDescription">
+                  Видео и образовательные материалы
+                </span>
+              </span>
+            </span>
+            <span class="social-arrow" aria-hidden="true">↗</span>
           </a>
 
-          <a class="social-link" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
-            <span>◎ Instagram</span><span>↗</span>
+          <a class="social-card" href="#" data-social="vk">
+            <span class="social-left">
+              <span class="social-icon" aria-hidden="true">ⓥ</span>
+              <span>
+                <span class="social-name">VK</span><br>
+                <span class="social-description" data-i18n="vkDescription">
+                  Общение и публикации
+                </span>
+              </span>
+            </span>
+            <span class="social-arrow" aria-hidden="true">↗</span>
           </a>
         </div>
       </div>
     </section>
 
-    <section>
+    <section class="section">
       <div class="container">
-        <div class="contact-box">
-          <h2 data-i18n="contactTitle">Есть идея или предложение?</h2>
-          <p data-i18n="contactText">
-            Напиши нам, если хочешь предложить улучшение, сотрудничество или образовательный материал.
-          </p>
-          <a class="button" href="index.html" data-i18n="contactButton">Перейти к проекту →</a>
+        <div class="contact-band">
+          <div>
+            <h2 data-i18n="contactTitle">Есть идея для «Кадра»?</h2>
+            <p data-i18n="contactText">
+              Присоединяйся к проекту, изучай киношколу или расскажи о своей идее на бирже.
+            </p>
+          </div>
+
+          <a class="button" href="index.html#account" data-i18n="contactButton">
+            Присоединиться ↗
+          </a>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="container footer-row">
-      <span>© <span id="year"></span> «Кадр»</span>
-      <span data-i18n="footer">Создаём возможности для людей кино.</span>
+    <div class="container footer-content">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">К</span>
+        <span>кадр<span class="accent">.</span></span>
+      </a>
+
+      <span class="footer-note" data-i18n="copyright">
+        © Кадр. Пространство для людей кино.
+      </span>
+
+      <div class="footer-links">
+        <a href="index.html" data-i18n="home">Главная</a>
+        <a href="academy.html" data-i18n="academy">Киношкола</a>
+        <a href="index.html#marketplace" data-i18n="market">Биржа</a>
+      </div>
     </div>
   </footer>
 
   <script>
-    const translations = {
+    "use strict";
+
+    /*
+      ВСТАВЬ НАСТОЯЩИЕ ССЫЛКИ НА СОЦСЕТИ НИЖЕ.
+      Например: telegram: "https://t.me/your_channel"
+      Оставь пустую строку, если страницы пока нет.
+    */
+    const SOCIAL_LINKS = {
+      telegram: "",
+      instagram: "",
+      youtube: "",
+      vk: ""
+    };
+
+    const dictionary = {
       ru: {
-        home:"Главная", market:"Биржа", academy:"Киношкола",
-        eyebrow:"О проекте",
-        title:'Мы создаём пространство<br>для <span class="accent">людей кино.</span>',
-        lead:"«Кадр» — проект для тех, кто хочет изучать кино, находить единомышленников и воплощать свои идеи в жизнь.",
-        back:"← На главную",
-        missionTitle:"Наша идея",
-        mission1Title:"Кино доступнее",
-        mission1Text:"Мы хотим собрать полезные знания о кинопроизводстве в одном месте — от сценария до финального монтажа.",
-        mission2Title:"Люди находят людей",
-        mission2Text:"Кино создаётся командой. «Кадр» задуман как место, где можно искать специалистов и делиться проектами.",
-        mission3Title:"Учиться на практике",
-        mission3Text:"Помимо теории, мы хотим предлагать упражнения, творческие задачи и материалы для самостоятельной работы.",
-        mission4Title:"Расти вместе",
-        mission4Text:"Проект развивается постепенно. Мы открыты к идеям, обратной связи и сотрудничеству.",
-        teamTitle:"Создатель проекта",
-        role:"Создатель и генеральный директор",
-        founderText:"Владислав Роженцев — создатель и генеральный директор проекта «Кадр». Цель проекта — объединить обучение кинопрофессиям, поиск команды и развитие авторских кинопроектов в одном пространстве.",
-        socialTitle:"Мы в интернете",
-        socialText:"Добавь официальные ссылки на свои страницы, чтобы пользователи могли следить за развитием проекта.",
-        contactTitle:"Есть идея или предложение?",
-        contactText:"Напиши нам, если хочешь предложить улучшение, сотрудничество или образовательный материал.",
-        contactButton:"Перейти к проекту →",
-        footer:"Создаём возможности для людей кино."
+        home: "Главная",
+        academy: "Киношкола",
+        market: "Биржа",
+        eyebrow: "О проекте",
+        heroLine1: "Больше, чем",
+        heroLine2: "просто кино.",
+        heroDescription: "«Кадр» — пространство для людей, которые создают кино, хотят научиться этому или ищут единомышленников для своих идей.",
+        artTitle: "Каждая большая история начинается с команды.",
+        missionKicker: "Наша идея",
+        missionTitle: "Сделать путь в кино понятнее.",
+        missionText: "В кино много разных профессий, процессов и возможностей. Мы хотим собрать полезные знания и инструменты в одном месте, чтобы новичкам было проще разобраться в индустрии, а профессионалам — находить проекты и людей.",
+        value1Title: "Знания",
+        value1Text: "Объясняем кино-профессии и процессы производства понятным языком.",
+        value2Title: "Связи",
+        value2Text: "Помогаем людям находить участников команды и возможности для сотрудничества.",
+        value3Title: "Практика",
+        value3Text: "Развиваем пространство, где идеи могут становиться реальными проектами.",
+        founderKicker: "Кто стоит за проектом",
+        founderRole: "Создатель и генеральный директор проекта «Кадр»",
+        founderText: "Владислав основал «Кадр» как пространство для развития кино-сообщества, обмена знаниями и поиска творческих партнёров. Цель проекта — сделать киноиндустрию доступнее для тех, кто хочет в ней работать и создавать.",
+        socialKicker: "Остаёмся на связи",
+        socialTitle: "Следи за «Кадром»",
+        socialDescription: "Выбирай удобную платформу, чтобы следить за новостями и развитием проекта.",
+        telegramDescription: "Новости и сообщество",
+        instagramDescription: "Визуальные истории проекта",
+        youtubeDescription: "Видео и образовательные материалы",
+        vkDescription: "Общение и публикации",
+        contactTitle: "Есть идея для «Кадра»?",
+        contactText: "Присоединяйся к проекту, изучай киношколу или расскажи о своей идее на бирже.",
+        contactButton: "Присоединиться ↗",
+        copyright: "© Кадр. Пространство для людей кино.",
+        themeLight: "Переключить на светлую тему",
+        themeDark: "Переключить на тёмную тему",
+        linkNotSet: "Ссылка на эту социальную сеть пока не добавлена."
       },
+
       en: {
-        home:"Home", market:"Marketplace", academy:"Film Academy",
-        eyebrow:"About the project",
-        title:'A space made<br>for <span class="accent">filmmakers.</span>',
-        lead:"Kadr is a project for people who want to learn filmmaking, meet collaborators, and bring their ideas to life.",
-        back:"← Back home",
-        missionTitle:"Our idea",
-        mission1Title:"Make filmmaking accessible",
-        mission1Text:"We want to bring useful filmmaking knowledge together in one place, from screenwriting to the final edit.",
-        mission2Title:"People meet people",
-        mission2Text:"Films are made by teams. Kadr aims to help people find specialists and share projects.",
-        mission3Title:"Learn by doing",
-        mission3Text:"Alongside theory, we want to offer exercises, creative challenges, and independent study materials.",
-        mission4Title:"Grow together",
-        mission4Text:"The project is growing step by step. We welcome ideas, feedback, and collaboration.",
-        teamTitle:"Project creator",
-        role:"Founder and CEO",
-        founderText:"Vladislav Rozhentsev is the founder and CEO of Kadr. The project's goal is to bring film education, crew discovery, and independent filmmaking together in one space.",
-        socialTitle:"Find us online",
-        socialText:"Add your official social links so visitors can follow the project's development.",
-        contactTitle:"Have an idea or suggestion?",
-        contactText:"Get in touch if you want to suggest an improvement, collaborate, or contribute educational materials.",
-        contactButton:"Explore the project →",
-        footer:"Creating opportunities for filmmakers."
+        home: "Home",
+        academy: "Film Academy",
+        market: "Marketplace",
+        eyebrow: "About the project",
+        heroLine1: "More than",
+        heroLine2: "just cinema.",
+        heroDescription: "Kadr is a space for people who make films, want to learn filmmaking, or are looking for creative collaborators.",
+        artTitle: "Every great story begins with a team.",
+        missionKicker: "Our idea",
+        missionTitle: "Make the path into film clearer.",
+        missionText: "Film brings together many careers, processes, and opportunities. We want to collect useful knowledge and tools in one place, helping newcomers understand the industry and professionals find projects and people.",
+        value1Title: "Knowledge",
+        value1Text: "We explain film careers and production processes in an accessible way.",
+        value2Title: "Connections",
+        value2Text: "We help people find crew members and opportunities to collaborate.",
+        value3Title: "Practice",
+        value3Text: "We are building a space where ideas can become real projects.",
+        founderKicker: "The person behind the project",
+        founderRole: "Founder and CEO of Kadr",
+        founderText: "Vladislav created Kadr as a space to develop the film community, share knowledge, and find creative partners. The project's goal is to make the film industry more accessible to people who want to work and create in it.",
+        socialKicker: "Stay connected",
+        socialTitle: "Follow Kadr",
+        socialDescription: "Choose your preferred platform to follow project updates and news.",
+        telegramDescription: "News and community",
+        instagramDescription: "Visual stories from the project",
+        youtubeDescription: "Videos and educational content",
+        vkDescription: "Community and updates",
+        contactTitle: "Have an idea for Kadr?",
+        contactText: "Join the project, explore the academy, or share your idea on the marketplace.",
+        contactButton: "Get involved ↗",
+        copyright: "© Kadr. A space for film people.",
+        themeLight: "Switch to light theme",
+        themeDark: "Switch to dark theme",
+        linkNotSet: "The link for this social network has not been added yet."
       },
+
       zh: {
-        home:"首页", market:"项目市场", academy:"电影学院",
-        eyebrow:"关于项目",
-        title:'为<span class="accent">电影创作者</span><br>打造一个空间。',
-        lead:"「Кадр」是一个帮助人们学习电影制作、寻找合作伙伴并实现创意的项目。",
-        back:"← 返回首页",
-        missionTitle:"我们的理念",
-        mission1Title:"让电影制作更容易接触",
-        mission1Text:"我们希望把电影制作知识汇集在一个地方，从剧本创作到最终剪辑。",
-        mission2Title:"让创作者彼此连接",
-        mission2Text:"电影需要团队。「Кадр」希望帮助用户寻找专业人才并分享项目。",
-        mission3Title:"在实践中学习",
-        mission3Text:"除了理论，我们还希望提供练习、创意任务和自学材料。",
-        mission4Title:"共同成长",
-        mission4Text:"项目将逐步发展。我们欢迎想法、反馈与合作。",
-        teamTitle:"项目创始人",
-        role:"创始人兼首席执行官",
-        founderText:"弗拉迪斯拉夫·罗任采夫（Vladislav Rozhentsev）是「Кадр」的创始人兼首席执行官。项目旨在将电影教育、剧组招募和独立电影创作整合到一个空间。",
-        socialTitle:"关注我们",
-        socialText:"请添加你的官方社交媒体链接，让用户了解项目的最新发展。",
-        contactTitle:"有想法或建议吗？",
-        contactText:"欢迎提出改进建议、合作想法或教育内容。",
-        contactButton:"了解项目 →",
-        footer:"为电影创作者创造机会。"
+        home: "首页",
+        academy: "电影学院",
+        market: "项目市场",
+        eyebrow: "关于项目",
+        heroLine1: "不止于",
+        heroLine2: "电影本身。",
+        heroDescription: "Kadr 是一个为电影创作者、电影学习者以及寻找创意伙伴的人打造的空间。",
+        artTitle: "每一个精彩故事都始于一个团队。",
+        missionKicker: "我们的理念",
+        missionTitle: "让进入电影行业的道路更清晰。",
+        missionText: "电影行业拥有多种职业、流程和机会。我们希望把有用的知识和工具汇集在一起，帮助新人了解行业，也帮助专业人士寻找项目与合作伙伴。",
+        value1Title: "知识",
+        value1Text: "用易于理解的方式介绍电影职业和制作流程。",
+        value2Title: "连接",
+        value2Text: "帮助创作者寻找团队成员和合作机会。",
+        value3Title: "实践",
+        value3Text: "打造一个让创意逐渐变成真实项目的空间。",
+        founderKicker: "项目创始人",
+        founderRole: "Kadr 创始人兼首席执行官",
+        founderText: "弗拉迪斯拉夫创立 Kadr，希望推动电影社区发展、促进知识交流并帮助创作者寻找合作伙伴。项目的目标是让更多希望参与电影创作的人能够接触并了解这个行业。",
+        socialKicker: "保持联系",
+        socialTitle: "关注 Kadr",
+        socialDescription: "选择你常用的平台，了解项目的最新动态。",
+        telegramDescription: "新闻与社区",
+        instagramDescription: "项目视觉故事",
+        youtubeDescription: "视频与教育内容",
+        vkDescription: "社区交流与动态",
+        contactTitle: "对 Kadr 有什么想法？",
+        contactText: "加入项目、探索电影学院，或在项目市场分享你的创意。",
+        contactButton: "加入我们 ↗",
+        copyright: "© Kadr. 电影人的创作空间。",
+        themeLight: "切换到浅色主题",
+        themeDark: "切换到深色主题",
+        linkNotSet: "此社交平台的链接尚未添加。"
       }
     };
 
-    const $ = id => document.getElementById(id);
+    let language = "ru";
 
-    function applyLanguage(lang) {
-      document.documentElement.lang = lang;
+    function translatePage(nextLanguage) {
+      language = dictionary[nextLanguage] ? nextLanguage : "ru";
+      document.documentElement.lang = language;
+      document.getElementById("language").value = language;
 
-      document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.dataset.i18n;
-        if (translations[lang][key]) {
-          el.innerHTML = translations[lang][key];
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.dataset.i18n;
+        if (dictionary[language][key]) {
+          element.textContent = dictionary[language][key];
         }
       });
 
-      document.title = lang === "en"
-        ? "About — Kadr"
-        : lang === "zh"
-          ? "关于项目 — Кадр"
-          : "О проекте — Кадр";
-
-      localStorage.setItem("kadr-language", lang);
+      updateThemeButton();
     }
+
+    function setTheme(theme) {
+      const dark = theme === "dark";
+      document.body.classList.toggle("dark", dark);
+      localStorage.setItem("kadr-theme", dark ? "dark" : "light");
+      updateThemeButton();
+    }
+
+    function updateThemeButton() {
+      const dark = document.body.classList.contains("dark");
+      const button = document.getElementById("themeToggle");
+      button.textContent = dark ? "☀" : "☾";
+      button.title = dark
+        ? dictionary[language].themeLight
+        : dictionary[language].themeDark;
+      button.setAttribute("aria-label", button.title);
+    }
+
+    document.getElementById("language").addEventListener("change", (event) => {
+      translatePage(event.target.value);
+      localStorage.setItem("kadr-language", event.target.value);
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      setTheme(document.body.classList.contains("dark") ? "light" : "dark");
+    });
+
+    document.querySelectorAll("[data-social]").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const key = link.dataset.social;
+        const url = SOCIAL_LINKS[key];
+
+        if (!url) {
+          event.preventDefault();
+          alert(dictionary[language].linkNotSet);
+          return;
+        }
+
+        try {
+          const parsed = new URL(url);
+          if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+            event.preventDefault();
+            alert(dictionary[language].linkNotSet);
+            return;
+          }
+
+          link.href = parsed.href;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+        } catch {
+          event.preventDefault();
+          alert(dictionary[language].linkNotSet);
+        }
+      });
+    });
+
+    const savedTheme = localStorage.getItem("kadr-theme");
+    setTheme(savedTheme === "dark" ? "dark" : "light");
 
     const savedLanguage = localStorage.getItem("kadr-language") || "ru";
-    $("language").value = translations[savedLanguage] ? savedLanguage : "ru";
-    applyLanguage($("language").value);
-
-    $("language").addEventListener("change", event => {
-      applyLanguage(event.target.value);
-    });
-
-    function applyTheme(theme) {
-      document.body.classList.toggle("dark", theme === "dark");
-      $("themeButton").textContent = theme === "dark" ? "☀" : "☾";
-      document.querySelector('meta[name="theme-color"]').content =
-        theme === "dark" ? "#111218" : "#f6f7fb";
-      localStorage.setItem("kadr-theme", theme);
-    }
-
-    applyTheme(localStorage.getItem("kadr-theme") || "light");
-
-    $("themeButton").addEventListener("click", () => {
-      applyTheme(document.body.classList.contains("dark") ? "light" : "dark");
-    });
-
-    $("year").textContent = new Date().getFullYear();
+    translatePage(savedLanguage);
   </script>
 </body>
 </html>
