@@ -1,133 +1,306 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Scenarist.PRO</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="manifest.json">
-  <!-- Иконки -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#F3F6FB">
+  <title>Kadr — Cinema Industry Platform</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Шрифт Inter для современного вида -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="light-theme">
 
-  <!-- Шапка с настройками -->
+  <!-- Стеклянная шапка -->
   <header class="glass-header">
-    <div class="logo">🎬 Scenarist<span class="accent">.PRO</span></div>
-    
-    <div class="controls">
-      <!-- Переключатель темы -->
-      <button id="theme-toggle" class="icon-btn" aria-label="Toggle Theme">
-        <i class="fas fa-moon"></i>
-      </button>
+    <div class="container header-inner">
+      <a href="/" class="logo" onclick="app.scrollToTop()">
+        <span class="logo-icon">🎬</span>
+        <span class="logo-text">Кадр</span>
+      </a>
       
-      <!-- Переключатель языка -->
-      <div class="lang-selector">
-        <button id="lang-btn" class="icon-btn">
-          <i class="fas fa-globe"></i> <span id="current-lang">RU</span>
+      <nav class="desktop-nav">
+        <a href="#orders" data-i18n="nav_orders" class="nav-link">Заказы</a>
+        <a href="#specialists" data-i18n="nav_specialists" class="nav-link">Специалисты</a>
+        <a href="#learning" data-i18n="nav_learning" class="nav-link">Обучение</a>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Переключатель темы -->
+        <button id="theme-btn" class="icon-btn" aria-label="Toggle Theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         </button>
-        <div class="lang-dropdown" id="lang-menu">
-          <div onclick="setLanguage('ru')">🇺 Русский</div>
-          <div onclick="setLanguage('en')">🇺🇸 English</div>
-          <div onclick="setLanguage('zh')">🇨🇳 中文</div>
+
+        <!-- Переключатель языка -->
+        <div class="lang-wrapper">
+          <button id="lang-btn" class="text-btn">RU ▾</button>
+          <div class="glass-dropdown" id="lang-menu">
+            <div onclick="app.setLanguage('ru')">Русский</div>
+            <div onclick="app.setLanguage('en')">English</div>
+            <div onclick="app.setLanguage('zh')">中文</div>
+          </div>
         </div>
+
+        <button class="mobile-menu-btn" onclick="app.toggleMobileMenu()" aria-label="Menu">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
       </div>
     </div>
   </header>
 
+  <!-- Мобильное меню (Glass Panel) -->
+  <div class="mobile-glass-menu" id="mobileMenu">
+    <div class="menu-content">
+      <a href="#orders" onclick="app.closeMobileMenu()" data-i18n="nav_orders">Заказы</a>
+      <a href="#specialists" onclick="app.closeMobileMenu()" data-i18n="nav_specialists">Специалисты</a>
+      <a href="#learning" onclick="app.closeMobileMenu()" data-i18n="nav_learning">Обучение</a>
+      <hr class="menu-divider">
+      <a href="terms.html" data-i18n="doc_terms">Соглашение</a>
+      <a href="privacy.html" data-i18n="doc_privacy">Конфиденциальность</a>
+      <a href="mailto:vladrozhentsev@zohomail.com" data-i18n="contact_email">Написать на почту</a>
+    </div>
+  </div>
+
   <main>
-    <!-- Главный экран -->
-    <section id="hero">
-      <h1 data-key="hero_title">Профессиональные документы для кино — за 2 минуты</h1>
-      <p data-key="hero_subtitle">Сценарии, брифы, ТЗ. Бесплатно. Без регистрации.</p>
-      <button class="primary-btn" onclick="startGenerator()" data-key="btn_start">Начать сейчас</button>
-    </section>
-
-    <!-- Выбор шаблона -->
-    <section id="templates" style="display:none;">
-      <h2 data-key="select_template">Выберите тип документа</h2>
-      <div class="grid">
-        <div class="card glass-card" onclick="openTemplate('script')">
-          <div class="icon"><i class="fas fa-scroll"></i></div>
-          <h3 data-key="type_script">Сценарий</h3>
-          <p data-key="desc_script">Стандарты индустрии</p>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <h1 class="hero-title" data-i18n="hero_title">Находи заказы. Собирай команду.</h1>
+          <p class="hero-subtitle" data-i18n="hero_subtitle">Платформа для специалистов кино и видеопроизводства. Находи проекты, партнёров и развивай навыки.</p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary btn-lg" onclick="app.scrollToId('orders')" data-i18n="btn_find_order">Найти заказ</button>
+            <button class="btn btn-glass btn-lg" onclick="app.scrollToId('specialists')" data-i18n="btn_find_spec">Найти специалиста</button>
+          </div>
+          <a href="#how-it-works" class="hero-link" data-i18n="btn_how_it_works">Как это работает ↓</a>
         </div>
-        <div class="card glass-card" onclick="openTemplate('brief')">
-          <div class="icon"><i class="fas fa-file-contract"></i></div>
-          <h3 data-key="type_brief">Бриф</h3>
-          <p data-key="desc_brief">Для заказчика</p>
-        </div>
-        <div class="card glass-card" onclick="openTemplate('tz')">
-          <div class="icon"><i class="fas fa-tasks"></i></div>
-          <h3 data-key="type_tz">Тех. задание</h3>
-          <p data-key="desc_tz">Для съемочной группы</p>
-        </div>
-        <div class="card glass-card" onclick="openTemplate('content')">
-          <div class="icon"><i class="fas fa-calendar-alt"></i></div>
-          <h3 data-key="type_content">Контент-план</h3>
-          <p data-key="desc_content">Для соцсетей</p>
+        <div class="hero-card-demo glass-panel">
+          <div class="card-badge active" data-i18n="status_active">Активен</div>
+          <h3 data-i18n="demo_title">Монтажёр для короткометражки</h3>
+          <p class="card-meta">Бюджет: 50 000 ₽ • Москва</p>
+          <div class="tags">
+            <span class="tag" data-i18n="tag_edit">Монтаж</span>
+            <span class="tag" data-i18n="tag_cinema">Кино</span>
+          </div>
         </div>
       </div>
-      <button class="secondary-btn" onclick="goHome()" data-key="btn_back">Назад</button>
     </section>
 
-    <!-- Генератор -->
-    <section id="generator" style="display:none;">
-      <h2 id="template-title">Редактирование</h2>
-      <form id="doc-form" class="glass-form"></form>
-      <div class="actions">
-        <button class="primary-btn" onclick="generateDocument()" data-key="btn_generate">Сгенерировать</button>
-        <button class="secondary-btn" onclick="closeGenerator()" data-key="btn_cancel">Отмена</button>
-      </div>
-    </section>
-
-    <!-- Результат -->
-    <section id="result" style="display:none;">
-      <h2 data-key="res_title">Ваш документ готов!</h2>
-      <div id="preview" class="glass-preview"></div>
-      <div class="actions">
-        <button class="primary-btn" onclick="exportPDF()" data-key="btn_pdf"><i class="fas fa-file-pdf"></i> PDF</button>
-        <button class="secondary-btn" onclick="shareLink()" data-key="btn_share"><i class="fas fa-share-alt"></i> Ссылка</button>
-        <button class="premium-btn" onclick="upgradePro()" data-key="btn_pro">Upgrade PRO</button>
-      </div>
-      <button class="text-btn" onclick="closeResult()" data-key="btn_new">Создать новый</button>
-    </section>
-
-    <!-- Тарифы -->
-    <section id="pricing">
-      <h2 data-key="pricing_title">Тарифы</h2>
-      <div class="grid">
-        <div class="card glass-card">
-          <h3>Free</h3>
-          <p class="price">0 ₽</p>
-          <ul>
-            <li data-key="feat_basic">Базовые шаблоны</li>
-            <li data-key="feat_export">Экспорт PDF</li>
-          </ul>
+    <!-- Features -->
+    <section class="features-section">
+      <div class="container">
+        <h2 class="section-title" data-i18n="feat_title">Что можно сделать?</h2>
+        <div class="features-grid">
+          <div class="feature-card glass-panel">
+            <div class="f-icon">💼</div>
+            <h3 data-i18n="feat_1_title">Найти заказ</h3>
+            <p data-i18n="feat_1_desc">Просматривай проекты, фильтруй по бюджету и откликайся.</p>
+            <button class="btn btn-secondary" onclick="app.scrollToId('orders')" data-i18n="btn_view_orders">Смотреть заказы</button>
+          </div>
+          <div class="feature-card glass-panel">
+            <div class="f-icon">👥</div>
+            <h3 data-i18n="feat_2_title">Найти специалиста</h3>
+            <p data-i18n="feat_2_desc">Каталог режиссёров, операторов и монтажёров с портфолио.</p>
+            <button class="btn btn-secondary" onclick="app.scrollToId('specialists')" data-i18n="btn_view_specs">Открыть каталог</button>
+          </div>
+          <div class="feature-card glass-panel">
+            <div class="f-icon">📚</div>
+            <h3 data-i18n="feat_3_title">Развиваться</h3>
+            <p data-i18n="feat_3_desc">Гайды по съёмке, монтажу и поиску клиентов.</p>
+            <button class="btn btn-secondary" onclick="app.scrollToId('learning')" data-i18n="btn_view_learn">Перейти к материалам</button>
+          </div>
         </div>
-        <div class="card glass-card premium-card">
-          <div class="badge">POPULAR</div>
-          <h3>Pro</h3>
-          <p class="price">299 ₽<span>/мес</span></p>
-          <ul>
-            <li data-key="feat_all">Все шаблоны</li>
-            <li data-key="feat_logo">Свой логотип</li>
-            <li data-key="feat_support">Приоритет</li>
-          </ul>
-          <button class="primary-btn" onclick="buyPro()" data-key="btn_buy">Купить</button>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how-it-works" class="how-section">
+      <div class="container">
+        <h2 class="section-title" data-i18n="how_title">Как это работает</h2>
+        <div class="role-switcher">
+          <button class="switch-btn active" onclick="app.switchRole('executor')" data-i18n="role_exec">Я исполнитель</button>
+          <button class="switch-btn" onclick="app.switchRole('client')" data-i18n="role_client">Я заказчик</button>
+        </div>
+        
+        <div class="steps-wrapper">
+          <!-- Steps for Executor -->
+          <div class="steps-list executor-steps active">
+            <div class="step-item">
+              <span class="step-num">1</span>
+              <div>
+                <h4 data-i18n="step_e1_h">Создай профиль</h4>
+                <p data-i18n="step_e1_p">Добавь портфолио и укажи специализацию.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-num">2</span>
+              <div>
+                <h4 data-i18n="step_e2_h">Отправь отклик</h4>
+                <p data-i18n="step_e2_p">Выбери подходящий заказ и напиши сопроводительное.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-num">3</span>
+              <div>
+                <h4 data-i18n="step_e3_h">Начни работу</h4>
+                <p data-i18n="step_e3_p">Обсуди детали с заказчиком и приступай.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Steps for Client -->
+          <div class="steps-list client-steps">
+            <div class="step-item">
+              <span class="step-num">1</span>
+              <div>
+                <h4 data-i18n="step_c1_h">Размести задачу</h4>
+                <p data-i18n="step_c1_p">Опиши проект, бюджет и сроки.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-num">2</span>
+              <div>
+                <h4 data-i18n="step_c2_h">Выбери кандидата</h4>
+                <p data-i18n="step_c2_p">Изучи отклики и портфолио специалистов.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-num">3</span>
+              <div>
+                <h4 data-i18n="step_c3_h">Свяжись</h4>
+                <p data-i18n="step_c3_p">Обсуди детали и начни сотрудничество.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Orders Section -->
+    <section id="orders" class="content-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="sec_orders">Биржа заказов</h2>
+          <button class="btn btn-primary" onclick="app.openModal('orderModal')" data-i18n="btn_post_order">+ Разместить</button>
+        </div>
+        
+        <div class="filters-bar glass-panel">
+          <input type="text" id="orderSearch" class="filter-input" placeholder="Поиск..." oninput="app.filterOrders()">
+          <select id="orderSpecFilter" class="filter-select" onchange="app.filterOrders()">
+            <option value="">Все специальности</option>
+            <option value="director" data-i18n="cat_dir">Режиссёр</option>
+            <option value="editor" data-i18n="cat_edit">Монтажёр</option>
+            <option value="operator" data-i18n="cat_op">Оператор</option>
+          </select>
+        </div>
+
+        <div id="ordersList" class="cards-grid"></div>
+        <div id="emptyOrders" class="empty-state" style="display:none">
+          <p data-i18n="empty_orders">Пока нет заказов. Будь первым!</p>
+          <button class="btn btn-primary" onclick="app.openModal('orderModal')" data-i18n="btn_create_first">Разместить заказ</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specialists Section -->
+    <section id="specialists" class="content-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="sec_specs">Специалисты</h2>
+          <button class="btn btn-primary" onclick="app.openModal('profileModal')" data-i18n="btn_create_prof">+ Профиль</button>
+        </div>
+        
+        <div class="categories-bar" id="specCats">
+          <button class="cat-btn active" onclick="app.filterSpecs('all')" data-i18n="cat_all">Все</button>
+          <button class="cat-btn" onclick="app.filterSpecs('director')" data-i18n="cat_dir">Режиссёр</button>
+          <button class="cat-btn" onclick="app.filterSpecs('editor')" data-i18n="cat_edit">Монтажёр</button>
+        </div>
+
+        <div id="specsList" class="cards-grid"></div>
+      </div>
+    </section>
+
+    <!-- Learning Section -->
+    <section id="learning" class="content-section">
+      <div class="container">
+        <h2 class="section-title" data-i18n="sec_learn">Обучение</h2>
+        <div id="learnList" class="cards-grid"></div>
+      </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="cta-section glass-panel">
+      <div class="container text-center">
+        <h2 data-i18n="cta_title">Начни со своей задачи</h2>
+        <div class="hero-buttons" style="justify-content: center; margin-top: 20px;">
+          <button class="btn btn-primary" onclick="app.scrollToId('orders')" data-i18n="btn_find_order">Найти заказ</button>
+          <button class="btn btn-glass" onclick="app.scrollToId('specialists')" data-i18n="btn_find_spec">Найти специалиста</button>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <p>© 2026 Scenarist.PRO by Vlad Rozhentsev</p>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h4>Кадр</h4>
+        <p class="footer-desc" data-i18n="footer_desc">Платформа для кинопрофессионалов.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="foot_nav">Навигация</h4>
+        <a href="#" onclick="app.scrollToTop()" data-i18n="foot_home">Главная</a>
+        <a href="#orders" data-i18n="foot_orders">Заказы</a>
+        <a href="#specialists" data-i18n="foot_specs">Специалисты</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="foot_docs">Документы</h4>
+        <a href="terms.html" data-i18n="doc_terms">Соглашение</a>
+        <a href="privacy.html" data-i18n="doc_privacy">Конфиденциальность</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="foot_contact">Контакты</h4>
+        <a href="mailto:vladrozhentsev@zohomail.com">Email</a>
+        <a href="https://t.me/rvkinos" target="_blank">Telegram</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span id="year">2026</span> Кадр. <span data-i18n="foot_rights">Все права защищены.</span></p>
+    </div>
   </footer>
 
-  <!-- Подключаем библиотеки -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  
-  <script src="translations.js"></script>
+  <!-- Modals -->
+  <div id="orderModal" class="modal-overlay">
+    <div class="glass-modal">
+      <span class="modal-close" onclick="app.closeModal('orderModal')">&times;</span>
+      <h3 data-i18n="modal_order_title">Разместить заказ</h3>
+      <form onsubmit="app.createOrder(event)">
+        <div class="form-group"><label data-i18n="lbl_title">Название</label><input name="title" required></div>
+        <div class="form-group"><label data-i18n="lbl_desc">Описание</label><textarea name="desc" required></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="lbl_spec">Специальность</label><select name="spec"><option value="director">Режиссёр</option><option value="editor">Монтажёр</option></select></div>
+          <div class="form-group"><label data-i18n="lbl_budget">Бюджет</label><select name="budget"><option value="low">до 30к</option><option value="med">30-100к</option></select></div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="btn_publish">Опубликовать</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="profileModal" class="modal-overlay">
+    <div class="glass-modal">
+      <span class="modal-close" onclick="app.closeModal('profileModal')">&times;</span>
+      <h3 data-i18n="modal_prof_title">Профиль специалиста</h3>
+      <form onsubmit="app.createProfile(event)">
+        <div class="form-group"><label data-i18n="lbl_name">Имя</label><input name="name" required></div>
+        <div class="form-group"><label data-i18n="lbl_spec">Специальность</label><select name="spec"><option value="director">Режиссёр</option><option value="editor">Монтажёр</option></select></div>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="btn_create">Создать</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="notifyArea" class="notify-container"></div>
+
   <script src="script.js"></script>
 </body>
 </html>
