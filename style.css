@@ -1,0 +1,138 @@
+:root {
+  --bg-color: #f0f2f5;
+  --text-color: #1a1a1a;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --border: rgba(0, 0, 0, 0.1);
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+.dark-theme {
+  --bg-color: #0f172a;
+  --text-color: #e2e8f0;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --accent: #60a5fa;
+  --accent-hover: #3b82f6;
+  --border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; transition: background 0.3s, color 0.3s; }
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  padding-bottom: 2rem;
+}
+
+/* Glassmorphism */
+.glass-header, .glass-card, .glass-form, .glass-preview {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin: 1rem;
+}
+
+.logo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+.accent { color: var(--accent); }
+
+.controls { display: flex; gap: 10px; align-items: center; }
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.lang-selector { position: relative; }
+.lang-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: none;
+  min-width: 120px;
+  box-shadow: var(--shadow);
+}
+.lang-dropdown.active { display: block; animation: fadeIn 0.2s; }
+.lang-dropdown div {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.lang-dropdown div:hover { background: rgba(128,128,128,0.1); }
+
+main { padding: 1rem; max-width: 800px; margin: 0 auto; }
+
+#hero { text-align: center; padding: 3rem 1rem; margin-bottom: 2rem; }
+#hero h1 { font-size: 2.2rem; margin-bottom: 1rem; line-height: 1.2; }
+#hero p { font-size: 1.1rem; opacity: 0.8; margin-bottom: 2rem; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+
+.card { padding: 1.5rem; text-align: center; cursor: pointer; position: relative; overflow: hidden; }
+.card:hover { transform: translateY(-5px); }
+.card .icon { font-size: 2rem; color: var(--accent); margin-bottom: 1rem; }
+.card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.card p { font-size: 0.9rem; opacity: 0.7; }
+
+.premium-card { border: 2px solid var(--accent); }
+.badge { position: absolute; top: 10px; right: 10px; background: var(--accent); color: white; font-size: 0.7rem; padding: 4px 8px; border-radius: 20px; font-weight: bold; }
+.price { font-size: 1.5rem; font-weight: bold; margin: 1rem 0; }
+.price span { font-size: 0.9rem; font-weight: normal; opacity: 0.7; }
+
+/* Buttons */
+button { font-weight: 600; cursor: pointer; border: none; outline: none; }
+.primary-btn { background: var(--accent); color: white; padding: 12px 24px; border-radius: 12px; width: 100%; font-size: 1rem; margin-top: 10px; }
+.primary-btn:hover { background: var(--accent-hover); }
+.secondary-btn { background: transparent; border: 1px solid var(--border); color: var(--text-color); padding: 12px 24px; border-radius: 12px; width: 100%; margin-top: 10px; }
+.premium-btn { background: linear-gradient(45deg, #f59e0b, #d97706); color: white; padding: 12px 24px; border-radius: 12px; width: 100%; margin-top: 10px; }
+.text-btn { background: none; color: var(--text-color); text-decoration: underline; margin-top: 1rem; width: auto; padding: 0; }
+
+/* Form & Result */
+.glass-form { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0; }
+.glass-form label { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; display: block; }
+.glass-form input, .glass-form textarea {
+  width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border);
+  background: rgba(128,128,128,0.05); color: var(--text-color); font-size: 1rem;
+}
+.glass-form textarea { resize: vertical; min-height: 100px; }
+
+.glass-preview { padding: 1.5rem; white-space: pre-wrap; font-family: monospace; font-size: 0.9rem; margin: 1.5rem 0; max-height: 300px; overflow-y: auto; }
+
+.actions { display: flex; flex-direction: column; gap: 10px; }
+
+footer { text-align: center; font-size: 0.8rem; opacity: 0.5; margin-top: 3rem; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (min-width: 600px) {
+  .actions { flex-direction: row; }
+  button { width: auto; flex: 1; }
+}
