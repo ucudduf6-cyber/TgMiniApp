@@ -3,62 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Кадр — Киноиндустрия</title>
+  <title>Сценарист.PRO — Генератор документов для кино</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json">
 </head>
-<body>
+<body class="dark-theme">
   <header>
-    <div class="logo">🎬 Кадр</div>
+    <div class="logo">🎬 Сценарист.PRO</div>
     <nav>
-      <a href="#orders">Биржа заказов</a>
-      <a href="#partners">Партнёры</a>
-      <a href="#learn">Обучалка</a>
+      <a href="#templates">Шаблоны</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="#about">О нас</a>
     </nav>
   </header>
 
   <main>
     <section id="hero">
-      <h1>Свои люди. Настоящее кино.</h1>
-      <p>Работа, коллаборации и знания для тех, кто создаёт будущее кинематографа.</p>
+      <h1>Профессиональные документы для кино — за 2 минуты</h1>
+      <p>Сценарии, брифы, ТЗ, контент-планы. Бесплатно. Без регистрации.</p>
+      <button onclick="startGenerator()">Начать сейчас</button>
     </section>
 
-    <section id="orders">
-      <h2> Биржа заказов</h2>
-      <div class="card">
-        <h3>Нужен монтажёр для короткометражки</h3>
-        <p>Бюджет: 15 000 ₽ | Срок: 7 дней</p>
-        <button>Откликнуться</button>
-      </div>
-      <div class="card">
-        <h3>Ищем оператора для съёмки клипа</h3>
-        <p>Бюджет: 20 000 ₽ | Срок: 3 дня</p>
-        <button>Откликнуться</button>
+    <section id="templates">
+      <h2>Выберите тип документа</h2>
+      <div class="grid">
+        <div class="card" onclick="openTemplate('script')">
+          <h3>📜 Сценарий</h3>
+          <p>По стандартам Голливуда и российского кино</p>
+        </div>
+        <div class="card" onclick="openTemplate('brief')">
+          <h3>📋 Бриф для заказчика</h3>
+          <p>Чёткое ТЗ для видеомейкеров и студий</p>
+        </div>
+        <div class="card" onclick="openTemplate('tz')">
+          <h3>📄 Техническое задание</h3>
+          <p>Для съёмочной группы и постпродакшна</p>
+        </div>
+        <div class="card" onclick="openTemplate('content')">
+          <h3> Контент-план</h3>
+          <p>Для YouTube, TikTok, Instagram</p>
+        </div>
       </div>
     </section>
 
-    <section id="partners">
-      <h2>🤝 Поиск партнёров</h2>
-      <div class="card">
-        <h3>Режиссёр — Влад Роженцев</h3>
-        <p>Опыт: 10+ лет | Проекты: Золото скифов, RVKINO</p>
-        <button>Связаться</button>
+    <section id="generator" style="display:none;">
+      <h2 id="template-title">Редактирование документа</h2>
+      <form id="doc-form">
+        <!-- Поля будут добавлены динамически -->
+      </form>
+      <div class="actions">
+        <button onclick="generateDocument()">Сгенерировать</button>
+        <button onclick="closeGenerator()" class="secondary">Назад</button>
       </div>
     </section>
 
-    <section id="learn">
-      <h2>📚 Кинообучалка</h2>
-      <div class="card">
-        <h3>Как снять фильм за 0 рублей</h3>
-        <p>Пошаговая инструкция от Влада Роженцева</p>
-        <button>Читать</button>
+    <section id="result" style="display:none;">
+      <h2>Ваш документ готов!</h2>
+      <div id="preview"></div>
+      <div class="actions">
+        <button onclick="exportPDF()">Скачать PDF</button>
+        <button onclick="shareLink()">Поделиться ссылкой</button>
+        <button onclick="upgradePro()" class="premium">Upgrade to Pro</button>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <h2>Тарифы</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Free</h3>
+          <p>0 ₽/мес</p>
+          <ul>
+            <li>Базовые шаблоны</li>
+            <li>Экспорт без бренда</li>
+            <li>Публичные ссылки</li>
+          </ul>
+        </div>
+        <div class="card premium">
+          <h3>Pro</h3>
+          <p>299 ₽/мес</p>
+          <ul>
+            <li>Все шаблоны</li>
+            <li>Свой логотип</li>
+            <li>Приоритетная поддержка</li>
+          </ul>
+          <button onclick="buyPro()">Купить</button>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <p>© 2026 Кадр — сообщество кино. Создано Владом Роженцевым.</p>
+    <p>© 2026 Сценарист.PRO. Создано Владом Роженцевым.</p>
   </footer>
 
+  <script src="templates.js"></script>
   <script src="script.js"></script>
+  <script src="export.js"></script>
+  <script src="telegram.js"></script>
+  <script src="analytics.js"></script>
 </body>
 </html>
