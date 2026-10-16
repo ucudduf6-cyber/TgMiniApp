@@ -3,628 +3,203 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101522">
-<title>My College — расписание пар</title>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0a0c">
+<title>UNMIND — Make the internet useful</title>
 <style>
-:root {
-  --bg:#101522;--panel:#191f2e;--panel2:#222a3b;
-  --line:#30394c;--text:#f4f6ff;--muted:#929db4;
-  --green:#a9f17a;--blue:#91aaff;--orange:#ffcb83;
-}
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root{--bg:#0a0a0c;--panel:#111114;--line:#242429;--muted:#8a8a98;--text:#f5f5f7;--purple:#a78bfa;--green:#b7f7cf}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
-button,input,select,textarea{font:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif}
+button,input,select{font:inherit}
 button{cursor:pointer}
-.wrap{width:min(1120px,calc(100% - 32px));margin:auto}
-header{border-bottom:1px solid var(--line);background:#101522;position:sticky;top:0;z-index:5}
-.nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:15px}
-.logo{font-size:21px;font-weight:900;letter-spacing:-1px}
-.logo span{color:var(--green)}
-.tag{font-size:11px;color:var(--muted)}
-.hero{padding:40px 0 25px}
-.eyebrow{color:var(--green);font-size:11px;letter-spacing:2px;text-transform:uppercase}
-h1{font-size:clamp(35px,6vw,56px);letter-spacing:-2px;line-height:1.05;margin:14px 0}
-.subtitle{color:var(--muted);line-height:1.7;max-width:620px;font-size:14px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}
-h2{font-size:19px;margin:0 0 17px}
-h3{font-size:15px;margin:0 0 10px}
-.setup{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.field{margin-bottom:14px}
-label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}
-input,select,textarea{width:100%;padding:12px;background:#111725;border:1px solid #354056;border-radius:10px;color:var(--text);min-width:0}
-input[type=file]{font-size:12px}
-button{border:0;border-radius:10px;padding:12px 15px;font-weight:750}
-.primary{background:var(--green);color:#172013}
-.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
-button:hover{filter:brightness(1.08)}
-.full{width:100%}
-.small{font-size:12px;color:var(--muted);line-height:1.65}
-.drop{border:1px dashed #52617a;border-radius:13px;padding:20px;text-align:center;background:#141b29}
-.drop strong{display:block;margin-bottom:8px}
-.drop input{margin-top:12px}
-.actions{display:flex;gap:9px;flex-wrap:wrap}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
-.stat{padding:17px;background:var(--panel);border:1px solid var(--line);border-radius:15px}
-.stat-label{font-size:11px;color:var(--muted)}
-.stat-value{font-size:clamp(18px,3vw,26px);font-weight:850;margin-top:9px}
-.green{color:var(--green)}
-.blue{color:var(--blue)}
-.orange{color:var(--orange)}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:30px 0 14px}
-.section-head h2{margin:0}
-.current{background:linear-gradient(130deg,#263b35,#1b2930);border:1px solid #476653;border-radius:18px;padding:23px;margin:15px 0}
-.current .label{font-size:11px;color:#b7d6bf;letter-spacing:1.5px;text-transform:uppercase}
-.current h2{font-size:26px;margin:12px 0 7px}
-.current p{color:#d0dfd4;font-size:13px;line-height:1.6;margin:5px 0}
-.time{font-size:20px;font-weight:850;margin-top:13px}
-.timeline{display:grid;gap:10px}
-.lesson{display:grid;grid-template-columns:100px 1fr auto;gap:15px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
-.lesson.active{border-color:var(--green);background:#202b2b}
-.lesson-time{font-weight:800;font-size:13px}
-.lesson-time small{display:block;color:var(--muted);font-size:11px;margin-top:5px}
-.lesson-name{font-weight:750;overflow-wrap:anywhere}
-.lesson-meta{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.6}
-.badge{font-size:10px;padding:6px 9px;border-radius:999px;background:#293143;color:#c8d2e7;white-space:nowrap}
-.lesson.active .badge{background:#314c36;color:var(--green)}
-.empty{padding:30px 18px;border:1px dashed #46516a;border-radius:14px;text-align:center;color:var(--muted);line-height:1.7}
-details{margin-top:15px}
-summary{cursor:pointer;color:var(--blue);font-size:13px}
-.manual{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}
-.manual .field{margin:0}
-.notice{background:#252438;border:1px solid #454060;border-radius:12px;padding:13px;color:#d5d1ff;font-size:12px;line-height:1.6;margin-top:14px}
-footer{border-top:1px solid var(--line);margin-top:45px;padding:25px 0;color:var(--muted);font-size:11px;line-height:1.7}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#efffe4;color:#152013;padding:13px 18px;border-radius:12px;display:none;z-index:10;font-size:13px;max-width:90%;text-align:center}
-.toast.show{display:block}
-@media(max-width:700px){
- .setup{grid-template-columns:1fr}
- .stats{gap:7px}
- .stat{padding:12px}
- .lesson{grid-template-columns:78px 1fr;gap:10px}
- .lesson>.badge{grid-column:2;justify-self:start}
- .panel{padding:16px}
- .hero{padding-top:30px}
- .tag{display:none}
-}
-@media(max-width:390px){.manual{grid-template-columns:1fr}.lesson-time{font-size:12px}}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+aside{border-right:1px solid var(--line);padding:27px 18px;display:flex;flex-direction:column;gap:34px}
+.logo{font-family:Manrope,sans-serif;font-size:23px;font-weight:800;letter-spacing:-1.4px;padding:0 10px}
+.logo span{color:var(--purple)}
+.tag{font-size:10px;letter-spacing:2px;color:var(--muted);padding:0 10px;margin-bottom:12px}
+.nav{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:none;color:#a5a5b0;padding:12px 11px;border-radius:10px;font-size:13px}
+.nav.active,.nav:hover{background:#1a1822;color:white}
+.nav.active{box-shadow:inset 2px 0 var(--purple)}
+.nav .ico{width:20px;text-align:center;font-size:16px}
+.bottom{margin-top:auto;border:1px solid var(--line);border-radius:14px;padding:15px;background:linear-gradient(140deg,#19151f,#101013)}
+.bottom p{font-size:12px;color:var(--muted);line-height:1.6}
+.smallbtn{border:1px solid #393342;color:#e5d9ff;background:#211a2b;border-radius:8px;padding:9px 11px;font-size:12px}
+main{padding:30px clamp(20px,4vw,56px);max-width:1600px;width:100%;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:48px}
+.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--purple)}
+h1,h2,h3,p{margin-top:0}
+h1{font:700 clamp(30px,4vw,47px)/1.15 Manrope,sans-serif;letter-spacing:-2px;margin:13px 0}
+.sub{color:var(--muted);font-size:14px;line-height:1.7}
+.avatar{width:39px;height:39px;display:grid;place-items:center;border:1px solid #38303f;border-radius:50%;background:#211a2b;color:#ddceff}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:30px}
+.primary{border:0;background:#e9ddff;color:#17101f;border-radius:10px;padding:13px 18px;font-size:13px;font-weight:700;transition:.2s}
+.primary:hover{background:white;transform:translateY(-1px)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:36px}
+.stat,.card,.searchbox,.empty{border:1px solid var(--line);background:var(--panel);border-radius:15px}
+.stat{padding:19px}
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-num{font:700 29px Manrope,sans-serif;letter-spacing:-1px;margin:12px 0 5px}
+.stat-note{font-size:11px;color:#b8b0c8}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:17px}
+h2{font:700 19px Manrope,sans-serif;letter-spacing:-.5px;margin:0}
+.searchbox{display:flex;align-items:center;gap:10px;padding:0 14px;max-width:360px;width:100%}
+.searchbox input{width:100%;background:none;border:0;outline:0;color:white;padding:13px 0;font-size:12px}
+.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:19px;padding-bottom:4px}
+.filter{white-space:nowrap;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--muted);padding:9px 13px;font-size:12px}
+.filter.active{background:#211b2b;border-color:#55416d;color:#e8dcff}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.card{padding:17px;min-width:0;transition:.2s;display:flex;flex-direction:column;min-height:210px}
+.card:hover{border-color:#4a4059;transform:translateY(-2px)}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}
+.site-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:11px;background:#201c29;font-size:17px}
+.kind{font-size:10px;color:var(--purple);background:#1c1825;padding:6px 8px;border-radius:6px}
+.card h3{font:600 15px/1.5 Manrope,sans-serif;letter-spacing:-.3px;margin-bottom:8px;overflow-wrap:anywhere}
+.card p{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:17px}
+.card-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto}
+.domain{font-size:10px;color:#777783;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.actions{display:flex;gap:6px}
+.iconbtn{border:1px solid var(--line);background:#17171b;color:#c6c5d0;border-radius:8px;padding:7px 9px}
+.iconbtn:hover{border-color:#73628e}
+.empty{padding:42px 20px;text-align:center;color:var(--muted);grid-column:1/-1;font-size:13px}
+footer{border-top:1px solid var(--line);margin-top:48px;padding-top:20px;display:flex;justify-content:space-between;gap:15px;color:#62626e;font-size:11px}
+dialog{width:min(460px,calc(100% - 28px));background:#121216;color:white;border:1px solid #35313d;border-radius:18px;padding:25px}
+dialog::backdrop{background:#000b;backdrop-filter:blur(6px)}
+dialog h2{margin-bottom:20px}
+.field{display:flex;flex-direction:column;gap:8px;margin-bottom:15px}
+.field label{font-size:12px;color:#aaa6b5}
+.field input,.field select{width:100%;padding:12px;background:#0b0b0e;border:1px solid #302e37;border-radius:9px;color:white;outline:none}
+.field input:focus,.field select:focus{border-color:#8c72b5}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.secondary{border:1px solid var(--line);background:transparent;color:#ccc;padding:11px 15px;border-radius:9px}
+.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#e9ddff;color:#17101f;border-radius:10px;padding:12px 18px;font-size:12px;box-shadow:0 8px 40px #0008;z-index:10}
+.hidden{display:none!important}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.layout{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--line);padding:17px;gap:17px}.logo{padding:0}.navwrap{display:flex;gap:5px;overflow:auto}.nav{width:auto;white-space:nowrap;padding:10px}.nav .ico{width:auto}.bottom,.tag{display:none}main{padding:25px 17px}.top{margin-bottom:32px}.hero{align-items:flex-start;flex-direction:column}.stats{gap:8px}.stat{padding:12px}.stat-num{font-size:24px}.stat-note{font-size:10px}.grid{grid-template-columns:1fr}.card{min-height:175px}.section-head{align-items:flex-start;flex-direction:column}.searchbox{max-width:none}footer{flex-direction:column}}
 </style>
 </head>
 <body>
-<header>
- <div class="wrap nav">
-  <div class="logo">MY COLLEGE<span>.</span></div>
-  <div class="tag">ТВОЁ РАСПИСАНИЕ · ВСЕГДА ПОД РУКОЙ</div>
-  <button class="secondary" id="todayBtn">Сегодня ↻</button>
- </div>
-</header>
-
-<main class="wrap">
- <section class="hero">
-  <div class="eyebrow">STUDENT PLANNER</div>
-  <h1>Знай, что у тебя<br>за следующая пара.</h1>
-  <p class="subtitle">Загрузи расписание один раз. Выбери курс и дату — приложение покажет текущую пару, следующую и весь оставшийся учебный день.</p>
- </section>
-
- <section class="setup">
-  <div class="panel">
-   <h2>01 / Твоё расписание</h2>
-   <div class="drop">
-    <strong>📂 Загрузи файл расписания</strong>
-    <div class="small">Excel, CSV, PDF или TXT. Файл обрабатывается в браузере.</div>
-    <input id="fileInput" type="file" accept=".xlsx,.xls,.csv,.pdf,.txt">
-   </div>
-   <p class="small" id="fileStatus">Расписание ещё не загружено. Можно попробовать демо-данные.</p>
-   <div class="actions">
-    <button class="secondary" id="demoBtn">Показать пример</button>
-    <button class="secondary" id="clearBtn">Удалить расписание</button>
-   </div>
-   <div class="notice">Совет: в Excel лучше всего работает таблица, где отдельные столбцы содержат день, курс или группу, время, предмет, преподавателя и аудиторию. Формат расписания у колледжей различается, поэтому импорт нужно проверить.</div>
+<div class="layout">
+<aside>
+  <div class="logo">UN<span>MIND</span><div style="font-size:10px;color:#777783;font-weight:500;letter-spacing:2px;margin-top:5px">YOUR SECOND BRAIN</div></div>
+  <div>
+    <div class="tag">WORKSPACE</div>
+    <div class="navwrap">
+      <button class="nav active" data-filter="Все"><span class="ico">◈</span> Обзор</button>
+      <button class="nav" data-filter="Идеи"><span class="ico">✳</span> Идеи</button>
+      <button class="nav" data-filter="Учёба"><span class="ico">⌘</span> Учёба</button>
+      <button class="nav" data-filter="Работа"><span class="ico">▧</span> Работа</button>
+      <button class="nav" data-filter="На потом"><span class="ico">◷</span> На потом</button>
+    </div>
   </div>
-
-  <div class="panel">
-   <h2>02 / Укажи свои данные</h2>
-   <div class="field">
-    <label for="course">Курс</label>
-    <input id="course" list="courseOptions" placeholder="Например, 1 курс">
-    <datalist id="courseOptions"></datalist>
-   </div>
-   <div class="field">
-    <label for="group">Группа (если есть)</label>
-    <input id="group" list="groupOptions" placeholder="Например, ICT-1A">
-    <datalist id="groupOptions"></datalist>
-   </div>
-   <div class="field">
-    <label for="dayDate">На какую дату показать пары?</label>
-    <input id="dayDate" type="date">
-   </div>
-   <div class="field">
-    <label for="startTime">Начало учебного дня (если не указано в файле)</label>
-    <input id="startTime" type="time" value="08:30">
-   </div>
-   <button class="primary full" id="applyBtn">Показать моё расписание →</button>
-   <p class="small">Курс и группа фильтруют данные, если эти сведения есть в таблице.</p>
+  <div class="bottom">
+    <div style="font-size:13px;font-weight:700">Меньше хаоса.</div>
+    <div style="font-size:13px;font-weight:700;color:#c9b4f7">Больше результата.</div>
+    <p>Сохраняй важное. Возвращайся к нужному. Двигайся вперёд.</p>
+    <button class="smallbtn" onclick="openModal()">+ Добавить материал</button>
   </div>
- </section>
+</aside>
 
- <div class="stats">
-  <div class="stat"><div class="stat-label">ПАР НА ДЕНЬ</div><div class="stat-value green" id="statTotal">0</div></div>
-  <div class="stat"><div class="stat-label">СЛЕДУЮЩАЯ ПАРА</div><div class="stat-value blue" id="statNext">—</div></div>
-  <div class="stat"><div class="stat-label">ДО НАЧАЛА</div><div class="stat-value orange" id="statCountdown">—</div></div>
- </div>
-
- <section>
-  <div class="section-head"><h2>Сейчас</h2><span class="small" id="displayDate">—</span></div>
-  <div id="currentLesson" class="current">
-   <div class="label">ГОТОВ К РАБОТЕ</div>
-   <h2>Сначала загрузи расписание</h2>
-   <p>Выбери файл и свой курс, чтобы увидеть занятия.</p>
+<main>
+  <div class="top">
+    <div><div class="eyebrow">PERSONAL KNOWLEDGE SPACE</div><div style="font-size:12px;color:var(--muted);margin-top:7px">ТВОЁ ПРОСТРАНСТВО · ТВОИ ПРАВИЛА</div></div>
+    <div class="avatar">U</div>
   </div>
- </section>
-
- <section>
-  <div class="section-head">
-   <h2>Пары на этот день</h2>
-   <span class="small" id="daySummary">0 занятий</span>
-  </div>
-  <div id="lessonList" class="timeline">
-   <div class="empty">Здесь появятся твои пары.</div>
-  </div>
- </section>
-
- <section class="panel" style="margin-top:25px">
-  <h2>Добавить пару вручную</h2>
-  <p class="small">Если импорт не распознал формат таблицы, добавь занятие здесь. Можно также использовать этот раздел, чтобы проверить работу приложения.</p>
-  <form id="manualForm">
-   <div class="manual">
-    <div class="field"><label for="mDate">Дата</label><input type="date" id="mDate" required></div>
-    <div class="field"><label for="mCourse">Курс</label><input id="mCourse" placeholder="1 курс"></div>
-    <div class="field"><label for="mGroup">Группа</label><input id="mGroup" placeholder="ICT-1A"></div>
-    <div class="field"><label for="mName">Предмет</label><input id="mName" required placeholder="Математика"></div>
-    <div class="field"><label for="mStart">Начало</label><input type="time" id="mStart" required value="08:30"></div>
-    <div class="field"><label for="mEnd">Окончание</label><input type="time" id="mEnd" required value="10:00"></div>
-    <div class="field"><label for="mRoom">Аудитория</label><input id="mRoom" placeholder="B204"></div>
-    <div class="field"><label for="mTeacher">Преподаватель</label><input id="mTeacher" placeholder="Имя преподавателя"></div>
-   </div>
-   <button class="primary" type="submit" style="margin-top:15px">Сохранить пару</button>
-  </form>
- </section>
-
- <details>
-  <summary>Как должен выглядеть файл, чтобы импорт сработал лучше?</summary>
-  <div class="panel" style="margin-top:12px">
-   <p class="small">Пример структуры Excel или CSV:</p>
-   <div style="overflow-x:auto">
-    <table style="border-collapse:collapse;width:100%;font-size:12px">
-     <tr><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Дата</th><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Курс</th><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Предмет</th><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Начало</th><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Конец</th></tr>
-     <tr><td style="padding:8px">2026-10-16</td><td style="padding:8px">1 курс</td><td style="padding:8px">Математика</td><td style="padding:8px">08:30</td><td style="padding:8px">10:00</td></tr>
-    </table>
-   </div>
-   <p class="small">Для недельного расписания вместо конкретной даты можно использовать столбец «День недели». Если расписание содержит отдельные листы для курсов, приложение также попробует использовать название листа.</p>
-  </div>
- </details>
+  <section class="hero">
+    <div><div class="eyebrow">ТВОЙ ВТОРОЙ МОЗГ</div>
+      <h1>Меньше искать.<br><span style="color:var(--purple)">Больше создавать.</span></h1>
+      <p class="sub">Всё полезное из интернета — в одном месте.<br>Организуй идеи и превращай их в реальные действия.</p>
+    </div>
+    <button class="primary" onclick="openModal()">＋ Сохранить материал</button>
+  </section>
+  <section class="stats">
+    <div class="stat"><div class="stat-label">В твоей библиотеке</div><div class="stat-num" id="total">0</div><div class="stat-note">Материалы под рукой</div></div>
+    <div class="stat"><div class="stat-label">Категории</div><div class="stat-num" id="categories">0</div><div class="stat-note">Твои области интереса</div></div>
+    <div class="stat"><div class="stat-label">Избранное</div><div class="stat-num" id="favorites">0</div><div class="stat-note">Самое важное</div></div>
+  </section>
+  <section>
+    <div class="section-head">
+      <div><div class="eyebrow" style="margin-bottom:9px">YOUR LIBRARY</div><h2>Твоя коллекция</h2></div>
+      <div class="searchbox"><span>⌕</span><input id="search" placeholder="Найти идею, ссылку, тему..." aria-label="Поиск материалов"></div>
+    </div>
+    <div class="filters" id="filters">
+      <button class="filter active" data-filter="Все">Всё</button>
+      <button class="filter" data-filter="Идеи">✳ Идеи</button>
+      <button class="filter" data-filter="Учёба">⌘ Учёба</button>
+      <button class="filter" data-filter="Работа">▧ Работа</button>
+      <button class="filter" data-filter="На потом">◷ На потом</button>
+      <button class="filter" data-filter="Избранное">☆ Избранное</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+  <footer><span>UNMIND © 2026 · MADE FOR YOUR MIND</span><span>Твои данные хранятся в этом браузере</span></footer>
 </main>
+</div>
 
-<footer><div class="wrap">My College — личный планировщик расписания. Данные сохраняются в браузере на этом устройстве. Эта версия не отправляет push-уведомления, когда страница закрыта.</div></footer>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<dialog id="modal">
+  <form id="saveForm">
+    <div class="eyebrow" style="margin-bottom:10px">ADD TO YOUR WORLD</div>
+    <h2>Сохрани полезное.</h2>
+    <div class="field"><label for="title">Название</label><input id="title" required maxlength="100" placeholder="Например, курс по дизайну"></div>
+    <div class="field"><label for="url">Ссылка</label><input id="url" type="url" required placeholder="https://..."></div>
+    <div class="field"><label for="category">Категория</label><select id="category"><option>Идеи</option><option>Учёба</option><option>Работа</option><option>На потом</option></select></div>
+    <div class="field"><label for="note">Почему это важно? (необязательно)</label><input id="note" maxlength="180" placeholder="Что хочешь отсюда получить?"></div>
+    <div class="modal-actions"><button type="button" class="secondary" onclick="closeModal()">Отмена</button><button class="primary" type="submit">Сохранить ↗</button></div>
+  </form>
+</dialog>
+<div id="toast" class="toast hidden" role="status"></div>
 
 <script>
-"use strict";
-
-if(window.pdfjsLib){
- pdfjsLib.GlobalWorkerOptions.workerSrc =
- "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-}
-
-const STORE_KEY="my_college_lessons_v1";
-const PREF_KEY="my_college_preferences_v1";
-let lessons=loadLessons();
-let fileCourses=[];
-let fileGroups=[];
-let activeDay=[];
-let timer=null;
-
+const KEY='unmind-library-v1';
+const demo=[
+ {id:1,title:'Как научиться быстрее учиться',url:'https://www.coursera.org',category:'Учёба',note:'Найти полезные курсы и выстроить план обучения',icon:'⌘',favorite:true},
+ {id:2,title:'Идеи для будущего проекта',url:'https://www.producthunt.com',category:'Идеи',note:'Изучить, какие проблемы решают новые продукты',icon:'✳',favorite:false},
+ {id:3,title:'Инструменты для продуктивной работы',url:'https://www.notion.so',category:'Работа',note:'Собрать инструменты в единый рабочий процесс',icon:'▧',favorite:false},
+ {id:4,title:'Прочитать в свободное время',url:'https://www.wikipedia.org',category:'На потом',note:'Любопытная тема, к которой стоит вернуться',icon:'◷',favorite:false}
+];
+let items=[];
+try{const stored=localStorage.getItem(KEY);items=stored?JSON.parse(stored):demo;if(!Array.isArray(items))items=demo}catch(e){items=demo}
+let active='Все';
 const $=id=>document.getElementById(id);
-const todayISO=()=>{
- const d=new Date();
- d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
- return d.toISOString().slice(0,10);
-};
-$("dayDate").value=todayISO();
-$("mDate").value=todayISO();
-
-function loadLessons(){
- try{
-  const v=JSON.parse(localStorage.getItem(STORE_KEY)||"[]");
-  return Array.isArray(v)?v.filter(x=>x&&x.subject&&x.date):[];
- }catch{return [];}
-}
-function saveLessons(){
- try{
-  localStorage.setItem(STORE_KEY,JSON.stringify(lessons));
-  return true;
- }catch{
-  toast("Не удалось сохранить данные. Возможно, хранилище браузера заполнено.");
-  return false;
- }
-}
-function savePrefs(){
- try{
-  localStorage.setItem(PREF_KEY,JSON.stringify({
-   course:$("course").value,group:$("group").value,
-   startTime:$("startTime").value
-  }));
- }catch{}
-}
-function loadPrefs(){
- try{
-  const p=JSON.parse(localStorage.getItem(PREF_KEY)||"{}");
-  $("course").value=p.course||"";
-  $("group").value=p.group||"";
-  $("startTime").value=p.startTime||"08:30";
- }catch{}
-}
-function toast(msg){
- const el=$("toast");el.textContent=msg;el.classList.add("show");
- clearTimeout(toast.t);
- toast.t=setTimeout(()=>el.classList.remove("show"),3500);
-}
-function esc(s){
- return String(s??"").replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- })[c]);
-}
-function normalize(s){
- return String(s??"").toLowerCase().trim().replace(/ё/g,"е");
-}
-function parseTime(v){
- if(v===null||v===undefined||v==="")return "";
- if(typeof v==="number"&&v>=0&&v<1){
-  const m=Math.round(v*1440);
-  return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
- }
- if(v instanceof Date){
-  return String(v.getHours()).padStart(2,"0")+":"+String(v.getMinutes()).padStart(2,"0");
- }
- const s=String(v).trim();
- const m=s.match(/(?:^|\D)(\d{1,2})[:.](\d{2})(?:\D|$)/);
- if(m&&+m[1]<24&&+m[2]<60)return String(+m[1]).padStart(2,"0")+":"+m[2];
- return "";
-}
-function timeMinutes(t){
- const m=(t||"").match(/^(\d{1,2}):(\d{2})$/);
- return m?Number(m[1])*60+Number(m[2]):null;
-}
-function dateFromCell(v){
- if(v instanceof Date&&!isNaN(v)){
-  const d=new Date(v.getTime());d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
-  return d.toISOString().slice(0,10);
- }
- if(typeof v==="number"&&v>20000&&v<80000){
-  const d=XLSX.SSF.parse_date_code(v);
-  if(d)return `${d.y}-${String(d.m).padStart(2,"0")}-${String(d.d).padStart(2,"0")}`;
- }
- const s=String(v??"").trim();
- let m=s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
- if(m)return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
- m=s.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
- if(m)return `${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;
- return "";
-}
-function weekdayName(s){
- const map={
-  "понедельник":1,"пн":1,"monday":1,"mon":1,
-  "вторник":2,"вт":2,"tuesday":2,"tue":2,
-  "среда":3,"ср":3,"wednesday":3,"wed":3,
-  "четверг":4,"чт":4,"thursday":4,"thu":4,
-  "пятница":5,"пт":5,"friday":5,"fri":5,
-  "суббота":6,"сб":6,"saturday":6,"sat":6,
-  "воскресенье":0,"вс":0,"sunday":0,"sun":0
- };
- return map[normalize(s)]??null;
-}
-function weekDay(date){
- return new Date(date+"T12:00:00").getDay();
-}
-function colIndex(headers,patterns){
- return headers.findIndex(h=>patterns.some(p=>p.test(normalize(h))));
-}
-function cleanLesson(x){
- if(!x.subject||!x.date)return null;
- return {
-  id:x.id||makeId(),date:String(x.date),weekday:x.weekday??null,
-  course:String(x.course||"").trim(),
-  group:String(x.group||"").trim(),
-  subject:String(x.subject).trim(),
-  start:parseTime(x.start)||"",
-  end:parseTime(x.end)||"",
-  room:String(x.room||"").trim(),
-  teacher:String(x.teacher||"").trim()
- };
-}
-function makeId(){
- return window.crypto?.randomUUID?.()||
- Date.now().toString(36)+Math.random().toString(36).slice(2);
-}
-function parseRows(rows,sheetName=""){
- if(!rows.length)return [];
- let headerIndex=0,headers=rows[0].map(x=>String(x??""));
- const aliases={
-  date:[/^(дата|date|число)$/,/дата занятия/],
-  day:[/^(день|weekday|day|день недели)$/],
-  course:[/курс/,/course/],
-  group:[/групп/,/group/],
-  subject:[/предмет/,/дисциплин/,/заняти/,/subject/,/lesson/],
-  start:[/начало/,/время начала/,/start/,/^с$/],
-  end:[/окончан/,/конец/,/время конца/,/end/,/^до$/],
-  time:[/^время$/,/пара и время/],
-  room:[/аудитор/,/кабинет/,/room/],
-  teacher:[/преподавател/,/teacher/,/лектор/]
- };
- let ix={};
- for(const k in aliases)ix[k]=colIndex(headers,aliases[k]);
-
- if(ix.subject<0){
-  const maybe=rows.findIndex(r=>r.some(c=>/предмет|дисциплин|subject|заняти/i.test(String(c??""))));
-  if(maybe>=0){headerIndex=maybe;headers=rows[maybe].map(x=>String(x??""));for(const k in aliases)ix[k]=colIndex(headers,aliases[k]);}
- }
- const out=[];
- for(let r=headerIndex+1;r<rows.length;r++){
-  const row=rows[r]||[];
-  const get=k=>ix[k]>=0?row[ix[k]]:"";
-  const subject=String(get("subject")??"").trim();
-  if(!subject)continue;
-  let date=dateFromCell(get("date"));
-  const day=weekdayName(get("day"));
-  const timeCell=String(get("time")??"");
-  let start=parseTime(get("start")),end=parseTime(get("end"));
-  if(!start){
-   const times=[...timeCell.matchAll(/\d{1,2}[:.]\d{2}/g)].map(m=>parseTime(m[0]));
-   start=times[0]||"";
-   end=end||times[1]||"";
-  }
-  let course=String(get("course")||sheetName||"").trim();
-  let group=String(get("group")||"").trim();
-  if(!date&&day!==null){
-   out.push(cleanLesson({date:"",weekday:day,course,group,subject,start,end,room:get("room"),teacher:get("teacher")}));
-  }else if(date){
-   out.push(cleanLesson({date,weekday:weekDay(date),course,group,subject,start,end,room:get("room"),teacher:get("teacher")}));
-  }
- }
- return out.filter(Boolean);
-}
-function unique(arr){return [...new Set(arr.filter(Boolean))].sort();}
-function populateOptions(){
- fileCourses=unique(lessons.map(x=>x.course));
- fileGroups=unique(lessons.map(x=>x.group));
- $("courseOptions").innerHTML=fileCourses.map(x=>`<option value="${esc(x)}"></option>`).join("");
- $("groupOptions").innerHTML=fileGroups.map(x=>`<option value="${esc(x)}"></option>`).join("");
-}
-function mergeLessons(imported){
- let added=0;
- for(const x of imported){
-  if(!x)continue;
-  const duplicate=lessons.some(y=>y.date===x.date&&y.weekday===x.weekday&&
-   normalize(y.course)===normalize(x.course)&&normalize(y.group)===normalize(x.group)&&
-   normalize(y.subject)===normalize(x.subject)&&y.start===x.start);
-  if(!duplicate){lessons.push({...x,id:makeId()});added++;}
- }
- return added;
-}
-async function readFile(file){
- if(!file)return;
- const name=file.name.toLowerCase();
- $("fileStatus").textContent="Читаю файл…";
- try{
-  let imported=[];
-  if(name.endsWith(".xlsx")||name.endsWith(".xls")||name.endsWith(".csv")){
-   const data=await file.arrayBuffer();
-   const wb=XLSX.read(data,{type:"array",cellDates:true});
-   for(const sheet of wb.SheetNames){
-    const rows=XLSX.utils.sheet_to_json(wb.Sheets[sheet],{header:1,defval:""});
-    imported.push(...parseRows(rows,sheet));
-   }
-  }else if(name.endsWith(".txt")){
-   const txt=await file.text();
-   imported=parseText(txt);
-  }else if(name.endsWith(".pdf")){
-   if(!window.pdfjsLib)throw new Error("Не удалось загрузить PDF.js. Проверь интернет и попробуй снова.");
-   const data=new Uint8Array(await file.arrayBuffer());
-   const pdf=await pdfjsLib.getDocument({data}).promise;
-   let text="";
-   for(let i=1;i<=pdf.numPages;i++){
-    const page=await pdf.getPage(i);
-    const content=await page.getTextContent();
-    text+=content.items.map(it=>it.str).join(" ")+"\n";
-   }
-   imported=parseText(text);
-   if(!imported.length){
-    $("fileStatus").textContent="PDF прочитан, но расписание автоматически не распознано. Попробуй Excel/CSV или добавь пары вручную.";
-    toast("Возможно, это скан или нестандартный PDF.");
-    return;
-   }
-  }else{
-   throw new Error("Формат не поддерживается. Используй Excel, CSV, PDF или TXT.");
-  }
-  if(!imported.length){
-   $("fileStatus").textContent="Файл прочитан, но не найдены строки расписания. Проверь названия столбцов или добавь пары вручную.";
-   toast("Не удалось автоматически распознать расписание.");
-   return;
-  }
-  const count=mergeLessons(imported);
-  if(!saveLessons())return;
-  populateOptions();
-  $("fileStatus").textContent=`Файл: ${file.name}. Распознано записей: ${imported.length}; добавлено новых: ${count}.`;
-  render();
-  toast(`Импорт завершён: ${count} новых записей.`);
- }catch(e){
-  $("fileStatus").textContent="Ошибка чтения: "+e.message;
-  toast("Не получилось прочитать файл. Попробуй другой формат.");
- }
-}
-function parseText(text){
- const lines=text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
- const rows=lines.map(line=>line.split(/\t|;|\s{2,}/).map(s=>s.trim()));
- let imported=parseRows(rows);
- if(imported.length)return imported;
- const out=[];
- for(const line of lines){
-  const m=line.match(/(\d{4}-\d{2}-\d{2}|\d{1,2}[./-]\d{1,2}[./-]\d{4})\s+(\d{1,2}[:.]\d{2})\s*[-–—]\s*(\d{1,2}[:.]\d{2})\s+(.+)/);
-  if(m){
-   const date=dateFromCell(m[1]);
-   if(date)out.push(cleanLesson({date,weekday:weekDay(date),start:m[2],end:m[3],subject:m[4]}));
-  }
- }
- return out;
-}
-$("fileInput").addEventListener("change",e=>readFile(e.target.files[0]));
-function lessonDayMatch(x,date){
- if(x.date)return x.date===date;
- return x.weekday===weekDay(date);
-}
-function filterDay(date){
- const course=normalize($("course").value);
- const group=normalize($("group").value);
- return lessons.filter(x=>{
-  if(!lessonDayMatch(x,date))return false;
-  if(course&&x.course&&normalize(x.course)!==course)return false;
-  if(group&&x.group&&normalize(x.group)!==group)return false;
-  return true;
- }).sort((a,b)=>(timeMinutes(a.start)??9999)-(timeMinutes(b.start)??9999));
-}
-function fmtDate(date){
- return new Intl.DateTimeFormat("ru-RU",{weekday:"long",day:"numeric",month:"long"}).format(new Date(date+"T12:00:00"));
-}
-function fmtRange(x){
- if(x.start&&x.end)return `${x.start} — ${x.end}`;
- if(x.start)return `Начало в ${x.start}`;
- return "Время не указано";
-}
-function findState(day,date){
- const now=new Date();
- const selectedToday=date===todayISO();
- const minute=now.getHours()*60+now.getMinutes();
- const entries=day.map((x,i)=>{
-  const start=timeMinutes(x.start);
-  let end=timeMinutes(x.end);
-  if(end===null&&start!==null)end=start+90;
-  return {...x,_i:i,_start:start,_end:end};
- });
- let current=null,next=null;
- if(selectedToday){
-  current=entries.find(x=>x._start!==null&&x._end!==null&&minute>=x._start&&minute<x._end)||null;
-  next=entries.find(x=>x._start!==null&&x._start>minute)||null;
- }else{
-  next=entries.find(x=>x._start!==null)||null;
- }
- return {current,next,entries,minute,selectedToday};
-}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){toast('Не удалось сохранить. Возможно, хранилище заполнено.')}}
+function getDomain(url){try{return new URL(url).hostname.replace(/^www\./,'')}catch(e){return url}}
+function iconFor(c){return {'Идеи':'✳','Учёба':'⌘','Работа':'▧','На потом':'◷'}[c]||'◈'}
+function toast(s){$('toast').textContent=s;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),2200)}
 function render(){
- savePrefs();
- const date=$("dayDate").value||todayISO();
- $("displayDate").textContent=fmtDate(date);
- const day=filterDay(date);
- activeDay=day;
- const state=findState(day,date);
- $("statTotal").textContent=day.length;
- $("statNext").textContent=state.current?"Сейчас":state.next?state.next.start||"Есть":"—";
- $("statCountdown").textContent="—";
- const cur=$("currentLesson");
- if(!day.length){
-  cur.innerHTML=`<div class="label">НЕТ ДАННЫХ</div><h2>Пары не найдены</h2><p>Проверь курс, группу и дату. Если расписание еженедельное, импорт должен содержать день недели.</p>`;
- }else if(state.current){
-  cur.innerHTML=`<div class="label">● ИДЁТ СЕЙЧАС</div><h2>${esc(state.current.subject)}</h2>
-   <p>${esc(fmtRange(state.current))}</p>
-   <p>${state.current.room?"Аудитория: "+esc(state.current.room)+" · ":""}${state.current.teacher?"Преподаватель: "+esc(state.current.teacher):""}</p>
-   <div class="time">Не опоздай на следующую пару.</div>`;
- }else if(state.next){
-  let mins=state.next._start-state.minute;
-  if(!state.selectedToday){
-   cur.innerHTML=`<div class="label">СЛЕДУЮЩАЯ ПО РАСПИСАНИЮ</div><h2>${esc(state.next.subject)}</h2><p>${esc(fmtRange(state.next))}</p><p>${state.next.room?"Аудитория: "+esc(state.next.room):""}</p>`;
-   $("statCountdown").textContent=state.next.start||"—";
-  }else{
-   cur.innerHTML=`<div class="label">СЛЕДУЮЩАЯ ПАРА</div><h2>${esc(state.next.subject)}</h2>
-    <p>${esc(fmtRange(state.next))}</p>
-    <p>${state.next.room?"Аудитория: "+esc(state.next.room)+" · ":""}${state.next.teacher?"Преподаватель: "+esc(state.next.teacher):""}</p>
-    <div class="time">${mins>0?`Через ${mins} мин.`:"Скоро начинается"}</div>`;
-   $("statCountdown").textContent=mins>0?`${mins} мин.`:"Скоро";
-  }
- }else{
-  cur.innerHTML=`<div class="label">НА СЕГОДНЯ</div><h2>Больше пар не найдено</h2><p>По загруженным данным новых занятий на выбранную дату нет.</p>`;
- }
- $("daySummary").textContent=`${day.length} ${plural(day.length,"пара","пары","пар")}`;
- const list=$("lessonList");
- if(!day.length){
-  list.innerHTML=`<div class="empty">Нет пар для выбранных параметров.<br>Загрузи файл, измени курс или добавь занятие вручную.</div>`;
- }else{
-  list.innerHTML=state.entries.map((x,i)=>{
-   const isCurrent=state.current&&state.current.id===x.id;
-   let badge=isCurrent?"ИДЁТ СЕЙЧАС":x._start!==null&&state.selectedToday&&x._start>state.minute?"ВПЕРЕДИ":"ПО РАСПИСАНИЮ";
-   if(state.selectedToday&&x._end!==null&&x._end<=state.minute)badge="ЗАВЕРШЕНО";
-   return `<article class="lesson ${isCurrent?"active":""}">
-    <div class="lesson-time">${esc(x.start||"—")}<small>${esc(x.end||"—")}</small></div>
-    <div><div class="lesson-name">${esc(x.subject)}</div>
-    <div class="lesson-meta">${x.room?"Аудитория: "+esc(x.room)+" · ":""}${x.teacher?"Преподаватель: "+esc(x.teacher):""}${x.course?" · "+esc(x.course):""}${x.group?" · "+esc(x.group):""}</div></div>
-    <span class="badge">${badge}</span>
-   </article>`;
-  }).join("");
- }
+ const q=$('search').value.trim().toLowerCase();
+ const shown=items.filter(x=>(active==='Все'||(active==='Избранное'?x.favorite:x.category===active))&&[x.title,x.url,x.note,x.category].some(v=>String(v||'').toLowerCase().includes(q)));
+ $('total').textContent=items.length;
+ $('categories').textContent=new Set(items.map(x=>x.category)).size;
+ $('favorites').textContent=items.filter(x=>x.favorite).length;
+ $('grid').innerHTML=shown.length?shown.map(x=>`
+ <article class="card">
+  <div class="card-top"><div class="site-icon">${esc(x.icon||iconFor(x.category))}</div><span class="kind">${esc(x.category)}</span></div>
+  <h3>${esc(x.title)}</h3><p>${esc(x.note||'Сохранено, чтобы вернуться к этому позже.')}</p>
+  <div class="card-foot"><span class="domain">${esc(getDomain(x.url))}</span><div class="actions">
+   <button class="iconbtn" title="${x.favorite?'Убрать из избранного':'В избранное'}" onclick="toggleFav(${Number(x.id)})">${x.favorite?'★':'☆'}</button>
+   <button class="iconbtn" title="Удалить" onclick="removeItem(${Number(x.id)})">×</button>
+   <button class="iconbtn" title="Открыть ссылку" onclick="openLink(${Number(x.id)})">↗</button>
+  </div></div>
+ </article>`).join(''):'<div class="empty">Ничего не найдено.<br><br>Попробуй изменить запрос или сохрани новый материал.</div>';
+ document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter===active));
 }
-function plural(n,a,b,c){
- const n10=n%10,n100=n%100;
- if(n10===1&&n100!==11)return a;
- if(n10>=2&&n10<=4&&(n100<12||n100>14))return b;
- return c;
-}
-$("applyBtn").addEventListener("click",render);
-$("todayBtn").addEventListener("click",()=>{$("dayDate").value=todayISO();render();});
-$("dayDate").addEventListener("change",render);
-$("course").addEventListener("change",render);
-$("group").addEventListener("change",render);
-$("startTime").addEventListener("change",savePrefs);
-$("clearBtn").addEventListener("click",()=>{
- if(!confirm("Удалить всё сохранённое расписание?"))return;
- lessons=[];saveLessons();populateOptions();render();
- $("fileStatus").textContent="Расписание удалено.";
-});
-$("manualForm").addEventListener("submit",e=>{
+function openModal(){$('modal').showModal();setTimeout(()=>$('title').focus(),50)}
+function closeModal(){$('modal').close()}
+function toggleFav(id){items=items.map(x=>x.id===id?{...x,favorite:!x.favorite}:x);persist();render()}
+function removeItem(id){if(!confirm('Удалить материал из коллекции?'))return;items=items.filter(x=>x.id!==id);persist();render();toast('Материал удалён')}
+function openLink(id){const x=items.find(x=>x.id===id);if(x)window.open(x.url,'_blank','noopener,noreferrer')}
+document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{active=b.dataset.filter;render()}));
+$('search').addEventListener('input',render);
+$('saveForm').addEventListener('submit',e=>{
  e.preventDefault();
- const date=$("mDate").value;
- const start=$("mStart").value,end=$("mEnd").value;
- if(timeMinutes(end)<=timeMinutes(start)){
-  toast("Время окончания должно быть позже начала.");return;
- }
- const item=cleanLesson({
-  date,weekday:weekDay(date),course:$("mCourse").value,
-  group:$("mGroup").value,subject:$("mName").value,
-  start,end,room:$("mRoom").value,teacher:$("mTeacher").value
- });
- if(!item)return;
- lessons.push(item);
- if(!saveLessons()){lessons.pop();return;}
- $("course").value=item.course||$("course").value;
- $("group").value=item.group||$("group").value;
- $("dayDate").value=date;
- populateOptions();render();toast("Пара сохранена.");
+ const title=$('title').value.trim(),url=$('url').value.trim(),category=$('category').value,note=$('note').value.trim();
+ try{const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))throw Error()}catch(e){toast('Укажи корректную ссылку, начинающуюся с https://');return}
+ items.unshift({id:Date.now(),title,url,category,note,icon:iconFor(category),favorite:false});
+ persist();active='Все';$('search').value='';render();closeModal();e.target.reset();toast('Сохранено. Теперь это не потеряется.')
 });
-$("demoBtn").addEventListener("click",()=>{
- const date=$("dayDate").value||todayISO();
- const dow=weekDay(date);
- const demo=[
-  {subject:"Математика",start:"08:30",end:"10:00",room:"B204",teacher:"Пример преподавателя"},
-  {subject:"Информатика",start:"10:15",end:"11:45",room:"Lab 2",teacher:"Пример преподавателя"},
-  {subject:"Английский язык",start:"12:15",end:"13:45",room:"A105",teacher:"Пример преподавателя"}
- ].map(x=>cleanLesson({...x,date,weekday:dow,course:"1 курс",group:"DEMO-1"}));
- mergeLessons(demo);saveLessons();populateOptions();
- $("course").value="1 курс";$("group").value="DEMO-1";
- $("fileStatus").textContent="Демо-расписание добавлено. Это вымышленные данные для проверки интерфейса.";
- render();toast("Демо-данные загружены.");
-});
-loadPrefs();
-populateOptions();
 render();
-timer=setInterval(render,30000);
 </script>
 </body>
 </html>
