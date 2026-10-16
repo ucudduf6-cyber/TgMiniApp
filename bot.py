@@ -8,7 +8,7 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = os.getenv("8809988539:AAEtJ7IJJMTx1Ibcxi-XeWorIGbjiFEUIrw")
 if not TOKEN:
     raise RuntimeError("Set the BOT_TOKEN environment variable first.")
 
