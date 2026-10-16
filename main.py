@@ -1,327 +1,410 @@
-
-import asyncio
-import logging
 import os
-import re
 import sqlite3
-from datetime import datetime, timezone
+import asyncio
+from datetime import datetime
 
 from aiogram import Bot, Dispatcher, F
-from aiogram.filters import CommandStart, Command
+from aiogram.filters import Command
 from aiogram.types import (
     Message,
+    CallbackQuery,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
     BusinessConnection,
     BusinessMessagesDeleted,
 )
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 
-TOKEN = os.getenv("BOT_TOKEN")
+
+# =========================
+# НАСТРОЙКИ
+# =========================
+
+TOKEN = os.getenv("BOT_TOKEN", "")
 OWNER_ID = int(os.getenv("OWNER_ID", "0"))
-DB_PATH = os.getenv("DB_PATH", "bot.sqlite3")
+DB_PATH = os.getenv("DB_PATH", "bot.db")
 
 if not TOKEN:
-    raise RuntimeError("Set BOT_TOKEN in GitHub Secrets")
+    raise RuntimeError("Добавь BOT_TOKEN в Secrets.")
 
 if not OWNER_ID:
-    raise RuntimeError("Set OWNER_ID in GitHub Secrets")
+    raise RuntimeError("Добавь OWNER_ID в Secrets.")
 
+bot = Bot(
+    token=TOKEN,
+    default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+)
 dp = Dispatcher()
-MAX_REPEAT = 3
-MAX_TEXT_LENGTH = 1000
 
 
-def connect_db():
-    conn = sqlite3.connect(DB_PATH, timeout=20)
-    conn.row_factory = sqlite3.Row
-    return conn
-
+# =========================
+# БАЗА ДАННЫХ
+# =========================
 
 def init_db():
-    with connect_db() as conn:
-        conn.executescript("""
-        CREATE TABLE IF NOT EXISTS connections (
-            connection_id TEXT PRIMARY KEY,
-            owner_id INTEGER NOT NULL,
-            enabled INTEGER NOT NULL DEFAULT 0,
-            can_reply INTEGER NOT NULL DEFAULT 0
-        );
+    with sqlite3.connect(DB_PATH) as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS messages (
+                chat_id INTEGER NOT NULL,
+                message_id INTEGER NOT NULL,
+                connection_id TEXT,
+                text TEXT,
+                saved_at TEXT,
+                PRIMARY KEY (chat_id, message_id)
+            )
+        """)
 
-        CREATE TABLE IF NOT EXISTS saved_messages (
-            connection_id TEXT NOT NULL,
-            chat_id INTEGER NOT NULL,
-            message_id INTEGER NOT NULL,
-            sender_id INTEGER,
-            message_text TEXT,
-            saved_at TEXT NOT NULL,
-            PRIMARY KEY (connection_id, chat_id, message_id)
-        );
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS connections (
+                connection_id TEXT PRIMARY KEY,
+                user_id INTEGER,
+                is_enabled INTEGER,
+                updated_at TEXT
+            )
         """)
 
 
-def get_connection(connection_id):
-    with connect_db() as conn:
-        row = conn.execute(
-            """SELECT * FROM connections
-               WHERE connection_id = ?""",
-            (connection_id,),
-        ).fetchone()
-    return dict(row) if row else None
-
-
-def save_message(connection_id, chat_id, message_id,
-                 sender_id, text):
-    with connect_db() as conn:
+def save_message(
+    chat_id: int,
+    message_id: int,
+    connection_id: str,
+    text: str,
+):
+    with sqlite3.connect(DB_PATH) as conn:
         conn.execute("""
-            INSERT INTO saved_messages (
-                connection_id, chat_id, message_id,
-                sender_id, message_text, saved_at
-            ) VALUES (?, ?, ?, ?, ?, ?)
-            ON CONFLICT(connection_id, chat_id, message_id)
-            DO UPDATE SET
-                sender_id = excluded.sender_id,
-                message_text = excluded.message_text,
-                saved_at = excluded.saved_at
+            INSERT OR REPLACE INTO messages
+            (chat_id, message_id, connection_id, text, saved_at)
+            VALUES (?, ?, ?, ?, ?)
         """, (
-            connection_id,
             chat_id,
             message_id,
-            sender_id,
-            text[:4000],
-            datetime.now(timezone.utc).isoformat(),
+            connection_id,
+            text,
+            datetime.utcnow().isoformat(),
         ))
 
 
-def get_saved_message(connection_id, chat_id, message_id):
-    with connect_db() as conn:
+def get_saved_message(chat_id: int, message_id: int):
+    with sqlite3.connect(DB_PATH) as conn:
         row = conn.execute("""
-            SELECT message_text FROM saved_messages
-            WHERE connection_id = ?
-              AND chat_id = ?
-              AND message_id = ?
-        """, (connection_id, chat_id, message_id)).fetchone()
+            SELECT text FROM messages
+            WHERE chat_id = ? AND message_id = ?
+        """, (chat_id, message_id)).fetchone()
 
-    return row["message_text"] if row else None
+    return row[0] if row else None
 
 
-@dp.message(CommandStart())
-async def start(message: Message):
-    await message.answer(
-        "Бот запущен.\n\n"
-        "Команды:\n"
-        "/repeat 3 Текст — повторить сообщение до 3 раз\n"
-        "/help — инструкция\n\n"
-        "Business-сообщения обрабатываются только "
-        "при активном разрешённом подключении."
-    )
-
-
-@dp.message(Command("help"))
-async def help_command(message: Message):
-    await message.answer(
-        "Использование:\n"
-        "/repeat 3 Привет!\n\n"
-        "Повторение ограничено тремя сообщениями за команду. "
-        "Команда работает только в личном чате с ботом "
-        "и не рассылает сообщения другим пользователям.\n\n"
-        "Business-журнал сохраняет тексты сообщений, "
-        "которые бот получил через разрешённое подключение."
-    )
-
-
-@dp.message(Command("repeat"))
-async def repeat_command(message: Message, bot: Bot):
-    # Repeat commands are accepted only in a private chat
-    # with this bot, not in chats with other people.
-    if message.chat.type != "private":
-        await message.answer(
-            "Используй /repeat в личном чате с ботом."
-        )
-        return
-
-    if message.from_user.id != OWNER_ID:
-        await message.answer("Эта команда недоступна.")
-        return
-
-    raw = message.text or ""
-    match = re.match(r"^/repeat(?:@\w+)?\s+(\d+)\s+(.+)$",
-                     raw, flags=re.DOTALL)
-
-    if not match:
-        await message.answer(
-            "Формат: /repeat 3 Текст сообщения"
-        )
-        return
-
-    count = int(match.group(1))
-    text = match.group(2).strip()
-
-    if not 1 <= count <= MAX_REPEAT:
-        await message.answer(
-            f"Количество должно быть от 1 до {MAX_REPEAT}."
-        )
-        return
-
-    if not text or len(text) > MAX_TEXT_LENGTH:
-        await message.answer(
-            f"Текст должен содержать не более "
-            f"{MAX_TEXT_LENGTH} символов."
-        )
-        return
-
-    for _ in range(count):
-        await bot.send_message(
-            chat_id=message.chat.id,
-            text=text,
-        )
-        await asyncio.sleep(1)
-
-    await message.answer(f"Готово: отправлено {count} сообщений.")
-
-
-@dp.business_connection()
-async def business_connection_update(
-    connection: BusinessConnection,
-):
-    rights = connection.rights
-
-    can_reply = bool(
-        rights and getattr(rights, "can_reply", False)
-    )
-
-    with connect_db() as conn:
+def save_connection(connection: BusinessConnection):
+    with sqlite3.connect(DB_PATH) as conn:
         conn.execute("""
-            INSERT INTO connections (
-                connection_id, owner_id, enabled, can_reply
-            ) VALUES (?, ?, ?, ?)
-            ON CONFLICT(connection_id) DO UPDATE SET
-                owner_id = excluded.owner_id,
-                enabled = excluded.enabled,
-                can_reply = excluded.can_reply
+            INSERT OR REPLACE INTO connections
+            (connection_id, user_id, is_enabled, updated_at)
+            VALUES (?, ?, ?, ?)
         """, (
             connection.id,
             connection.user.id,
             int(connection.is_enabled),
-            int(can_reply),
+            datetime.utcnow().isoformat(),
         ))
 
-    logging.info(
-        "Business connection updated: enabled=%s",
-        connection.is_enabled,
+
+# =========================
+# КЛАВИАТУРЫ
+# =========================
+
+def main_menu():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="🔗 Telegram Business",
+                    callback_data="business_info",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="📊 Статус бота",
+                    callback_data="bot_status",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="ℹ️ Помощь",
+                    callback_data="help",
+                )
+            ],
+        ]
     )
 
 
+def back_menu():
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="⬅️ Назад",
+                    callback_data="main_menu",
+                )
+            ]
+        ]
+    )
+
+
+# =========================
+# КОМАНДЫ
+# =========================
+
+@dp.message(Command("start"))
+async def start_handler(message: Message):
+    await message.answer(
+        "👋 <b>Привет!</b>\n\n"
+        "Бот запущен.\n"
+        "Выбери нужный раздел в меню:",
+        reply_markup=main_menu(),
+    )
+
+
+@dp.message(Command("help"))
+async def help_handler(message: Message):
+    await message.answer(
+        "ℹ️ <b>Помощь</b>\n\n"
+        "/start — открыть меню\n"
+        "/help — помощь\n"
+        "/repeat 2 текст — повторить текст до 3 раз "
+        "в этом личном чате с ботом.\n\n"
+        "Функции Telegram Business работают только "
+        "в пределах выданных Telegram разрешений."
+    )
+
+
+# =========================
+# ПОВТОР ТЕКСТА
+# Только в личном чате с ботом
+# =========================
+
+@dp.message(Command("repeat"))
+async def repeat_handler(message: Message):
+    if message.from_user is None or message.from_user.id != OWNER_ID:
+        await message.answer("⛔ Эта команда недоступна.")
+        return
+
+    if message.chat.type != "private":
+        await message.answer(
+            "Используй /repeat только в личном чате с ботом."
+        )
+        return
+
+    parts = (message.text or "").split(maxsplit=2)
+
+    if len(parts) < 3:
+        await message.answer(
+            "Формат команды:\n"
+            "<code>/repeat 3 Привет!</code>\n\n"
+            "Максимум — 3 повтора."
+        )
+        return
+
+    try:
+        count = int(parts[1])
+    except ValueError:
+        await message.answer("Укажи число от 1 до 3.")
+        return
+
+    if not 1 <= count <= 3:
+        await message.answer("Можно повторить текст от 1 до 3 раз.")
+        return
+
+    text_to_repeat = parts[2]
+
+    for _ in range(count):
+        await message.answer(text_to_repeat)
+        await asyncio.sleep(0.3)
+
+
+# =========================
+# CALLBACK-КНОПКИ
+# =========================
+
+@dp.callback_query(F.data == "main_menu")
+async def main_menu_handler(callback: CallbackQuery):
+    if callback.message:
+        await callback.message.edit_text(
+            "🏠 <b>Главное меню</b>\n\nВыбери раздел:",
+            reply_markup=main_menu(),
+        )
+    await callback.answer()
+
+
+@dp.callback_query(F.data == "business_info")
+async def business_info_handler(callback: CallbackQuery):
+    # Обновлённый текст: нежелательная фраза удалена.
+    if callback.message:
+        await callback.message.edit_text(
+            "🔗 <b>TELEGRAM BUSINESS</b>\n\n"
+            "1. Открой настройки Telegram Business.\n"
+            "2. Найди раздел чат-ботов.\n"
+            "3. Выбери своего бота.\n"
+            "4. Выдай необходимые разрешения.\n"
+            "5. Выбери чаты, к которым разрешён доступ.",
+            reply_markup=back_menu(),
+        )
+
+    await callback.answer()
+
+
+@dp.callback_query(F.data == "bot_status")
+async def bot_status_handler(callback: CallbackQuery):
+    if callback.message:
+        await callback.message.edit_text(
+            "📊 <b>Статус бота</b>\n\n"
+            "Бот работает, если он запущен на хостинге.\n"
+            "Проверить запуск можно в журнале выполнения.",
+            reply_markup=back_menu(),
+        )
+
+    await callback.answer()
+
+
+@dp.callback_query(F.data == "help")
+async def help_callback_handler(callback: CallbackQuery):
+    if callback.message:
+        await callback.message.edit_text(
+            "ℹ️ <b>Помощь</b>\n\n"
+            "/start — главное меню\n"
+            "/help — помощь\n"
+            "/repeat 2 текст — повторить текст до 3 раз "
+            "в личном чате с ботом.",
+            reply_markup=back_menu(),
+        )
+
+    await callback.answer()
+
+
+# =========================
+# TELEGRAM BUSINESS:
+# ОБНОВЛЕНИЯ ПОДКЛЮЧЕНИЯ
+# =========================
+
+@dp.business_connection()
+async def business_connection_handler(
+    connection: BusinessConnection,
+):
+    save_connection(connection)
+
+    if connection.user.id == OWNER_ID:
+        status = (
+            "включено"
+            if connection.is_enabled
+            else "отключено"
+        )
+
+        try:
+            await bot.send_message(
+                OWNER_ID,
+                "🔗 <b>Обновление Telegram Business</b>\n\n"
+                f"Подключение: <code>{connection.id}</code>\n"
+                f"Статус: {status}",
+            )
+        except Exception:
+            pass
+
+
+# =========================
+# СОХРАНЕНИЕ ДОСТУПНЫХ BUSINESS-СООБЩЕНИЙ
+# =========================
+
 @dp.business_message()
-async def handle_business_message(message: Message):
+async def business_message_handler(message: Message):
     connection_id = message.business_connection_id
 
     if not connection_id:
         return
 
-    connection = get_connection(connection_id)
+    text_content = message.text or message.caption or ""
 
-    if not connection or not connection["enabled"]:
-        return
-
-    # Save only messages from the Business connection
-    # that the bot is permitted to receive.
-    text = message.text or message.caption
-
-    if text:
+    if text_content:
         save_message(
-            connection_id,
-            message.chat.id,
-            message.message_id,
-            message.from_user.id if message.from_user else None,
-            text,
+            chat_id=message.chat.id,
+            message_id=message.message_id,
+            connection_id=connection_id,
+            text=text_content,
         )
 
+
+# =========================
+# ОБНОВЛЁННЫЕ BUSINESS-СООБЩЕНИЯ
+# =========================
 
 @dp.edited_business_message()
-async def handle_edited_business_message(message: Message):
+async def edited_business_message_handler(message: Message):
     connection_id = message.business_connection_id
 
     if not connection_id:
         return
 
-    connection = get_connection(connection_id)
+    text_content = message.text or message.caption or ""
 
-    if not connection or not connection["enabled"]:
-        return
-
-    text = message.text or message.caption
-
-    if text:
+    if text_content:
         save_message(
-            connection_id,
-            message.chat.id,
-            message.message_id,
-            message.from_user.id if message.from_user else None,
-            text,
+            chat_id=message.chat.id,
+            message_id=message.message_id,
+            connection_id=connection_id,
+            text=text_content,
         )
 
 
+# =========================
+# УДАЛЁННЫЕ BUSINESS-СООБЩЕНИЯ
+# =========================
+
 @dp.deleted_business_messages()
-async def handle_deleted_business_messages(
+async def deleted_business_messages_handler(
     event: BusinessMessagesDeleted,
-    bot: Bot,
 ):
-    connection_id = event.business_connection_id
-    connection = get_connection(connection_id)
-
-    if not connection or not connection["enabled"]:
-        return
-
-    # Only notify the configured owner of this bot.
-    if connection["owner_id"] != OWNER_ID:
+    if not event.message_ids:
         return
 
     for message_id in event.message_ids:
         saved_text = get_saved_message(
-            connection_id,
             event.chat.id,
             message_id,
         )
 
-        if saved_text is None:
-            body = (
-                "Telegram сообщил об удалении сообщения, "
-                "но его текст не был сохранён заранее.\n"
-                f"Chat ID: {event.chat.id}\n"
-                f"Message ID: {message_id}"
+        if saved_text:
+            notification = (
+                "🗑 <b>Сообщение удалено</b>\n\n"
+                f"Чат ID: <code>{event.chat.id}</code>\n"
+                f"ID сообщения: <code>{message_id}</code>\n\n"
+                f"Сохранённый текст:\n{saved_text}"
             )
         else:
-            body = (
-                "Получено уведомление об удалении сообщения.\n\n"
-                f"Chat ID: {event.chat.id}\n"
-                f"Message ID: {message_id}\n\n"
-                "Сохранённый текст:\n"
-                f"{saved_text}"
+            notification = (
+                "🗑 <b>Сообщение удалено</b>\n\n"
+                f"Чат ID: <code>{event.chat.id}</code>\n"
+                f"ID сообщения: <code>{message_id}</code>\n\n"
+                "Текст сообщения не был сохранён ранее."
             )
 
         try:
-            await bot.send_message(OWNER_ID, body[:4000])
+            await bot.send_message(
+                OWNER_ID,
+                notification,
+            )
         except Exception:
-            logging.exception("Could not send deletion notification")
+            pass
 
+
+# =========================
+# ЗАПУСК
+# =========================
 
 async def main():
-    logging.basicConfig(level=logging.INFO)
     init_db()
-
-    bot = Bot(TOKEN)
-
-    try:
-        await dp.start_polling(
-            bot,
-            allowed_updates=[
-                "message",
-                "business_connection",
-                "business_message",
-                "edited_business_message",
-                "deleted_business_messages",
-            ],
-        )
-    finally:
-        await bot.session.close()
+    await dp.start_polling(
+        bot,
+        allowed_updates=dp.resolve_used_update_types(),
+    )
 
 
 if __name__ == "__main__":
