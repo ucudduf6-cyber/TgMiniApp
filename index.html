@@ -1,1436 +1,821 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101014">
-  <meta name="description" content="Linkora — создавай QR-коды и цифровые визитки для своего бизнеса бесплатно.">
-  <title>Linkora — твой бизнес в одной ссылке</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-  <style>
-    :root {
-      --bg: #101014;
-      --panel: #18181f;
-      --panel-2: #202029;
-      --text: #f7f7fb;
-      --muted: #9696a8;
-      --line: rgba(255,255,255,.09);
-      --accent: #c6ff6b;
-      --accent-dark: #a9e64e;
-      --purple: #a28bff;
-      --radius: 22px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 95px;
-    }
-
-    body {
-      min-height: 100vh;
-      background:
-        radial-gradient(ellipse at 12% 0%, rgba(162,139,255,.10), transparent 35%),
-        radial-gradient(ellipse at 90% 15%, rgba(198,255,107,.06), transparent 28%),
-        var(--bg);
-      color: var(--text);
-      font-family: "DM Sans", sans-serif;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    button, input, textarea, select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(1120px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid var(--line);
-      background: rgba(16,16,20,.83);
-      backdrop-filter: blur(18px);
-    }
-
-    .nav-inner {
-      height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: Manrope, sans-serif;
-      font-weight: 800;
-      font-size: 24px;
-      letter-spacing: -1.2px;
-    }
-
-    .brand-icon {
-      width: 35px;
-      height: 35px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: var(--accent);
-      color: #151515;
-      font-size: 20px;
-      transform: rotate(-5deg);
-    }
-
-    .brand span:last-child {
-      color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 30px;
-      color: #c0c0cc;
-      font-size: 14px;
-    }
-
-    .nav-links a:hover {
-      color: var(--accent);
-    }
-
-    .nav-action {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 11px 17px;
-      font-weight: 600;
-      font-size: 13px;
-    }
-
-    .nav-action:hover {
-      border-color: var(--accent);
-    }
-
-    .hero {
-      padding: 88px 0 65px;
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      align-items: center;
-      gap: 55px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      border: 1px solid rgba(198,255,107,.20);
-      background: rgba(198,255,107,.06);
-      color: var(--accent);
-      border-radius: 100px;
-      padding: 8px 13px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 25px;
-    }
-
-    .eyebrow-dot {
-      width: 7px;
-      height: 7px;
-      background: var(--accent);
-      border-radius: 50%;
-      box-shadow: 0 0 12px rgba(198,255,107,.6);
-    }
-
-    h1, h2, h3 {
-      font-family: Manrope, sans-serif;
-      letter-spacing: -1.8px;
-      line-height: 1.12;
-    }
-
-    h1 {
-      font-size: clamp(43px, 5.4vw, 68px);
-      font-weight: 800;
-      margin-bottom: 24px;
-    }
-
-    .gradient-text {
-      color: var(--accent);
-    }
-
-    .hero-description {
-      max-width: 490px;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.8;
-      margin-bottom: 30px;
-    }
-
-    .hero-buttons {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      padding: 14px 20px;
-      border-radius: 13px;
-      font-weight: 700;
-      font-size: 14px;
-      border: 1px solid transparent;
-      transition: transform .2s, background .2s, border-color .2s;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-primary {
-      color: #161914;
-      background: var(--accent);
-    }
-
-    .btn-primary:hover {
-      background: var(--accent-dark);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,.04);
-      border-color: var(--line);
-      color: var(--text);
-    }
-
-    .btn-secondary:hover {
-      border-color: rgba(255,255,255,.22);
-    }
-
-    .hero-note {
-      margin-top: 18px;
-      color: #777786;
-      font-size: 12px;
-    }
-
-    .hero-visual {
-      min-height: 380px;
-      position: relative;
-      display: grid;
-      place-items: center;
-    }
-
-    .visual-glow {
-      position: absolute;
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      background: rgba(162,139,255,.17);
-      filter: blur(75px);
-    }
-
-    .demo-card {
-      position: relative;
-      z-index: 2;
-      width: min(340px, 100%);
-      padding: 25px;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 28px;
-      background: linear-gradient(150deg, #252530, #17171d 75%);
-      box-shadow: 0 30px 90px rgba(0,0,0,.35);
-      transform: rotate(2deg);
-    }
-
-    .demo-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 26px;
-    }
-
-    .demo-label {
-      color: #a6a6b7;
-      font-size: 12px;
-    }
-
-    .demo-tag {
-      border-radius: 30px;
-      padding: 5px 9px;
-      background: rgba(198,255,107,.10);
-      color: var(--accent);
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .demo-avatar {
-      width: 62px;
-      height: 62px;
-      border-radius: 20px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--accent), #91c7ff);
-      color: #171717;
-      font-size: 26px;
-      font-weight: 800;
-      margin-bottom: 17px;
-    }
-
-    .demo-card h3 {
-      font-size: 25px;
-      letter-spacing: -1px;
-      margin-bottom: 6px;
-    }
-
-    .demo-job {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 24px;
-    }
-
-    .demo-link {
-      padding: 13px;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      margin-top: 9px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: #d6d6df;
-    }
-
-    .demo-link span:last-child {
-      color: var(--accent);
-    }
-
-    .floating-chip {
-      position: absolute;
-      z-index: 3;
-      padding: 13px 16px;
-      border-radius: 15px;
-      background: #262630;
-      border: 1px solid var(--line);
-      box-shadow: 0 15px 35px rgba(0,0,0,.25);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .chip-one {
-      top: 48px;
-      right: -8px;
-      transform: rotate(5deg);
-    }
-
-    .chip-two {
-      bottom: 34px;
-      left: -8px;
-      transform: rotate(-5deg);
-    }
-
-    .chip-symbol {
-      color: var(--accent);
-      margin-right: 7px;
-    }
-
-    .section {
-      padding: 66px 0;
-    }
-
-    .section-heading {
-      text-align: center;
-      max-width: 650px;
-      margin: 0 auto 38px;
-    }
-
-    .section-kicker {
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 11px;
-      font-weight: 800;
-      margin-bottom: 13px;
-    }
-
-    .section-heading h2 {
-      font-size: clamp(31px, 4vw, 43px);
-      margin-bottom: 15px;
-    }
-
-    .section-heading p {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.8;
-    }
-
-    .tool-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 20px;
-      align-items: start;
-    }
-
-    .tool-card {
-      min-width: 0;
-      padding: 27px;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: linear-gradient(145deg, rgba(31,31,40,.96), rgba(23,23,29,.96));
-    }
-
-    .tool-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-
-    .tool-icon {
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      width: 45px;
-      height: 45px;
-      border-radius: 14px;
-      background: rgba(198,255,107,.10);
-      color: var(--accent);
-      font-size: 22px;
-    }
-
-    .tool-header h3 {
-      font-size: 21px;
-      letter-spacing: -.6px;
-      margin-bottom: 6px;
-    }
-
-    .tool-header p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .field {
-      margin-bottom: 17px;
-    }
-
-    .field label {
-      display: block;
-      color: #d9d9e2;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .field input, .field textarea, .field select {
-      width: 100%;
-      padding: 13px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.11);
-      background: #121218;
-      color: var(--text);
-      outline: none;
-      transition: border-color .2s;
-    }
-
-    .field input:focus, .field textarea:focus, .field select:focus {
-      border-color: var(--accent);
-    }
-
-    .field input::placeholder, .field textarea::placeholder {
-      color: #686876;
-    }
-
-    .field textarea {
-      resize: vertical;
-      min-height: 82px;
-    }
-
-    .field small {
-      display: block;
-      margin-top: 7px;
-      color: #777786;
-      font-size: 11px;
-    }
-
-    .qr-layout {
-      display: grid;
-      grid-template-columns: 1fr 145px;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .qr-preview {
-      min-height: 165px;
-      display: grid;
-      place-items: center;
-      padding: 13px;
-      border-radius: 16px;
-      background: #fff;
-      color: #111;
-      overflow: hidden;
-    }
-
-    #qrcode {
-      width: 100%;
-      min-height: 125px;
-      display: grid;
-      place-items: center;
-    }
-
-    #qrcode img, #qrcode canvas {
-      display: block;
-      max-width: 100%;
-      height: auto;
-    }
-
-    .qr-placeholder {
-      color: #737373;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    .qr-placeholder span {
-      display: block;
-      font-size: 32px;
-      margin-bottom: 5px;
-    }
-
-    .qr-status {
-      min-height: 18px;
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 10px;
-    }
-
-    .full-button {
-      width: 100%;
-      margin-top: 4px;
-    }
-
-    .profile-preview {
-      padding: 22px;
-      border-radius: 18px;
-      background: #f6f5ef;
-      color: #24251f;
-      margin-top: 20px;
-    }
-
-    .profile-preview-top {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 15px;
-    }
-
-    .profile-avatar {
-      width: 56px;
-      height: 56px;
-      flex-shrink: 0;
-      border-radius: 17px;
-      background: #d8ff8b;
-      display: grid;
-      place-items: center;
-      font-size: 23px;
-      font-weight: 800;
-      overflow: hidden;
-    }
-
-    .profile-preview h3 {
-      font-size: 19px;
-      letter-spacing: -.5px;
-      overflow-wrap: anywhere;
-    }
-
-    .profile-preview .profile-job {
-      color: #73736a;
-      font-size: 12px;
-      margin-top: 4px;
-      overflow-wrap: anywhere;
-    }
-
-    .profile-bio {
-      color: #52534b;
-      font-size: 13px;
-      line-height: 1.7;
-      margin: 15px 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    .profile-link {
-      display: block;
-      border-radius: 11px;
-      padding: 12px;
-      margin-top: 8px;
-      background: #e9e8df;
-      color: #24251f;
-      font-size: 12px;
-      font-weight: 700;
-      overflow-wrap: anywhere;
-    }
-
-    .profile-brand {
-      text-align: center;
-      font-size: 10px;
-      color: #8a8a80;
-      margin-top: 16px;
-    }
-
-    .profile-brand strong {
-      color: #44453d;
-    }
-
-    .preview-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-      margin-top: 12px;
-    }
-
-    .preview-actions .btn {
-      padding: 11px 9px;
-      font-size: 12px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 18px;
-    }
-
-    .feature-card {
-      padding: 25px;
-      border-radius: 19px;
-      background: rgba(255,255,255,.025);
-      border: 1px solid var(--line);
-    }
-
-    .feature-number {
-      font-family: Manrope, sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--accent);
-      margin-bottom: 23px;
-    }
-
-    .feature-card h3 {
-      font-size: 18px;
-      letter-spacing: -.5px;
-      margin-bottom: 10px;
-    }
-
-    .feature-card p {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
-    }
-
-    .cta {
-      padding: 50px 30px;
-      border-radius: 26px;
-      border: 1px solid rgba(198,255,107,.15);
-      background:
-        radial-gradient(ellipse at 100% 0%, rgba(198,255,107,.10), transparent 45%),
-        #19191f;
-      text-align: center;
-    }
-
-    .cta h2 {
-      font-size: clamp(29px, 4vw, 42px);
-      margin-bottom: 14px;
-    }
-
-    .cta p {
-      max-width: 520px;
-      margin: 0 auto 24px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    footer {
-      padding: 32px 0;
-      margin-top: 70px;
-      border-top: 1px solid var(--line);
-    }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      color: #858593;
-      font-size: 12px;
-    }
-
-    .footer-brand {
-      color: var(--text);
-      font-family: Manrope, sans-serif;
-      font-weight: 800;
-      font-size: 17px;
-    }
-
-    .footer-brand span {
-      color: var(--accent);
-    }
-
-    .toast {
-      position: fixed;
-      z-index: 999;
-      bottom: 25px;
-      left: 50%;
-      transform: translate(-50%, 20px);
-      opacity: 0;
-      pointer-events: none;
-      background: var(--accent);
-      color: #171914;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 800;
-      box-shadow: 0 10px 40px rgba(0,0,0,.3);
-      transition: .25s;
-      max-width: calc(100% - 32px);
-      text-align: center;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    @media (max-width: 850px) {
-      .hero {
-        grid-template-columns: 1fr;
-        padding-top: 65px;
-        gap: 20px;
-      }
-
-      .hero-copy {
-        text-align: center;
-      }
-
-      .hero-description {
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .hero-buttons {
-        justify-content: center;
-      }
-
-      .hero-visual {
-        min-height: 360px;
-      }
-
-      .chip-one {
-        right: 5%;
-      }
-
-      .chip-two {
-        left: 5%;
-      }
-
-      .features-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .features-grid .feature-card:last-child {
-        grid-column: 1 / -1;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        width: min(100% - 28px, 500px);
-      }
-
-      .nav-inner {
-        height: 65px;
-      }
-
-      .brand {
-        font-size: 21px;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      .nav-action {
-        padding: 10px 12px;
-        font-size: 12px;
-      }
-
-      .hero {
-        padding-top: 49px;
-      }
-
-      h1 {
-        font-size: clamp(39px, 11vw, 54px);
-        letter-spacing: -2px;
-      }
-
-      .hero-description {
-        font-size: 15px;
-      }
-
-      .hero-visual {
-        min-height: 330px;
-      }
-
-      .demo-card {
-        max-width: 300px;
-        padding: 21px;
-      }
-
-      .floating-chip {
-        font-size: 10px;
-        padding: 10px 11px;
-      }
-
-      .chip-one {
-        top: 28px;
-        right: -2px;
-      }
-
-      .chip-two {
-        bottom: 22px;
-        left: -2px;
-      }
-
-      .section {
-        padding: 48px 0;
-      }
-
-      .tool-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .tool-card {
-        padding: 20px;
-      }
-
-      .qr-layout {
-        grid-template-columns: 1fr 125px;
-        gap: 12px;
-      }
-
-      .qr-preview {
-        min-height: 140px;
-      }
-
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .features-grid .feature-card:last-child {
-        grid-column: auto;
-      }
-
-      .feature-card {
-        padding: 21px;
-      }
-
-      .feature-number {
-        margin-bottom: 13px;
-      }
-
-      .cta {
-        padding: 35px 20px;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        text-align: center;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .qr-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .qr-preview {
-        max-width: 180px;
-        width: 100%;
-        margin: 0 auto;
-      }
-
-      .preview-actions {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101114">
+<meta name="description" content="Min Up помогает фрилансерам следить за неоплаченными счетами и создавать вежливые напоминания клиентам.">
+<title>Min Up — получай оплату вовремя</title>
+
+<style>
+:root {
+  --bg: #101114;
+  --panel: #181a20;
+  --panel2: #202229;
+  --text: #f4f4f5;
+  --muted: #9699a6;
+  --accent: #c5f36b;
+  --border: #30323a;
+  --red: #ff8585;
+  --yellow: #f5ce75;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.container { max-width: 1120px; margin: auto; padding: 0 22px; }
+header {
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 5;
+  background: rgba(16,17,20,.94);
+  backdrop-filter: blur(14px);
+}
+.nav {
+  min-height: 72px; display: flex; align-items: center;
+  justify-content: space-between; gap: 16px;
+}
+.logo { font-size: 23px; font-weight: 850; letter-spacing: -1px; }
+.logo span { color: var(--accent); }
+.nav-right { display: flex; gap: 10px; align-items: center; }
+button {
+  border: 0; border-radius: 11px; padding: 11px 16px;
+  font-weight: 700; transition: .18s;
+}
+button:hover { transform: translateY(-1px); }
+.primary { background: var(--accent); color: #14170e; }
+.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
+.ghost { background: transparent; color: var(--muted); }
+.danger { color: var(--red); background: transparent; border: 1px solid #553333; }
+.hero { padding: 62px 0 35px; }
+.eyebrow {
+  display: inline-flex; gap: 8px; align-items: center;
+  border: 1px solid #3c4930; background: #20281a;
+  color: var(--accent); padding: 6px 11px;
+  border-radius: 999px; font-size: 12px; font-weight: 800;
+}
+h1 {
+  font-size: clamp(38px, 6vw, 66px); line-height: 1.04;
+  letter-spacing: -3px; max-width: 750px; margin: 20px 0 16px;
+}
+h1 em { color: var(--accent); font-style: normal; }
+.subtitle { color: var(--muted); font-size: 17px; max-width: 650px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.stats {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 14px; margin: 28px 0;
+}
+.stat, .panel, .invoice-card, .feature {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 17px;
+}
+.stat { padding: 20px; }
+.stat-label { color: var(--muted); font-size: 13px; }
+.stat-value { font-size: clamp(22px,3vw,32px); font-weight: 800; margin-top: 6px; overflow-wrap: anywhere; }
+.stat-value.green { color: var(--accent); }
+.stat-value.red { color: var(--red); }
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; margin: 35px 0 16px;
+}
+h2 { font-size: 23px; letter-spacing: -.7px; margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; color: var(--muted); }
+.workspace {
+  display: grid; grid-template-columns: 1.1fr .9fr;
+  gap: 16px; align-items: start;
+}
+.panel { padding: 22px; min-width: 0; }
+.panel h3 { margin: 0 0 18px; font-size: 17px; }
+label { display: block; font-size: 13px; color: #c4c5cd; margin-bottom: 7px; }
+.field { margin-bottom: 15px; }
+input, select, textarea {
+  width: 100%; background: #111216; border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px; color: var(--text);
+}
+input::placeholder, textarea::placeholder { color: #656875; }
+textarea { resize: vertical; min-height: 100px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.full { width: 100%; }
+.notice {
+  background: #22251d; border: 1px solid #414a32; color: #d6e9b7;
+  border-radius: 10px; padding: 12px; font-size: 12px; margin-top: 13px;
+}
+.usage { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+.usage-line { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; }
+.usage-track { height: 6px; border-radius: 9px; background: #30323a; margin-top: 9px; overflow: hidden; }
+.usage-fill { height: 100%; background: var(--accent); width: 0%; transition: width .2s; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 9px; }
+.toolbar select { width: auto; min-width: 145px; }
+.invoice-list { display: grid; gap: 12px; }
+.invoice-card { padding: 17px; }
+.invoice-top { display: flex; justify-content: space-between; gap: 12px; }
+.invoice-name { font-weight: 800; overflow-wrap: anywhere; }
+.invoice-client { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.invoice-amount { font-weight: 800; white-space: nowrap; }
+.invoice-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+.pill { font-size: 11px; border-radius: 999px; padding: 5px 9px; background: #292b32; color: #d5d6de; }
+.pill.overdue { color: #ffaaaa; background: #3b2427; }
+.pill.paid { color: #c5f36b; background: #27311f; }
+.pill.due { color: #f5ce75; background: #373020; }
+.invoice-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.invoice-actions button { font-size: 12px; padding: 8px 10px; }
+.empty {
+  padding: 35px 20px; text-align: center; color: var(--muted);
+  background: var(--panel); border: 1px dashed var(--border); border-radius: 16px;
+}
+.features {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 20px 0 60px;
+}
+.feature { padding: 19px; }
+.feature-icon { font-size: 22px; margin-bottom: 12px; }
+.feature h3 { font-size: 15px; margin: 0 0 7px; }
+.feature p { font-size: 13px; color: var(--muted); margin: 0; }
+footer { border-top: 1px solid var(--border); padding: 26px 0 35px; color: var(--muted); font-size: 12px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 12px; }
+.footer-links button { font-size: 12px; padding: 0; }
+.modal-backdrop {
+  display: none; position: fixed; inset: 0; z-index: 20;
+  background: rgba(0,0,0,.76); padding: 18px;
+  align-items: center; justify-content: center;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  width: min(100%, 510px); max-height: 90vh; overflow-y: auto;
+  padding: 25px; background: #1a1c22; border: 1px solid #393b44;
+  border-radius: 20px; box-shadow: 0 20px 90px #0009;
+}
+.modal h2 { margin-bottom: 12px; }
+.modal p, .modal li { color: #c1c2cb; font-size: 14px; }
+.modal .price { font-size: 39px; font-weight: 850; margin: 18px 0; }
+.modal .price small { font-size: 14px; color: var(--muted); font-weight: 500; }
+.modal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.toast {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  z-index: 50; background: #f4f4f5; color: #141414;
+  border-radius: 12px; padding: 12px 18px; font-size: 13px;
+  font-weight: 700; max-width: calc(100% - 30px); display: none;
+}
+.toast.show { display: block; }
+@media(max-width:760px) {
+  .workspace { grid-template-columns: 1fr; }
+  .features { grid-template-columns: 1fr; }
+  .hero { padding-top: 42px; }
+  .stats { gap: 8px; }
+  .stat { padding: 13px; }
+  .nav { min-height: 64px; }
+  .nav-right .secondary { display: none; }
+  h1 { letter-spacing: -1.8px; }
+}
+@media(max-width:420px) {
+  .container { padding: 0 14px; }
+  .stats { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; gap: 0; }
+  .panel { padding: 16px; }
+  .invoice-top { flex-direction: column; }
+}
+</style>
 </head>
 
 <body>
-  <header class="navbar">
-    <div class="container nav-inner">
-      <a class="brand" href="#" aria-label="Linkora — главная">
-        <span class="brand-icon">↗</span>
-        Link<span>ora</span>
-      </a>
-
-      <nav class="nav-links" aria-label="Основная навигация">
-        <a href="#tools">Инструменты</a>
-        <a href="#benefits">Возможности</a>
-        <a href="#about">О проекте</a>
-      </nav>
-
-      <a class="nav-action" href="#tools">Попробовать бесплатно ↗</a>
+<header>
+  <div class="container nav">
+    <div class="logo">min<span>.</span>up</div>
+    <div class="nav-right">
+      <button class="secondary" onclick="showModal('privacy')">Конфиденциальность</button>
+      <button class="primary" onclick="showModal('pro')">Min Up Pro ↗</button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main>
-    <section class="container hero">
-      <div class="hero-copy">
-        <div class="eyebrow">
-          <span class="eyebrow-dot"></span>
-          ПРОСТОЙ СТАРТ ДЛЯ ТВОЕГО БИЗНЕСА
-        </div>
-
-        <h1>
-          Твой бизнес.<br>
-          Твоя ссылка.<br>
-          <span class="gradient-text">Твои правила.</span>
-        </h1>
-
-        <p class="hero-description">
-          Создавай QR-коды и цифровые визитки за пару минут.
-          Без сложных настроек и лишних сервисов — всё в одном месте.
-        </p>
-
-        <div class="hero-buttons">
-          <a class="btn btn-primary" href="#tools">Создать бесплатно <span>↗</span></a>
-          <a class="btn btn-secondary" href="#benefits">Как это работает</a>
-        </div>
-
-        <p class="hero-note">Без регистрации для первых инструментов · Начни за минуту</p>
-      </div>
-
-      <div class="hero-visual" aria-label="Пример цифровой визитки">
-        <div class="visual-glow"></div>
-
-        <div class="floating-chip chip-one">
-          <span class="chip-symbol">✳</span>Готово за пару минут
-        </div>
-
-        <div class="demo-card">
-          <div class="demo-top">
-            <span class="demo-label">DIGITAL BUSINESS CARD</span>
-            <span class="demo-tag">ONLINE</span>
-          </div>
-
-          <div class="demo-avatar">A.</div>
-          <h3>Alex Morgan</h3>
-          <p class="demo-job">Designer & Creative Studio</p>
-
-          <div class="demo-link">
-            <span>Портфолио</span><span>↗</span>
-          </div>
-          <div class="demo-link">
-            <span>Связаться</span><span>↗</span>
-          </div>
-          <div class="demo-link">
-            <span>Социальные сети</span><span>↗</span>
-          </div>
-        </div>
-
-        <div class="floating-chip chip-two">
-          <span class="chip-symbol">⌘</span>Одна ссылка — всё важное
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="tools">
-      <div class="container">
-        <div class="section-heading">
-          <div class="section-kicker">ТВОИ ИНСТРУМЕНТЫ</div>
-          <h2>Создай что-то полезное</h2>
-          <p>Выбери инструмент, заполни несколько полей и сразу увидишь результат.</p>
-        </div>
-
-        <div class="tool-grid">
-          <article class="tool-card">
-            <div class="tool-header">
-              <div class="tool-icon">▦</div>
-              <div>
-                <h3>Генератор QR-кодов</h3>
-                <p>Преврати ссылку или текст в QR-код, который можно скачать.</p>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="qr-input">Ссылка или текст</label>
-              <input
-                id="qr-input"
-                type="text"
-                placeholder="https://example.com"
-                value="https://example.com"
-                autocomplete="url"
-              >
-              <small>Можно вставить сайт, ссылку на соцсеть или обычный текст.</small>
-            </div>
-
-            <div class="qr-layout">
-              <div>
-                <button class="btn btn-primary full-button" id="generate-qr" type="button">
-                  Создать QR-код ↗
-                </button>
-                <p class="qr-status" id="qr-status" aria-live="polite">Подготовка генератора…</p>
-              </div>
-
-              <div class="qr-preview">
-                <div id="qrcode">
-                  <div class="qr-placeholder">
-                    <span>▦</span>
-                    Твой QR-код появится здесь
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <button class="btn btn-secondary full-button" id="download-qr" type="button" disabled>
-              Скачать QR-код ↓
-            </button>
-          </article>
-
-          <article class="tool-card">
-            <div class="tool-header">
-              <div class="tool-icon">✳</div>
-              <div>
-                <h3>Цифровая визитка</h3>
-                <p>Собери аккуратную карточку с контактами и ссылками.</p>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="profile-name">Имя или название бизнеса</label>
-              <input id="profile-name" type="text" maxlength="70" placeholder="Например, Anna Studio" value="Anna Studio">
-            </div>
-
-            <div class="field">
-              <label for="profile-job">Чем ты занимаешься</label>
-              <input id="profile-job" type="text" maxlength="90" placeholder="Например, фотограф и ретушёр" value="Фотограф и ретушёр">
-            </div>
-
-            <div class="field">
-              <label for="profile-bio">Короткое описание</label>
-              <textarea id="profile-bio" maxlength="240" placeholder="Расскажи о себе или своём бизнесе">Создаю фотографии, которые рассказывают истории. Открыта для новых проектов.</textarea>
-            </div>
-
-            <div class="field">
-              <label for="profile-link">Основная ссылка</label>
-              <input id="profile-link" type="url" placeholder="https://instagram.com/..." value="https://example.com">
-            </div>
-
-            <div class="field">
-              <label for="profile-email">Контактный email (необязательно)</label>
-              <input id="profile-email" type="email" placeholder="hello@example.com">
-            </div>
-
-            <div class="profile-preview" id="profile-preview">
-              <div class="profile-preview-top">
-                <div class="profile-avatar" id="preview-avatar">A</div>
-                <div>
-                  <h3 id="preview-name">Anna Studio</h3>
-                  <p class="profile-job" id="preview-job">Фотограф и ретушёр</p>
-                </div>
-              </div>
-
-              <p class="profile-bio" id="preview-bio">Создаю фотографии, которые рассказывают истории. Открыта для новых проектов.</p>
-
-              <a class="profile-link" id="preview-link" href="https://example.com" target="_blank" rel="noopener noreferrer">
-                Открыть ссылку ↗
-              </a>
-
-              <a class="profile-link hidden" id="preview-email"></a>
-
-              <div class="profile-brand">Создано с помощью <strong>Linkora</strong></div>
-            </div>
-
-            <div class="preview-actions">
-              <button class="btn btn-primary" id="copy-profile" type="button">Копировать текст</button>
-              <button class="btn btn-secondary" id="download-profile" type="button">Скачать карточку</button>
-            </div>
-
-            <p class="qr-status">
-              Пока это предпросмотр на твоём устройстве, а не опубликованная публичная страница.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="benefits">
-      <div class="container">
-        <div class="section-heading">
-          <div class="section-kicker">ПОЧЕМУ LINKORA</div>
-          <h2>Меньше рутины. Больше возможностей.</h2>
-          <p>Инструменты для тех, кто хочет представить свой проект в интернете без лишней сложности.</p>
-        </div>
-
-        <div class="features-grid">
-          <article class="feature-card">
-            <div class="feature-number">01 / БЫСТРО</div>
-            <h3>Без долгой настройки</h3>
-            <p>Заполни поля и получи результат прямо на странице. Не нужно устанавливать программу.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-number">02 / ПРОСТО</div>
-            <h3>Всё понятно с первого раза</h3>
-            <p>Чистый интерфейс без десятков ненужных настроек и перегруженных меню.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-number">03 / ГИБКО</div>
-            <h3>Для разных задач</h3>
-            <p>Используй QR-коды и визитки для портфолио, услуг, небольших магазинов и личных проектов.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="about">
-      <div class="container">
-        <div class="cta">
-          <div class="section-kicker">ТВОЙ СЛЕДУЮЩИЙ ШАГ</div>
-          <h2>Начни с одной ссылки</h2>
-          <p>
-            Создай первый QR-код или оформи цифровую визитку.
-            Это первая версия Linkora — дальше добавим публикацию страниц,
-            сохранение данных и платные функции после их реального подключения.
-          </p>
-          <a class="btn btn-primary" href="#tools">Попробовать инструменты ↗</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container footer-inner">
-      <a class="footer-brand" href="#">Link<span>ora</span></a>
-      <p>Инструменты для твоего цифрового присутствия.</p>
-      <p>© <span id="year"></span> Linkora</p>
+<main class="container">
+  <section class="hero">
+    <span class="eyebrow">✳ ДЛЯ ФРИЛАНСЕРОВ И МАЛЫХ КОМАНД</span>
+    <h1>Тебе должны деньги.<br><em>Пора их получить.</em></h1>
+    <p class="subtitle">
+      Следи за неоплаченными счетами, замечай просрочки и создавай
+      вежливые напоминания клиентам за несколько секунд.
+    </p>
+    <div class="hero-actions">
+      <button class="primary" onclick="document.getElementById('invoiceName').focus();document.getElementById('workspace').scrollIntoView({behavior:'smooth'})">
+        + Добавить счёт
+      </button>
+      <button class="secondary" onclick="exportCSV()">Экспортировать CSV ↓</button>
     </div>
-  </footer>
+  </section>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <section class="stats" aria-label="Статистика счетов">
+    <div class="stat">
+      <div class="stat-label">Всего ожидает оплаты</div>
+      <div class="stat-value green" id="totalOutstanding">€0.00</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Просрочено</div>
+      <div class="stat-value red" id="totalOverdue">€0.00</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Получено</div>
+      <div class="stat-value" id="totalPaid">€0.00</div>
+    </div>
+  </section>
 
-  <script>
-    (() => {
-      "use strict";
+  <section id="workspace">
+    <div class="section-head">
+      <h2>Твой рабочий стол</h2>
+      <span class="small">Данные сохраняются в этом браузере</span>
+    </div>
 
-      const $ = (id) => document.getElementById(id);
+    <div class="workspace">
+      <section class="panel">
+        <h3>＋ Добавить счёт</h3>
+        <form id="invoiceForm">
+          <div class="field">
+            <label for="invoiceName">Название счёта или проекта *</label>
+            <input id="invoiceName" maxlength="100" required placeholder="Например, Дизайн сайта">
+          </div>
+          <div class="field">
+            <label for="clientName">Клиент или компания *</label>
+            <input id="clientName" maxlength="100" required placeholder="Например, Alex Studio">
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="amount">Сумма (€) *</label>
+              <input id="amount" type="number" min="0.01" max="999999999" step="0.01" required placeholder="450.00">
+            </div>
+            <div class="field">
+              <label for="dueDate">Срок оплаты *</label>
+              <input id="dueDate" type="date" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="clientEmail">Email клиента (необязательно)</label>
+            <input id="clientEmail" type="email" maxlength="200" placeholder="client@example.com">
+          </div>
+          <button class="primary full" type="submit">Сохранить счёт</button>
+        </form>
+        <div class="notice">
+          🔒 В этой версии данные хранятся локально в браузере.
+          Они не отправляются на наш сервер, потому что сервер ещё не подключён.
+        </div>
+        <div class="usage">
+          <div class="usage-line">
+            <span class="muted">Бесплатные напоминания</span>
+            <strong id="usageText">0 из 3</strong>
+          </div>
+          <div class="usage-track"><div class="usage-fill" id="usageFill"></div></div>
+          <p class="small" id="usageHint">Три бесплатных создания текста напоминания.</p>
+        </div>
+      </section>
 
-      let qrReady = false;
-      let toastTimer = null;
+      <section class="panel">
+        <h3>✉️ Напоминание клиенту</h3>
+        <p class="small">Выбери счёт в списке, чтобы создать персональное сообщение.</p>
+        <div class="field">
+          <label for="reminderInvoice">Счёт</label>
+          <select id="reminderInvoice">
+            <option value="">Сначала добавь счёт</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="reminderTone">Тон сообщения</label>
+          <select id="reminderTone">
+            <option value="friendly">Дружелюбный</option>
+            <option value="professional">Деловой</option>
+            <option value="firm">Более настойчивый</option>
+          </select>
+        </div>
+        <button class="primary full" id="generateReminder">Создать напоминание</button>
+        <div class="field" style="margin-top:16px">
+          <label for="reminderText">Текст сообщения</label>
+          <textarea id="reminderText" maxlength="3000" placeholder="Текст напоминания появится здесь..." readonly></textarea>
+        </div>
+        <div class="form-grid">
+          <button class="secondary" id="copyReminder" type="button">Копировать текст</button>
+          <button class="secondary" id="emailReminder" type="button">Открыть email</button>
+        </div>
+        <p class="small">Сообщение не отправляется автоматически. Перед отправкой проверь сумму и данные клиента.</p>
+      </section>
+    </div>
+  </section>
 
-      function showToast(message) {
-        const toast = $("toast");
-        toast.textContent = message;
-        toast.classList.add("show");
+  <section>
+    <div class="section-head">
+      <h2>Счета</h2>
+      <div class="toolbar">
+        <select id="filterStatus" aria-label="Фильтр счетов">
+          <option value="all">Все счета</option>
+          <option value="unpaid">Ожидают оплаты</option>
+          <option value="overdue">Просроченные</option>
+          <option value="paid">Оплаченные</option>
+        </select>
+        <button class="secondary" onclick="loadDemo()">Пример</button>
+      </div>
+    </div>
+    <div id="invoiceList" class="invoice-list"></div>
+  </section>
 
-        if (toastTimer) {
-          clearTimeout(toastTimer);
-        }
+  <section>
+    <div class="section-head"><h2>Меньше рутины. Больше контроля.</h2></div>
+    <div class="features">
+      <article class="feature">
+        <div class="feature-icon">◷</div>
+        <h3>Не пропускай сроки</h3>
+        <p>Видно, какие счета ожидают оплаты, а какие уже просрочены.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon">✉</div>
+        <h3>Напоминай без неловкости</h3>
+        <p>Подготовь вежливое сообщение вместо того, чтобы каждый раз писать с нуля.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon">↗</div>
+        <h3>Забирай свои данные</h3>
+        <p>Экспортируй список счетов в CSV для таблиц и дальнейшей работы.</p>
+      </article>
+    </div>
+  </section>
+</main>
 
-        toastTimer = setTimeout(() => {
-          toast.classList.remove("show");
-        }, 2600);
-      }
+<footer>
+  <div class="container">
+    <div><strong>min.up</strong> — простой помощник для работы со счетами.</div>
+    <div class="footer-links">
+      <button class="ghost" onclick="showModal('privacy')">Конфиденциальность</button>
+      <button class="ghost" onclick="showModal('terms')">Условия использования</button>
+      <button class="ghost" onclick="showModal('pro')">Тарифы</button>
+      <button class="ghost" onclick="clearAllData()">Удалить мои данные</button>
+    </div>
+    <p>Это ранняя версия продукта. Она не является бухгалтерской или юридической консультацией.</p>
+  </div>
+</footer>
 
-      function setQrStatus(message) {
-        $("qr-status").textContent = message;
-      }
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="backdropClose(event)">
+  <div class="modal">
+    <h2 id="modalTitle">Min Up</h2>
+    <div id="modalContent"></div>
+    <div class="modal-actions">
+      <button class="secondary" onclick="closeModal()">Закрыть</button>
+      <button class="primary" id="modalAction" onclick="modalPrimaryAction()">Понятно</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-      function generateQr() {
-        const value = $("qr-input").value.trim();
+<script>
+"use strict";
 
-        if (!value) {
-          setQrStatus("Сначала введи ссылку или текст.");
-          $("qr-input").focus();
-          return;
-        }
+const DATA_KEY = "minup_invoices_v1";
+const USAGE_KEY = "minup_free_reminders_v1";
+const FREE_LIMIT = 3;
 
-        if (typeof QRCode === "undefined") {
-          setQrStatus("Не удалось загрузить генератор. Проверь интернет и обнови страницу.");
-          return;
-        }
+let invoices = readInvoices();
+let reminderUses = readUsage();
+let currentModal = "";
+let lastFocus = null;
 
-        const container = $("qrcode");
-        container.innerHTML = "";
+function readInvoices() {
+  try {
+    const value = JSON.parse(localStorage.getItem(DATA_KEY) || "[]");
+    return Array.isArray(value) ? value.filter(x =>
+      x && typeof x.id === "string" &&
+      typeof x.name === "string" &&
+      typeof x.client === "string" &&
+      Number.isFinite(Number(x.amount))
+    ) : [];
+  } catch {
+    return [];
+  }
+}
 
-        try {
-          new QRCode(container, {
-            text: value,
-            width: 180,
-            height: 180,
-            colorDark: "#111111",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-          });
+function readUsage() {
+  try {
+    const n = Number(localStorage.getItem(USAGE_KEY) || 0);
+    return Number.isFinite(n) && n >= 0 ? Math.floor(n) : 0;
+  } catch {
+    return 0;
+  }
+}
 
-          qrReady = true;
-          $("download-qr").disabled = false;
-          $("download-qr").style.opacity = "1";
-          setQrStatus("Готово! Можно скачать QR-код.");
-        } catch (error) {
-          qrReady = false;
-          $("download-qr").disabled = true;
-          setQrStatus("Не удалось создать QR-код. Попробуй другой текст.");
-          console.error("QR generation error:", error);
-        }
-      }
+function saveInvoices() {
+  try {
+    localStorage.setItem(DATA_KEY, JSON.stringify(invoices));
+    return true;
+  } catch {
+    notify("Не удалось сохранить данные. Проверь свободное место в браузере.");
+    return false;
+  }
+}
 
-      function downloadQr() {
-        if (!qrReady) {
-          showToast("Сначала создай QR-код.");
-          return;
-        }
+function saveUsage() {
+  try {
+    localStorage.setItem(USAGE_KEY, String(reminderUses));
+  } catch {
+    notify("Браузер не смог сохранить счётчик.");
+  }
+}
 
-        const container = $("qrcode");
-        const canvas = container.querySelector("canvas");
-        const image = container.querySelector("img");
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[ch]);
+}
 
-        let dataUrl = "";
+function money(value) {
+  return new Intl.NumberFormat("en-IE", {
+    style: "currency", currency: "EUR"
+  }).format(Number(value) || 0);
+}
 
-        if (canvas) {
-          dataUrl = canvas.toDataURL("image/png");
-        } else if (image && image.src) {
-          dataUrl = image.src;
-        }
+function localToday() {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 10);
+}
 
-        if (!dataUrl) {
-          showToast("QR-код ещё не готов. Попробуй ещё раз.");
-          return;
-        }
+function getStatus(invoice) {
+  if (invoice.paid) return "paid";
+  if (invoice.dueDate && invoice.dueDate < localToday()) return "overdue";
+  return "unpaid";
+}
 
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = "linkora-qr.png";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+function statusLabel(status) {
+  return ({
+    paid: "Оплачен",
+    overdue: "Просрочен",
+    unpaid: "Ожидает оплаты"
+  })[status];
+}
 
-        showToast("Загрузка QR-кода началась.");
-      }
+function notify(message) {
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(notify.timer);
+  notify.timer = setTimeout(() => el.classList.remove("show"), 2800);
+}
 
-      function safeUrl(rawValue) {
-        const value = rawValue.trim();
+function render() {
+  const outstanding = invoices.filter(x => !x.paid)
+    .reduce((sum, x) => sum + Number(x.amount), 0);
+  const overdue = invoices.filter(x => getStatus(x) === "overdue")
+    .reduce((sum, x) => sum + Number(x.amount), 0);
+  const paid = invoices.filter(x => x.paid)
+    .reduce((sum, x) => sum + Number(x.amount), 0);
 
-        if (!value) {
-          return "";
-        }
+  document.getElementById("totalOutstanding").textContent = money(outstanding);
+  document.getElementById("totalOverdue").textContent = money(overdue);
+  document.getElementById("totalPaid").textContent = money(paid);
 
-        try {
-          const url = new URL(value);
+  const filter = document.getElementById("filterStatus").value;
+  const visible = invoices.filter(x => {
+    if (filter === "all") return true;
+    if (filter === "overdue") return getStatus(x) === "overdue";
+    if (filter === "paid") return x.paid;
+    return !x.paid;
+  }).sort((a,b) => {
+    if (a.paid !== b.paid) return a.paid ? 1 : -1;
+    return String(a.dueDate).localeCompare(String(b.dueDate));
+  });
 
-          if (url.protocol === "http:" || url.protocol === "https:") {
-            return url.href;
-          }
-        } catch (_) {
-          return "";
-        }
+  const list = document.getElementById("invoiceList");
+  if (!visible.length) {
+    list.innerHTML = `<div class="empty">
+      <div style="font-size:28px;margin-bottom:8px">↗</div>
+      <strong>Здесь пока пусто</strong>
+      <p>Добавь счёт или нажми «Пример», чтобы посмотреть, как работает Min Up.</p>
+    </div>`;
+  } else {
+    list.innerHTML = visible.map(x => {
+      const status = getStatus(x);
+      return `<article class="invoice-card">
+        <div class="invoice-top">
+          <div>
+            <div class="invoice-name">${escapeHTML(x.name)}</div>
+            <div class="invoice-client">${escapeHTML(x.client)}</div>
+          </div>
+          <div class="invoice-amount">${money(x.amount)}</div>
+        </div>
+        <div class="invoice-meta">
+          <span class="pill ${status}">${statusLabel(status)}</span>
+          <span class="pill">Оплатить до: ${escapeHTML(x.dueDate || "не указан")}</span>
+        </div>
+        <div class="invoice-actions">
+          <button class="secondary" onclick="selectReminder('${x.id}')">Создать напоминание</button>
+          <button class="secondary" onclick="togglePaid('${x.id}')">${x.paid ? "Вернуть в неоплаченные" : "Отметить оплаченным"}</button>
+          <button class="danger" onclick="deleteInvoice('${x.id}')">Удалить</button>
+        </div>
+      </article>`;
+    }).join("");
+  }
 
-        return "";
-      }
+  const select = document.getElementById("reminderInvoice");
+  const previous = select.value;
+  const unpaid = invoices.filter(x => !x.paid);
+  select.innerHTML = unpaid.length
+    ? unpaid.map(x => `<option value="${x.id}">${escapeHTML(x.name)} — ${money(x.amount)}</option>`).join("")
+    : `<option value="">Нет неоплаченных счетов</option>`;
+  if (unpaid.some(x => x.id === previous)) select.value = previous;
 
-      function updateProfile() {
-        const name = $("profile-name").value.trim() || "Твоя визитка";
-        const job = $("profile-job").value.trim() || "Твоя профессия или бизнес";
-        const bio = $("profile-bio").value.trim();
-        const rawLink = $("profile-link").value.trim();
-        const email = $("profile-email").value.trim();
-        const validLink = safeUrl(rawLink);
+  updateUsage();
+}
 
-        $("preview-name").textContent = name;
-        $("preview-job").textContent = job;
-        $("preview-bio").textContent = bio || "Добавь короткое описание своего проекта.";
-        $("preview-avatar").textContent = name.charAt(0).toUpperCase();
+function updateUsage() {
+  const used = Math.min(reminderUses, FREE_LIMIT);
+  document.getElementById("usageText").textContent =
+    `${used} из ${FREE_LIMIT}`;
+  document.getElementById("usageFill").style.width =
+    `${used / FREE_LIMIT * 100}%`;
+  document.getElementById("usageHint").textContent =
+    reminderUses >= FREE_LIMIT
+      ? "Бесплатный лимит использован. Оформи Pro, когда платёжная система будет подключена."
+      : `Осталось бесплатных созданий: ${FREE_LIMIT - used}.`;
+}
 
-        const linkElement = $("preview-link");
+document.getElementById("invoiceForm").addEventListener("submit", event => {
+  event.preventDefault();
 
-        if (validLink) {
-          linkElement.href = validLink;
-          linkElement.classList.remove("hidden");
-          linkElement.textContent = "Открыть ссылку ↗";
-          linkElement.setAttribute("target", "_blank");
-          linkElement.setAttribute("rel", "noopener noreferrer");
-        } else {
-          linkElement.removeAttribute("href");
-          linkElement.classList.add("hidden");
-        }
+  const name = document.getElementById("invoiceName").value.trim();
+  const client = document.getElementById("clientName").value.trim();
+  const amount = Number(document.getElementById("amount").value);
+  const dueDate = document.getElementById("dueDate").value;
+  const email = document.getElementById("clientEmail").value.trim();
 
-        const emailElement = $("preview-email");
+  if (!name || !client || !dueDate || !Number.isFinite(amount) || amount <= 0) {
+    notify("Проверь обязательные поля.");
+    return;
+  }
 
-        if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          emailElement.href = "mailto:" + email;
-          emailElement.textContent = "Написать на email ↗";
-          emailElement.classList.remove("hidden");
-        } else {
-          emailElement.removeAttribute("href");
-          emailElement.classList.add("hidden");
-        }
-      }
+  const invoice = {
+    id: makeId(),
+    name, client, amount, dueDate, email,
+    paid: false,
+    createdAt: new Date().toISOString()
+  };
 
-      function getProfileText() {
-        const name = $("profile-name").value.trim() || "Твоя визитка";
-        const job = $("profile-job").value.trim() || "Твоя профессия или бизнес";
-        const bio = $("profile-bio").value.trim();
-        const link = safeUrl($("profile-link").value);
-        const email = $("profile-email").value.trim();
+  invoices.push(invoice);
+  if (!saveInvoices()) {
+    invoices.pop();
+    return;
+  }
 
-        const lines = [
-          name,
-          job,
-          "",
-          bio,
-          "",
-          link ? "Ссылка: " + link : "",
-          email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-            ? "Email: " + email
-            : "",
-          "",
-          "Создано с помощью Linkora"
-        ];
+  event.target.reset();
+  render();
+  document.getElementById("reminderInvoice").value = invoice.id;
+  notify("Счёт сохранён.");
+});
 
-        return lines.filter((line, index) => {
-          if (line !== "") return true;
-          return index > 0 && lines[index - 1] !== "";
-        }).join("\n").trim();
-      }
+function makeId() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
 
-      async function copyProfile() {
-        const text = getProfileText();
+function selectReminder(id) {
+  document.getElementById("reminderInvoice").value = id;
+  document.getElementById("workspace").scrollIntoView({ behavior: "smooth" });
+  document.getElementById("reminderTone").focus();
+}
 
-        try {
-          await navigator.clipboard.writeText(text);
-          showToast("Текст визитки скопирован!");
-        } catch (_) {
-          const textarea = document.createElement("textarea");
-          textarea.value = text;
-          textarea.style.position = "fixed";
-          textarea.style.opacity = "0";
-          document.body.appendChild(textarea);
-          textarea.select();
+function togglePaid(id) {
+  const item = invoices.find(x => x.id === id);
+  if (!item) return;
+  item.paid = !item.paid;
+  if (!saveInvoices()) {
+    item.paid = !item.paid;
+    return;
+  }
+  render();
+  notify(item.paid ? "Счёт отмечен как оплаченный." : "Счёт снова ожидает оплаты.");
+}
 
-          try {
-            const copied = document.execCommand("copy");
+function deleteInvoice(id) {
+  const item = invoices.find(x => x.id === id);
+  if (!item) return;
+  if (!confirm(`Удалить счёт «${item.name}»? Это действие нельзя отменить.`)) return;
+  const old = invoices;
+  invoices = invoices.filter(x => x.id !== id);
+  if (!saveInvoices()) {
+    invoices = old;
+    return;
+  }
+  render();
+  notify("Счёт удалён.");
+}
 
-            if (copied) {
-              showToast("Текст визитки скопирован!");
-            } else {
-              showToast("Не получилось скопировать. Выдели текст вручную.");
-              window.prompt("Скопируй текст визитки:", text);
-            }
-          } catch (error) {
-            window.prompt("Скопируй текст визитки:", text);
-          }
+function generateReminder() {
+  if (reminderUses >= FREE_LIMIT) {
+    showModal("pro");
+    return;
+  }
 
-          textarea.remove();
-        }
-      }
+  const id = document.getElementById("reminderInvoice").value;
+  const item = invoices.find(x => x.id === id);
+  if (!item) {
+    notify("Сначала добавь неоплаченный счёт.");
+    return;
+  }
 
-      function downloadProfile() {
-        updateProfile();
+  const tone = document.getElementById("reminderTone").value;
+  const subject = `Напоминание об оплате: ${item.name}`;
+  let message = "";
 
-        const card = $("profile-preview");
-        const copy = card.cloneNode(true);
+  if (tone === "friendly") {
+    message = `Привет, ${item.client}!\n\nНадеюсь, у тебя всё хорошо. Хотел(а) дружелюбно напомнить о счёте «${item.name}» на сумму ${money(item.amount)} со сроком оплаты ${item.dueDate}.\n\nДай знать, если нужна дополнительная информация. Спасибо!\n\nС уважением`;
+  } else if (tone === "professional") {
+    message = `Здравствуйте, ${item.client}!\n\nНапоминаю об оплате счёта «${item.name}» на сумму ${money(item.amount)}. Срок оплаты: ${item.dueDate}.\n\nБуду признателен(на), если вы сообщите ожидаемую дату оплаты. Если платёж уже произведён, пожалуйста, проигнорируйте это сообщение.\n\nСпасибо.\n\nС уважением`;
+  } else {
+    message = `Здравствуйте, ${item.client}.\n\nПовторно обращаю ваше внимание на неоплаченный счёт «${item.name}» на сумму ${money(item.amount)}, срок оплаты которого — ${item.dueDate}.\n\nПожалуйста, подтвердите статус платежа и сообщите предполагаемую дату оплаты. Если платёж уже отправлен, прошу сообщить об этом.\n\nСпасибо.\n\nС уважением`;
+  }
 
-        copy.style.width = "520px";
-        copy.style.maxWidth = "520px";
-        copy.style.margin = "0";
-        copy.style.boxSizing = "border-box";
+  document.getElementById("reminderText").value =
+    `Тема: ${subject}\n\n${message}`;
 
-        const content = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="560" height="520">
-            <foreignObject x="20" y="20" width="520" height="480">
-              <div xmlns="http://www.w3.org/1999/xhtml"
-                style="font-family:Arial,sans-serif;width:520px;">
-                ${copy.outerHTML}
-              </div>
-            </foreignObject>
-          </svg>
-        `;
+  reminderUses++;
+  saveUsage();
+  updateUsage();
+  notify(`Напоминание создано. Осталось ${Math.max(0, FREE_LIMIT - reminderUses)} бесплатных.`);
+}
 
-        const blob = new Blob([content], {
-          type: "image/svg+xml;charset=utf-8"
-        });
+document.getElementById("generateReminder")
+  .addEventListener("click", generateReminder);
 
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "linkora-business-card.svg";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+document.getElementById("copyReminder").addEventListener("click", async () => {
+  const text = document.getElementById("reminderText").value;
+  if (!text) {
+    notify("Сначала создай напоминание.");
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+    notify("Текст скопирован.");
+  } catch {
+    const field = document.getElementById("reminderText");
+    field.readOnly = false;
+    field.select();
+    const copied = document.execCommand("copy");
+    field.readOnly = true;
+    notify(copied ? "Текст скопирован." : "Выдели текст и скопируй вручную.");
+  }
+});
 
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-        showToast("Карточка скачивается в формате SVG.");
-      }
+document.getElementById("emailReminder").addEventListener("click", () => {
+  const id = document.getElementById("reminderInvoice").value;
+  const item = invoices.find(x => x.id === id);
+  const text = document.getElementById("reminderText").value;
+  if (!item || !text) {
+    notify("Сначала создай напоминание.");
+    return;
+  }
+  const subject = `Напоминание об оплате: ${item.name}`;
+  const body = text.replace(/^Тема:.*\n\n/, "");
+  const url = "mailto:" + encodeURIComponent(item.email || "") +
+    "?subject=" + encodeURIComponent(subject) +
+    "&body=" + encodeURIComponent(body);
+  window.location.href = url;
+});
 
-      $("generate-qr").addEventListener("click", generateQr);
-      $("download-qr").addEventListener("click", downloadQr);
-      $("copy-profile").addEventListener("click", copyProfile);
-      $("download-profile").addEventListener("click", downloadProfile);
+document.getElementById("filterStatus").addEventListener("change", render);
 
-      $("qr-input").addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          generateQr();
-        }
-      });
+function exportCSV() {
+  if (!invoices.length) {
+    notify("Пока нечего экспортировать.");
+    return;
+  }
 
-      [
-        "profile-name",
-        "profile-job",
-        "profile-bio",
-        "profile-link",
-        "profile-email"
-      ].forEach((id) => {
-        $(id).addEventListener("input", updateProfile);
-      });
+  const rows = [
+    ["Название", "Клиент", "Email", "Сумма EUR", "Срок оплаты", "Статус"]
+  ];
+  invoices.forEach(x => rows.push([
+    x.name, x.client, x.email || "", Number(x.amount).toFixed(2),
+    x.dueDate, statusLabel(getStatus(x))
+  ]));
 
-      $("year").textContent = new Date().getFullYear();
-      updateProfile();
+  const csv = "\uFEFF" + rows.map(row =>
+    row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(";")
+  ).join("\r\n");
 
-      if (typeof QRCode !== "undefined") {
-        generateQr();
-      } else {
-        setQrStatus("Если QR-код не появился, проверь подключение к интернету.");
-      }
-    })();
-  </script>
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "min-up-invoices.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  notify("CSV-файл подготовлен.");
+}
+
+function loadDemo() {
+  if (invoices.length && !confirm("Добавить демонстрационные счета к существующим?")) return;
+
+  const today = new Date();
+  const addDays = n => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + n);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 10);
+  };
+
+  invoices.push(
+    { id: makeId(), name: "Дизайн лендинга", client: "North Studio", amount: 850, dueDate: addDays(-5), email: "", paid: false, createdAt: new Date().toISOString() },
+    { id: makeId(), name: "Редизайн логотипа", client: "Mira Creative", amount: 320, dueDate: addDays(7), email: "", paid: false, createdAt: new Date().toISOString() },
+    { id: makeId(), name: "Консультация", client: "Alex Morgan", amount: 150, dueDate: addDays(-2), email: "", paid: true, createdAt: new Date().toISOString() }
+  );
+
+  if (!saveInvoices()) return;
+  render();
+  notify("Примеры добавлены.");
+}
+
+function showModal(type) {
+  lastFocus = document.activeElement;
+  currentModal = type;
+  const title = document.getElementById("modalTitle");
+  const content = document.getElementById("modalContent");
+  const action = document.getElementById("modalAction");
+
+  if (type === "pro") {
+    title.textContent = "Min Up Pro";
+    content.innerHTML = `
+      <p>Ты использовал(а) три бесплатных создания напоминаний.</p>
+      <div class="price">€5 <small>/ месяц — предполагаемая цена</small></div>
+      <ul>
+        <li>Больше шаблонов напоминаний</li>
+        <li>Дополнительные инструменты для счетов</li>
+        <li>Экспорт данных</li>
+      </ul>
+      <p><strong>Важно:</strong> платёжная система и подписка пока не подключены. Сейчас деньги не списываются и оформить платный тариф нельзя. Эта цена — предложение для тестирования, а не активный тариф.</p>`;
+    action.textContent = "Понятно";
+  } else if (type === "privacy") {
+    title.textContent = "Конфиденциальность";
+    content.innerHTML = `
+      <p><strong>Как работает текущая версия</strong></p>
+      <p>Введённые счета и счётчик бесплатных напоминаний сохраняются в локальном хранилище браузера на этом устройстве. В этой версии данные не передаются на сервер Min Up.</p>
+      <p>Экспорт создаёт CSV-файл на твоём устройстве. Кнопка email открывает почтовое приложение; дальнейшая отправка зависит от тебя.</p>
+      <p>Удаление данных на сайте удаляет сохранённые записи из локального хранилища этого браузера. Резервные копии, экспортированные файлы и другие копии автоматически не удаляются.</p>
+      <p><strong>Перед публичным запуском:</strong> этот текст нужно дополнить настоящими данными владельца, контактами, целями и основаниями обработки, сроками хранения, сведениями о поставщиках услуг и правами пользователей. Это не окончательная юридическая политика конфиденциальности.</p>`;
+    action.textContent = "Понятно";
+  } else if (type === "terms") {
+    title.textContent = "Условия использования";
+    content.innerHTML = `
+      <p>Min Up — ранняя версия инструмента для учёта счетов и подготовки текстов напоминаний.</p>
+      <p>Пользователь отвечает за проверку введённых данных, суммы, срока оплаты и содержания сообщений перед отправкой. Приложение не отправляет напоминания автоматически и не гарантирует получение оплаты.</p>
+      <p>Эта версия не предоставляет платную подписку и не принимает платежи.</p>
+      <p><strong>Перед коммерческим запуском:</strong> владелец должен подготовить окончательные условия с указанием продавца, цены, продления и отмены подписки, возвратов, применимого права и обязательных прав потребителей. Этот текст — черновик, а не полные юридические условия.</p>`;
+    action.textContent = "Понятно";
+  }
+
+  document.getElementById("modalBackdrop").classList.add("open");
+  action.focus();
+}
+
+function modalPrimaryAction() {
+  closeModal();
+}
+
+function closeModal() {
+  document.getElementById("modalBackdrop").classList.remove("open");
+  if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
+}
+
+function backdropClose(event) {
+  if (event.target.id === "modalBackdrop") closeModal();
+}
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeModal();
+});
+
+function clearAllData() {
+  if (!confirm("Удалить все счета и счётчик бесплатных напоминаний из этого браузера? Это действие нельзя отменить.")) return;
+  try {
+    localStorage.removeItem(DATA_KEY);
+    localStorage.removeItem(USAGE_KEY);
+    invoices = [];
+    reminderUses = 0;
+    document.getElementById("reminderText").value = "";
+    render();
+    notify("Локальные данные удалены.");
+  } catch {
+    notify("Не удалось удалить данные браузера.");
+  }
+}
+
+document.getElementById("dueDate").value = localToday();
+render();
+</script>
 </body>
 </html>
