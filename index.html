@@ -1,1894 +1,1449 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f7f7f4">
-  <meta name="description" content="Кадр — пространство для людей кино. Обучение, профессиональное сообщество и биржа кинопроектов.">
-  <title>Кадр — пространство для людей кино</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101014">
+  <meta name="description" content="Кадр — пространство киноиндустрии. Кастинги, съёмки, команды и проекты.">
+  <title>Кадр — кино начинается здесь</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
-      color-scheme: light;
-      --bg: #f7f7f4;
-      --surface: #ffffff;
-      --surface-2: #efefea;
-      --text: #171815;
-      --muted: #70716b;
-      --border: #dedfd7;
-      --accent: #d8ff54;
-      --accent-hover: #c8f03e;
-      --danger: #b42318;
-      --success: #16803d;
-      --shadow: 0 12px 40px rgba(20, 24, 12, .06);
-      --radius: 22px;
-    }
-
-    body.dark {
       color-scheme: dark;
-      --bg: #151612;
-      --surface: #20211c;
-      --surface-2: #2a2b24;
-      --text: #f5f5ed;
-      --muted: #a5a69b;
-      --border: #393a32;
-      --accent: #d8ff54;
-      --accent-hover: #c8f03e;
-      --danger: #ff8177;
-      --success: #70df94;
-      --shadow: 0 12px 40px rgba(0, 0, 0, .18);
+      --bg: #101014;
+      --panel: #19191f;
+      --panel2: #22222b;
+      --text: #f8f7fc;
+      --muted: #9b9aa9;
+      --line: rgba(255,255,255,.09);
+      --accent: #a78bfa;
+      --accent2: #7c5cff;
+      --green: #a3e6c0;
+      --danger: #ff8585;
+      --radius: 20px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    * {
-      box-sizing: border-box;
+    body.light {
+      color-scheme: light;
+      --bg: #f5f4fa;
+      --panel: #ffffff;
+      --panel2: #eeecf5;
+      --text: #1c1925;
+      --muted: #777384;
+      --line: rgba(30,20,50,.10);
+      --accent: #7046e8;
+      --accent2: #5934d4;
+      --green: #23794b;
+      --danger: #bd3e49;
     }
+
+    * { box-sizing: border-box; }
 
     html {
+      min-height: 100%;
       scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
-      background: var(--bg);
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 90% -10%, rgba(124,92,255,.15), transparent 38%),
+        var(--bg);
       color: var(--text);
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Arial, sans-serif;
-      line-height: 1.55;
-      transition: background .2s ease, color .2s ease;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: calc(88px + var(--safe-bottom));
+      transition: background .2s, color .2s;
     }
 
-    button,
-    input,
-    select,
-    textarea {
-      font: inherit;
-    }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible,
+    select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-    button,
-    a {
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    button:focus-visible,
-    a:focus-visible,
-    input:focus-visible,
-    select:focus-visible,
-    textarea:focus-visible {
-      outline: 3px solid #8ab600;
-      outline-offset: 3px;
-    }
-
-    .container {
-      width: min(1120px, calc(100% - 40px));
-      margin-inline: auto;
+    .app {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 16px;
     }
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 20;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-      background: color-mix(in srgb, var(--bg) 92%, transparent);
-      backdrop-filter: blur(16px);
-    }
-
-    .nav {
-      min-height: 76px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 12px;
+      min-height: 65px;
+      padding: 10px 0;
+      background: color-mix(in srgb, var(--bg) 90%, transparent);
+      backdrop-filter: blur(18px);
     }
 
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: -1.2px;
-    }
-
-    .brand-mark {
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .logo {
       display: grid;
       place-items: center;
-      width: 38px;
-      height: 38px;
-      background: var(--accent);
-      color: #171815;
-      border-radius: 12px;
-      font-size: 19px;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      border-radius: 15px;
+      color: white;
+      background: linear-gradient(145deg, #c4aaff, #7148ec 70%, #5233c8);
+      box-shadow: 0 7px 24px #8056f333;
+      font-size: 22px;
       font-weight: 900;
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 23px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 650;
-    }
+    .brand-name { font-size: 20px; font-weight: 850; letter-spacing: -.7px; }
+    .brand-caption { color: var(--muted); font-size: 11px; margin-top: 2px; }
 
-    .nav-links a:hover {
-      color: var(--text);
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .select-control,
-    .icon-button,
-    .secondary-button {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    .select-control {
-      padding: 9px 10px;
-      max-width: 125px;
-    }
-
-    .icon-button {
-      width: 42px;
-      height: 42px;
-      font-size: 18px;
-    }
-
-    .primary-button,
-    .secondary-button,
-    .donate-button {
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 18px;
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
       border-radius: 14px;
-      border: 1px solid transparent;
-      font-weight: 800;
-      transition: transform .15s ease, background .15s ease;
-    }
-
-    .primary-button,
-    .donate-button {
-      background: var(--accent);
-      color: #171815;
-    }
-
-    .primary-button:hover,
-    .donate-button:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
-    }
-
-    .secondary-button:hover {
-      background: var(--surface-2);
-    }
-
-    .small-button {
-      min-height: 40px;
-      padding: 9px 13px;
-      font-size: 13px;
+      color: var(--text);
+      background: var(--panel);
     }
 
     .hero {
-      padding: 88px 0 72px;
+      position: relative;
+      overflow: hidden;
+      margin: 8px 0 22px;
+      padding: 25px 22px 22px;
+      border: 1px solid rgba(183,153,255,.2);
+      border-radius: 27px;
+      background:
+        radial-gradient(ellipse at 100% 0%, #a27aff33, transparent 45%),
+        linear-gradient(135deg, #272036, #17151e 70%);
     }
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      align-items: center;
-      gap: 55px;
+    body.light .hero {
+      background:
+        radial-gradient(ellipse at 100% 0%, #b9a3ff88, transparent 45%),
+        linear-gradient(135deg, #e8ddff, #fff 75%);
+      border-color: #d9ccff;
+    }
+
+    .hero::after {
+      content: "✦";
+      position: absolute;
+      right: 14px;
+      top: -30px;
+      font-size: 155px;
+      line-height: 1;
+      color: rgba(181,151,255,.10);
+      pointer-events: none;
     }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 7px 11px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      color: var(--muted);
-      font-size: 12px;
+      gap: 6px;
+      color: var(--accent);
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: .6px;
+      letter-spacing: 1.1px;
       text-transform: uppercase;
     }
 
-    .eyebrow-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #85b900;
-    }
-
-    h1 {
-      max-width: 720px;
-      margin: 23px 0 20px;
-      font-size: clamp(46px, 7vw, 82px);
-      line-height: .99;
-      letter-spacing: -5px;
-      font-weight: 900;
-    }
-
-    .accent-text {
-      color: #789d00;
-    }
-
-    body.dark .accent-text {
-      color: var(--accent);
-    }
-
-    .hero-description {
-      max-width: 510px;
-      margin: 0;
-      color: var(--muted);
-      font-size: 18px;
-    }
-
-    .hero-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 11px;
-      margin-top: 30px;
-    }
-
-    .hero-art {
-      position: relative;
-      min-height: 350px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      border-radius: 32px;
-      background: var(--accent);
-      color: #171815;
-      box-shadow: var(--shadow);
-    }
-
-    .hero-art::before,
-    .hero-art::after {
-      content: "";
-      position: absolute;
-      border: 2px solid rgba(23, 24, 21, .13);
-      border-radius: 50%;
-    }
-
-    .hero-art::before {
-      width: 310px;
-      height: 310px;
-    }
-
-    .hero-art::after {
-      width: 230px;
-      height: 230px;
-    }
-
-    .film-icon {
+    .hero h1 {
       position: relative;
       z-index: 1;
-      font-size: 110px;
-      transform: rotate(-8deg);
-      filter: drop-shadow(0 15px 0 rgba(23, 24, 21, .08));
-    }
-
-    .art-label {
-      position: absolute;
-      bottom: 22px;
-      left: 24px;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .art-number {
-      position: absolute;
-      top: 22px;
-      right: 24px;
-      font-size: 13px;
-      font-weight: 900;
-    }
-
-    .section {
-      padding: 66px 0;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 25px;
-      margin-bottom: 26px;
-    }
-
-    .section-kicker {
-      margin: 0 0 8px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 850;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: clamp(30px, 4vw, 44px);
-      line-height: 1.08;
+      max-width: 420px;
+      margin: 13px 0 10px;
+      font-size: clamp(30px, 8vw, 43px);
+      line-height: 1.03;
       letter-spacing: -1.8px;
     }
 
-    .section-description {
-      max-width: 430px;
-      margin: 10px 0 0;
+    .hero p {
+      position: relative;
+      z-index: 1;
+      max-width: 350px;
       color: var(--muted);
+      line-height: 1.6;
+      margin: 0 0 20px;
     }
 
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .feature-card {
-      min-height: 230px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 25px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--surface);
-      transition: transform .18s ease, box-shadow .18s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow);
-    }
-
-    .feature-icon {
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 24px;
-      border-radius: 15px;
-      background: var(--surface-2);
-      font-size: 23px;
-    }
-
-    .feature-card h3 {
-      margin: 0 0 7px;
-      font-size: 21px;
-      letter-spacing: -.5px;
-    }
-
-    .feature-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .card-link {
-      margin-top: auto;
-      padding-top: 20px;
-      font-size: 14px;
-      font-weight: 850;
-    }
-
-    .marketplace {
-      padding: 28px;
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      background: var(--surface);
-    }
-
-    .marketplace-top {
-      display: flex;
+    .button {
+      display: inline-flex;
+      justify-content: center;
       align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 17px;
+      border: 0;
+      border-radius: 14px;
+      font-weight: 800;
+      transition: transform .15s, opacity .15s;
+    }
+
+    .button:active { transform: scale(.98); }
+    .button.primary {
+      color: white;
+      background: linear-gradient(120deg, #a48aff, #744cf0);
+      box-shadow: 0 7px 22px #8056f333;
+    }
+
+    .button.secondary {
+      color: var(--text);
+      background: var(--panel2);
+      border: 1px solid var(--line);
+    }
+
+    .button.full { width: 100%; }
+    .button.small { min-height: 36px; padding: 0 12px; font-size: 12px; border-radius: 11px; }
+    .button:disabled { opacity: .5; cursor: not-allowed; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin: 0 0 25px;
+    }
+
+    .stat {
+      min-width: 0;
+      padding: 13px 11px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--panel);
+    }
+
+    .stat-value { font-size: 19px; font-weight: 850; letter-spacing: -.5px; }
+    .stat-label { color: var(--muted); font-size: 11px; margin-top: 5px; }
+
+    .section { margin: 25px 0; scroll-margin-top: 75px; }
+    .section-head {
+      display: flex;
       justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .marketplace-top p {
-      margin: 8px 0 0;
-      color: var(--muted);
-    }
-
-    .empty-state {
-      display: flex;
-      flex-direction: column;
       align-items: center;
-      text-align: center;
-      padding: 55px 20px 35px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
-    .empty-icon {
-      width: 68px;
-      height: 68px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 16px;
-      border-radius: 22px;
-      background: var(--surface-2);
-      font-size: 30px;
+    .section h2 { margin: 0; font-size: 20px; letter-spacing: -.5px; }
+    .section-subtitle { color: var(--muted); margin: 6px 0 0; line-height: 1.45; }
+
+    .searchbox { position: relative; margin-bottom: 12px; }
+    .searchbox span { position: absolute; left: 14px; top: 12px; font-size: 16px; }
+    .searchbox input {
+      width: 100%;
+      height: 45px;
+      padding: 0 14px 0 42px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      color: var(--text);
+      background: var(--panel);
     }
 
-    .empty-state h3 {
-      margin: 0 0 7px;
-      font-size: 21px;
-    }
+    input, textarea, select { color: var(--text); }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    select option { background: var(--panel); color: var(--text); }
 
-    .empty-state p {
-      max-width: 420px;
-      margin: 0;
+    .chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 1px 0 8px;
+      scrollbar-width: none;
+    }
+    .chips::-webkit-scrollbar { display: none; }
+
+    .chip {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
       color: var(--muted);
+      background: var(--panel);
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 700;
     }
 
-    .project-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 24px;
+    .chip.active {
+      color: white;
+      border-color: transparent;
+      background: var(--accent2);
     }
 
-    .project-card {
-      padding: 20px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: var(--bg);
+    .project-list { display: grid; gap: 12px; }
+    .project {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+      overflow: hidden;
     }
 
-    .project-card h3 {
-      margin: 8px 0;
+    .project.promoted {
+      border-color: #a78bfa88;
+      background:
+        linear-gradient(120deg, #a78bfa12, transparent 60%),
+        var(--panel);
     }
 
-    .project-card p {
+    .project-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .project-category {
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .7px;
+      text-transform: uppercase;
+    }
+
+    .project h3 { margin: 8px 0; font-size: 17px; line-height: 1.3; }
+    .project-description {
       color: var(--muted);
+      line-height: 1.55;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
-    .project-category {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: var(--surface-2);
+    .project-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 9px;
+      border-radius: 9px;
+      background: var(--panel2);
+      color: var(--muted);
+      font-size: 10px;
       font-weight: 800;
     }
 
-    .auth-section {
-      padding: 66px 0 90px;
-    }
+    .tag.premium { color: #c6b3ff; background: #7953d82b; }
+    .project-actions { display: flex; gap: 8px; margin-top: 15px; }
+    .project-actions .button { flex: 1; }
 
-    .auth-layout {
-      display: grid;
-      grid-template-columns: .85fr 1.15fr;
-      gap: 26px;
-      align-items: start;
-    }
-
-    .auth-intro {
-      padding: 24px 0;
-    }
-
-    .auth-intro p {
-      max-width: 400px;
+    .empty {
+      padding: 30px 20px;
+      border: 1px dashed var(--line);
+      border-radius: 20px;
+      text-align: center;
       color: var(--muted);
+      line-height: 1.6;
     }
 
-    .auth-panel {
-      padding: 25px;
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      background: var(--surface);
+    .empty-icon { font-size: 30px; margin-bottom: 8px; }
+
+    .promo-banner {
+      position: relative;
+      overflow: hidden;
+      padding: 21px;
+      border: 1px solid #a78bfa55;
+      border-radius: 22px;
+      background: linear-gradient(130deg, #38265c, #211b35 70%);
     }
 
-    .auth-panel h3 {
-      margin: 0 0 6px;
-      font-size: 24px;
+    body.light .promo-banner {
+      background: linear-gradient(130deg, #e7dcff, #f9f7ff);
     }
 
-    .auth-panel > p {
-      margin: 0 0 22px;
+    .promo-banner h3 { margin: 10px 0 8px; font-size: 21px; }
+    .promo-banner p { margin: 0 0 16px; color: var(--muted); line-height: 1.55; }
+
+    .plans { display: grid; gap: 12px; }
+    .plan {
+      position: relative;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+    }
+
+    .plan.featured { border-color: var(--accent); }
+    .plan-label { color: var(--accent); font-size: 10px; font-weight: 900; letter-spacing: 1px; }
+    .plan h3 { margin: 8px 0 4px; font-size: 18px; }
+    .plan-price { font-size: 28px; font-weight: 900; letter-spacing: -1px; margin: 12px 0; }
+    .plan-price small { color: var(--muted); font-size: 12px; font-weight: 500; letter-spacing: 0; }
+    .plan ul { padding-left: 18px; color: var(--muted); line-height: 1.8; margin-bottom: 18px; }
+
+    .note {
       color: var(--muted);
-      font-size: 14px;
+      font-size: 11px;
+      line-height: 1.6;
+      margin-top: 12px;
     }
 
-    .form-grid {
-      display: grid;
-      gap: 13px;
+    .form-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
     }
 
-    .field {
-      display: grid;
-      gap: 7px;
-    }
-
-    .field label {
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .field input,
-    .field select,
-    .field textarea {
+    .field { display: grid; gap: 7px; margin-bottom: 14px; }
+    .field label { font-size: 12px; font-weight: 800; }
+    .field input, .field textarea, .field select {
       width: 100%;
-      min-width: 0;
-      padding: 12px 13px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      min-height: 45px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
       background: var(--bg);
-      color: var(--text);
     }
 
-    .field textarea {
-      min-height: 110px;
-      resize: vertical;
+    .field textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+
+    .notice {
+      padding: 12px 14px;
+      border-radius: 13px;
+      background: var(--panel2);
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 12px;
+      margin: 12px 0;
     }
 
-    .auth-tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 20px;
-      padding: 5px;
-      border-radius: 14px;
-      background: var(--surface-2);
+    .notice.error { color: var(--danger); }
+    .notice.success { color: var(--green); }
+
+    .account-box {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
     }
 
-    .auth-tab {
-      flex: 1;
-      padding: 10px;
+    .account-status { color: var(--muted); line-height: 1.6; margin: 8px 0 15px; }
+    .hidden { display: none !important; }
+
+    .bottom-nav {
+      position: fixed;
+      z-index: 30;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 8px 12px calc(8px + var(--safe-bottom));
+      border-top: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel) 94%, transparent);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-inner {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 3px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .nav-btn {
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+      min-height: 48px;
+      padding: 5px 0;
       border: 0;
-      border-radius: 10px;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    .auth-tab.active {
-      background: var(--surface);
-      color: var(--text);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
-    }
-
-    .form-message {
-      display: none;
-      margin: 14px 0 0;
-      padding: 11px 13px;
       border-radius: 12px;
-      font-size: 13px;
-      overflow-wrap: anywhere;
+      color: var(--muted);
+      background: transparent;
+      font-size: 10px;
     }
 
-    .form-message.visible {
-      display: block;
-    }
+    .nav-btn .nav-icon { font-size: 19px; line-height: 1.2; }
+    .nav-btn.active { color: var(--accent); background: #9675ff12; }
 
-    .form-message.error {
-      background: color-mix(in srgb, var(--danger) 10%, var(--surface));
-      color: var(--danger);
-    }
-
-    .form-message.success {
-      background: color-mix(in srgb, var(--success) 10%, var(--surface));
-      color: var(--success);
-    }
-
-    .account-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding: 13px;
+    .toast {
+      position: fixed;
+      z-index: 100;
+      left: 16px;
+      right: 16px;
+      bottom: calc(83px + var(--safe-bottom));
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
       border-radius: 14px;
-      background: var(--surface-2);
-    }
-
-    .account-email {
-      font-size: 13px;
-      font-weight: 750;
-      overflow-wrap: anywhere;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .donation-band {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 30px;
-      border-radius: 25px;
-      background: var(--surface-2);
-    }
-
-    .donation-band h2 {
-      font-size: clamp(25px, 3vw, 34px);
-    }
-
-    .donation-band p {
-      max-width: 520px;
-      margin: 10px 0 0;
-      color: var(--muted);
-    }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 0;
-    }
-
-    .footer-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .footer-note,
-    .footer-links {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-    }
-
-    .footer-links a:hover {
+      background: var(--panel2);
       color: var(--text);
+      box-shadow: 0 10px 35px #0003;
+      line-height: 1.5;
     }
 
-    @media (max-width: 850px) {
-      .nav-links {
-        gap: 13px;
-      }
-
-      .nav-links a:nth-child(2) {
-        display: none;
-      }
-
-      .hero-grid {
-        grid-template-columns: 1fr .7fr;
-        gap: 25px;
-      }
-
-      .hero-art {
-        min-height: 280px;
-      }
-
-      .film-icon {
-        font-size: 85px;
-      }
-
-      .feature-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .auth-layout {
-        grid-template-columns: 1fr;
-      }
+    .modal-backdrop {
+      position: fixed;
+      z-index: 80;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 12px;
+      background: #0009;
     }
 
-    @media (max-width: 600px) {
-      .container {
-        width: min(100% - 28px, 1120px);
-      }
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      max-height: 85dvh;
+      overflow-y: auto;
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 25px;
+      background: var(--panel);
+    }
 
-      .nav {
-        min-height: 66px;
-        flex-wrap: wrap;
-        padding: 10px 0;
-      }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .modal-head h2 { margin: 0; font-size: 20px; }
+    .modal-close { width: 35px; height: 35px; border: 0; border-radius: 11px; color: var(--text); background: var(--panel2); }
 
-      .brand {
-        font-size: 21px;
-      }
+    .footer {
+      padding: 20px 0 8px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+      text-align: center;
+    }
 
-      .brand-mark {
-        width: 34px;
-        height: 34px;
-      }
-
-      .nav-links {
-        order: 3;
-        width: 100%;
-        justify-content: space-around;
-        padding: 4px 0;
-      }
-
-      .nav-links a:nth-child(2) {
-        display: inline;
-      }
-
-      .nav-actions {
-        margin-left: auto;
-      }
-
-      .select-control {
-        max-width: 95px;
-        padding: 8px 5px;
-        font-size: 12px;
-      }
-
-      .icon-button {
-        width: 38px;
-        height: 38px;
-      }
-
-      .nav-actions .small-button {
-        display: none;
-      }
-
-      .hero {
-        padding: 50px 0 40px;
-      }
-
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
-
-      h1 {
-        font-size: clamp(46px, 14vw, 68px);
-        letter-spacing: -3px;
-      }
-
-      .hero-description {
-        font-size: 16px;
-      }
-
-      .hero-art {
-        min-height: 215px;
-      }
-
-      .film-icon {
-        font-size: 75px;
-      }
-
-      .hero-art::before {
-        width: 210px;
-        height: 210px;
-      }
-
-      .hero-art::after {
-        width: 155px;
-        height: 155px;
-      }
-
-      .section {
-        padding: 43px 0;
-      }
-
-      .section-header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .feature-grid,
-      .project-list {
-        grid-template-columns: 1fr;
-      }
-
-      .feature-card {
-        min-height: 195px;
-      }
-
-      .marketplace {
-        padding: 18px;
-      }
-
-      .auth-section {
-        padding: 42px 0 55px;
-      }
-
-      .auth-panel {
-        padding: 18px;
-      }
-
-      .donation-band {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 23px;
-      }
-
-      .footer-content {
-        align-items: flex-start;
-        flex-direction: column;
-      }
+    @media (min-width: 600px) {
+      .app { padding: 0 22px; }
+      .plans { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .modal-backdrop { align-items: center; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        transition: none !important;
-      }
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
     }
   </style>
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="container nav">
-      <a class="brand" href="index.html" aria-label="Кадр — главная">
-        <span class="brand-mark">К</span>
-        <span>кадр<span class="accent-text">.</span></span>
-      </a>
-
-      <nav class="nav-links" aria-label="Main navigation">
-        <a href="academy.html" data-i18n="navAcademy">Киношкола</a>
-        <a href="#marketplace" data-i18n="navMarket">Биржа</a>
-        <a href="about.html" data-i18n="navAbout">О проекте</a>
-      </nav>
-
-      <div class="nav-actions">
-        <select id="languageSelect" class="select-control" aria-label="Language">
-          <option value="ru">Русский</option>
-          <option value="en">English</option>
-          <option value="zh">中文</option>
-        </select>
-
-        <button id="themeToggle" class="icon-button" type="button"
-          aria-label="Toggle theme" title="Toggle theme">☾</button>
-
-        <a class="primary-button small-button" href="#account"
-          data-i18n="navLogin">Войти</a>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="container hero-grid">
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">К</div>
         <div>
-          <span class="eyebrow">
-            <span class="eyebrow-dot"></span>
-            <span data-i18n="heroEyebrow">Пространство для людей кино</span>
-          </span>
-
-          <h1>
-            <span data-i18n="heroLine1">Кино начинается</span><br>
-            <span class="accent-text" data-i18n="heroLine2">с людей.</span>
-          </h1>
-
-          <p class="hero-description" data-i18n="heroDescription">
-            Учись киноискусству, находи свою профессию и готовься к настоящим проектам.
-          </p>
-
-          <div class="hero-buttons">
-            <a class="primary-button" href="academy.html">
-              <span data-i18n="heroPrimary">Исследовать киношколу</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-            <a class="secondary-button" href="#marketplace" data-i18n="heroSecondary">
-              Биржа проектов
-            </a>
-          </div>
-        </div>
-
-        <div class="hero-art" aria-label="Film illustration">
-          <span class="art-number">KDR / 001</span>
-          <span class="film-icon" aria-hidden="true">🎬</span>
-          <span class="art-label" data-i18n="artLabel">Your next scene starts here</span>
+          <div class="brand-name">КАДР<span style="color:var(--accent)">.</span></div>
+          <div class="brand-caption" data-i18n="brandCaption">Кино начинается здесь</div>
         </div>
       </div>
-    </section>
 
-    <section class="section" id="explore">
-      <div class="container">
-        <div class="section-header">
+      <div class="top-actions">
+        <button class="icon-btn" id="languageBtn" aria-label="Change language">RU</button>
+        <button class="icon-btn" id="themeBtn" aria-label="Change theme">☼</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="eyebrow" data-i18n="heroEyebrow">✦ СООБЩЕСТВО КИНО</div>
+        <h1 data-i18n="heroTitle">Твой следующий проект начинается здесь.</h1>
+        <p data-i18n="heroText">Находи кастинги, собирай команду и превращай идеи в кино.</p>
+        <button class="button primary" onclick="goTo('publish')" data-i18n="heroButton">＋ Разместить проект</button>
+      </section>
+
+      <section class="stats" aria-label="Преимущества">
+        <div class="stat">
+          <div class="stat-value">01</div>
+          <div class="stat-label" data-i18n="statOne">Найди команду</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">02</div>
+          <div class="stat-label" data-i18n="statTwo">Найди кастинг</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">03</div>
+          <div class="stat-label" data-i18n="statThree">Запусти проект</div>
+        </div>
+      </section>
+
+      <section class="section" id="feed">
+        <div class="section-head">
           <div>
-            <p class="section-kicker" data-i18n="featuresKicker">Начни отсюда</p>
-            <h2 data-i18n="featuresTitle">Три шага в кино</h2>
-            <p class="section-description" data-i18n="featuresDescription">
-              Разберись в профессиях, познакомься с проектами и сделай следующий шаг.
-            </p>
+            <h2 data-i18n="feedTitle">Лента возможностей</h2>
+            <p class="section-subtitle" data-i18n="feedSubtitle">Проекты, люди и новые роли</p>
+          </div>
+          <button class="icon-btn" id="refreshBtn" aria-label="Refresh">↻</button>
+        </div>
+
+        <div class="searchbox">
+          <span>⌕</span>
+          <input id="searchInput" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Поиск по проектам">
+        </div>
+
+        <div class="chips" id="categoryChips">
+          <button class="chip active" data-category="all" data-i18n="catAll">Все</button>
+          <button class="chip" data-category="film" data-i18n="catFilm">Кино</button>
+          <button class="chip" data-category="casting" data-i18n="catCasting">Кастинг</button>
+          <button class="chip" data-category="team" data-i18n="catTeam">Команда</button>
+          <button class="chip" data-category="job" data-i18n="catJob">Работа</button>
+          <button class="chip" data-category="collaboration" data-i18n="catCollab">Коллаборация</button>
+        </div>
+
+        <div class="project-list" id="projectList">
+          <div class="empty">
+            <div class="empty-icon">🎬</div>
+            <div data-i18n="loading">Загружаем проекты…</div>
           </div>
         </div>
 
-        <div class="feature-grid">
-          <a class="feature-card" href="academy.html">
-            <span class="feature-icon" aria-hidden="true">🎓</span>
-            <h3 data-i18n="featureAcademyTitle">Киношкола</h3>
-            <p data-i18n="featureAcademyText">
-              Изучай профессии, процессы съёмок и путь от идеи до экрана.
-            </p>
-            <span class="card-link" data-i18n="learnMore">Начать обучение ↗</span>
-          </a>
-
-          <a class="feature-card" href="#marketplace">
-            <span class="feature-icon" aria-hidden="true">🎥</span>
-            <h3 data-i18n="featureMarketTitle">Биржа проектов</h3>
-            <p data-i18n="featureMarketText">
-              Публикуй кастинги, ищи команду и рассказывай о своём проекте.
-            </p>
-            <span class="card-link" data-i18n="viewMarket">Открыть биржу ↗</span>
-          </a>
-
-          <a class="feature-card" href="about.html">
-            <span class="feature-icon" aria-hidden="true">✳</span>
-            <h3 data-i18n="featureCommunityTitle">Сообщество</h3>
-            <p data-i18n="featureCommunityText">
-              Узнай, зачем создан «Кадр» и кто стоит за проектом.
-            </p>
-            <span class="card-link" data-i18n="aboutLink">О проекте ↗</span>
-          </a>
+        <div class="note" data-i18n="feedDisclaimer">
+          Проверяй условия участия и не отправляй деньги незнакомым людям за обещания ролей.
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section" id="marketplace">
-      <div class="container">
-        <div class="marketplace">
-          <div class="marketplace-top">
-            <div>
-              <p class="section-kicker" data-i18n="marketKicker">Работа и сотрудничество</p>
-              <h2 data-i18n="marketTitle">Биржа кино</h2>
-              <p data-i18n="marketDescription">
-                Проекты, команды, кастинги и новые возможности.
-              </p>
-            </div>
-
-            <button id="createProjectTop" class="primary-button" type="button"
-              data-i18n="createProject">＋ Создать объявление</button>
-          </div>
-
-          <div id="projectList" class="project-list"></div>
-
-          <div id="marketEmpty" class="empty-state">
-            <div class="empty-icon" aria-hidden="true">✳</div>
-            <h3 data-i18n="emptyTitle">Здесь начинается следующий проект</h3>
-            <p data-i18n="emptyDescription">
-              Объявлений пока нет. Зарегистрируйся, чтобы первым рассказать о своём проекте.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="auth-section" id="account">
-      <div class="container auth-layout">
-        <div class="auth-intro">
-          <p class="section-kicker" data-i18n="accountKicker">Твой следующий шаг</p>
-          <h2 data-i18n="accountTitle">В кино — вместе.</h2>
-          <p data-i18n="accountDescription">
-            Создай аккаунт, чтобы публиковать объявления на бирже и находить участников команды.
-          </p>
-          <p data-i18n="accountPrivacy">
-            Для публикации требуется вход. Используй действующий email и надёжный пароль.
-          </p>
-        </div>
-
-        <div class="auth-panel">
-          <div id="signedOutPanel">
-            <h3 data-i18n="authTitle">Твой аккаунт</h3>
-            <p data-i18n="authDescription">Войди или зарегистрируйся, чтобы продолжить.</p>
-
-            <div class="auth-tabs">
-              <button class="auth-tab active" id="loginTab" type="button"
-                data-i18n="loginTab">Войти</button>
-              <button class="auth-tab" id="registerTab" type="button"
-                data-i18n="registerTab">Регистрация</button>
-            </div>
-
-            <form id="authForm" class="form-grid">
-              <div class="field">
-                <label for="authEmail" data-i18n="emailLabel">Email</label>
-                <input id="authEmail" name="email" type="email" autocomplete="email"
-                  required maxlength="254" placeholder="you@example.com">
-              </div>
-
-              <div class="field">
-                <label for="authPassword" data-i18n="passwordLabel">Пароль</label>
-                <input id="authPassword" name="password" type="password"
-                  autocomplete="current-password" required minlength="6" maxlength="128"
-                  data-i18n-placeholder="passwordPlaceholder"
-                  placeholder="Не менее 6 символов">
-              </div>
-
-              <button id="authSubmit" class="primary-button" type="submit"
-                data-i18n="loginButton">Войти</button>
-            </form>
-
-            <div id="authMessage" class="form-message" role="status" aria-live="polite"></div>
-          </div>
-
-          <div id="signedInPanel" class="hidden">
-            <h3 data-i18n="welcomeTitle">С возвращением!</h3>
-            <p data-i18n="welcomeDescription">Ты вошёл в аккаунт.</p>
-
-            <div class="account-bar">
-              <span id="accountEmail" class="account-email"></span>
-              <button id="logoutButton" class="secondary-button small-button" type="button"
-                data-i18n="logoutButton">Выйти</button>
-            </div>
-
-            <h3 data-i18n="publishTitle">Новое объявление</h3>
-            <p data-i18n="publishDescription">
-              Опиши проект, укажи направление и способ связи.
-            </p>
-
-            <form id="projectForm" class="form-grid">
-              <div class="field">
-                <label for="projectTitle" data-i18n="projectTitleLabel">Название</label>
-                <input id="projectTitle" name="title" required maxlength="100"
-                  data-i18n-placeholder="projectTitlePlaceholder"
-                  placeholder="Например, короткометражный фильм">
-              </div>
-
-              <div class="field">
-                <label for="projectCategory" data-i18n="categoryLabel">Категория</label>
-                <select id="projectCategory" name="category" required>
-                  <option value="film" data-i18n="categoryFilm">Кинопроект</option>
-                  <option value="casting" data-i18n="categoryCasting">Кастинг</option>
-                  <option value="team" data-i18n="categoryTeam">Поиск команды</option>
-                  <option value="job" data-i18n="categoryJob">Вакансия</option>
-                  <option value="collaboration" data-i18n="categoryCollab">Сотрудничество</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="projectDescription" data-i18n="descriptionLabel">Описание</label>
-                <textarea id="projectDescription" name="description" required
-                  minlength="20" maxlength="5000"
-                  data-i18n-placeholder="descriptionPlaceholder"
-                  placeholder="Расскажи о задаче, сроках и необходимых участниках."></textarea>
-              </div>
-
-              <div class="field">
-                <label for="projectContact" data-i18n="contactLabel">Контакт для связи</label>
-                <input id="projectContact" name="contact" required maxlength="200"
-                  data-i18n-placeholder="contactPlaceholder"
-                  placeholder="Email, Telegram или другой контакт">
-              </div>
-
-              <button id="publishButton" class="primary-button" type="submit"
-                data-i18n="publishButton">Опубликовать объявление</button>
-            </form>
-
-            <div id="projectMessage" class="form-message" role="status" aria-live="polite"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="donation-band">
+      <section class="section" id="publish">
+        <div class="section-head">
           <div>
-            <p class="section-kicker" data-i18n="supportKicker">Поддержка проекта</p>
-            <h2 data-i18n="supportTitle">Помоги «Кадру» расти.</h2>
-            <p data-i18n="supportDescription">
-              Поддержка сообщества поможет развивать обучение и инструменты для людей кино.
-            </p>
+            <h2 data-i18n="publishTitle">Опубликовать проект</h2>
+            <p class="section-subtitle" data-i18n="publishSubtitle">Расскажи о своей идее сообществу</p>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div id="publishAuthNotice" class="notice" data-i18n="loginToPublish">
+            Для публикации необходимо войти в аккаунт.
           </div>
 
-          <button id="donateButton" class="donate-button" type="button">
-            <span data-i18n="donateButton">♥ Поддержать проект</span>
-            <span aria-hidden="true">↗</span>
-          </button>
+          <form id="publishForm">
+            <div class="field">
+              <label for="projectTitle" data-i18n="fieldTitle">Название</label>
+              <input id="projectTitle" name="title" maxlength="100" required data-i18n-placeholder="titlePlaceholder" placeholder="Например, короткометражный фильм">
+            </div>
+
+            <div class="field">
+              <label for="projectCategory" data-i18n="fieldCategory">Категория</label>
+              <select id="projectCategory" name="category" required>
+                <option value="film" data-i18n="catFilm">Кино</option>
+                <option value="casting" data-i18n="catCasting">Кастинг</option>
+                <option value="team" data-i18n="catTeam">Команда</option>
+                <option value="job" data-i18n="catJob">Работа</option>
+                <option value="collaboration" data-i18n="catCollab">Коллаборация</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="projectDescription" data-i18n="fieldDescription">Описание</label>
+              <textarea id="projectDescription" name="description" maxlength="3000" required data-i18n-placeholder="descriptionPlaceholder" placeholder="Расскажи о проекте, задачах и требованиях…"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="projectContact" data-i18n="fieldContact">Контакт для связи</label>
+              <input id="projectContact" name="contact" maxlength="200" required data-i18n-placeholder="contactPlaceholder" placeholder="@username или рабочая почта">
+            </div>
+
+            <button class="button primary full" id="publishSubmit" type="submit" data-i18n="publishButton">Опубликовать бесплатно</button>
+            <div id="publishMessage" class="notice hidden" role="status"></div>
+            <p class="note" data-i18n="contactWarning">Контакт опубликованного объявления будет виден другим пользователям. Не указывай личные данные, которыми не хочешь делиться.</p>
+          </form>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <footer>
-    <div class="container footer-content">
-      <a class="brand" href="index.html">
-        <span class="brand-mark">К</span>
-        <span>кадр<span class="accent-text">.</span></span>
-      </a>
+      <section class="section" id="pro">
+        <div class="section-head">
+          <div>
+            <h2 data-i18n="monetizationTitle">Кадр Pro</h2>
+            <p class="section-subtitle" data-i18n="monetizationSubtitle">Продвигай проекты и находи аудиторию быстрее</p>
+          </div>
+        </div>
 
-      <span class="footer-note" data-i18n="footerCopyright">
-        © Кадр. Пространство для людей кино.
-      </span>
+        <div class="promo-banner">
+          <div class="eyebrow" data-i18n="proEyebrow">✦ ДЛЯ СОЗДАТЕЛЕЙ</div>
+          <h3 data-i18n="proTitle">Пусть твой проект заметят.</h3>
+          <p data-i18n="proText">Продвижение помогает выделить объявление в ленте. Оплата и активация будут доступны после подключения платёжного сервера.</p>
+          <button class="button primary" onclick="goTo('plans')" data-i18n="viewPlans">Посмотреть тарифы →</button>
+        </div>
+      </section>
 
-      <div class="footer-links">
-        <a href="academy.html" data-i18n="navAcademy">Киношкола</a>
-        <a href="about.html" data-i18n="navAbout">О проекте</a>
-        <a href="#account" data-i18n="navLogin">Войти</a>
-      </div>
+      <section class="section" id="plans">
+        <div class="section-head">
+          <div>
+            <h2 data-i18n="plansTitle">Тарифы продвижения</h2>
+            <p class="section-subtitle" data-i18n="plansSubtitle">Бесплатное размещение остаётся доступным</p>
+          </div>
+        </div>
+
+        <div class="plans">
+          <article class="plan">
+            <div class="plan-label" data-i18n="planBasicLabel">СТАРТ</div>
+            <h3 data-i18n="planBasicTitle">Бесплатно</h3>
+            <div class="plan-price" data-i18n="freePrice">0 ₽</div>
+            <ul>
+              <li data-i18n="basicFeature1">Публикация объявления</li>
+              <li data-i18n="basicFeature2">Появление в общей ленте</li>
+              <li data-i18n="basicFeature3">Контакт для откликов</li>
+            </ul>
+            <button class="button secondary full" onclick="goTo('publish')" data-i18n="basicButton">Создать объявление</button>
+          </article>
+
+          <article class="plan featured">
+            <div class="plan-label" data-i18n="planBoostLabel">✦ ПРОДВИЖЕНИЕ</div>
+            <h3 data-i18n="planBoostTitle">Boost на 7 дней</h3>
+            <div class="plan-price"><span data-i18n="boostPrice">299 ₽</span> <small data-i18n="once">/ разово</small></div>
+            <ul>
+              <li data-i18n="boostFeature1">Выделение объявления</li>
+              <li data-i18n="boostFeature2">Метка «Продвигается»</li>
+              <li data-i18n="boostFeature3">Приоритетное место в ленте</li>
+            </ul>
+            <button class="button primary full" onclick="buyPlan('boost7')" data-i18n="buyBoost">Продвинуть проект</button>
+          </article>
+
+          <article class="plan">
+            <div class="plan-label" data-i18n="planProLabel">ДЛЯ ПРОФЕССИОНАЛОВ</div>
+            <h3 data-i18n="planProTitle">Кадр Pro</h3>
+            <div class="plan-price"><span data-i18n="proPrice">799 ₽</span> <small data-i18n="perMonth">/ месяц</small></div>
+            <ul>
+              <li data-i18n="proFeature1">Пакет продвижений</li>
+              <li data-i18n="proFeature2">Инструменты для регулярных публикаций</li>
+              <li data-i18n="proFeature3">Управление своими проектами</li>
+            </ul>
+            <button class="button secondary full" onclick="buyPlan('pro_month')" data-i18n="buyPro">Выбрать Pro</button>
+          </article>
+
+          <article class="plan">
+            <div class="plan-label" data-i18n="planStudioLabel">ДЛЯ СТУДИЙ</div>
+            <h3 data-i18n="planStudioTitle">Studio</h3>
+            <div class="plan-price"><span data-i18n="studioPrice">1990 ₽</span> <small data-i18n="perMonth">/ месяц</small></div>
+            <ul>
+              <li data-i18n="studioFeature1">Регулярные объявления</li>
+              <li data-i18n="studioFeature2">Несколько активных проектов</li>
+              <li data-i18n="studioFeature3">Для кастинг-директоров и команд</li>
+            </ul>
+            <button class="button secondary full" onclick="buyPlan('studio_month')" data-i18n="buyStudio">Выбрать Studio</button>
+          </article>
+        </div>
+
+        <div class="notice" data-i18n="paymentNotice">
+          Тарифы — демонстрационные цены. Оплата не принимается, пока владелец приложения не подключит сервер оформления заказа, платёжного провайдера и проверку платежей. Не отправляй деньги вручную.
+        </div>
+      </section>
+
+      <section class="section" id="account">
+        <div class="section-head">
+          <div>
+            <h2 data-i18n="accountTitle">Аккаунт</h2>
+            <p class="section-subtitle" data-i18n="accountSubtitle">Вход для публикации проектов</p>
+          </div>
+        </div>
+
+        <div class="account-box">
+          <div id="accountStatus" class="account-status" data-i18n="accountLoading">Проверяем подключение…</div>
+
+          <form id="authForm">
+            <div class="field">
+              <label for="authEmail" data-i18n="emailLabel">Электронная почта</label>
+              <input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com">
+            </div>
+            <div class="field">
+              <label for="authPassword" data-i18n="passwordLabel">Пароль</label>
+              <input id="authPassword" type="password" autocomplete="current-password" minlength="8" required data-i18n-placeholder="passwordPlaceholder" placeholder="Не менее 8 символов">
+            </div>
+            <button class="button primary full" type="submit" id="authSubmit" data-i18n="signIn">Войти</button>
+            <button class="button secondary full" type="button" id="signUpBtn" style="margin-top:9px" data-i18n="signUp">Создать аккаунт</button>
+            <button class="button secondary full hidden" type="button" id="signOutBtn" style="margin-top:9px" data-i18n="signOut">Выйти</button>
+            <div id="authMessage" class="notice hidden" role="status"></div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>КАДР · <span data-i18n="footerTagline">Пространство киноиндустрии</span></div>
+      <div data-i18n="footerNote">Проверяй объявления самостоятельно. Кадр не гарантирует трудоустройство или участие в проектах.</div>
+      <div style="margin-top:8px">© <span id="year"></span> Кадр</div>
+    </footer>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Navigation">
+    <div class="nav-inner">
+      <button class="nav-btn active" data-go="home"><span class="nav-icon">⌂</span><span data-i18n="navHome">Главная</span></button>
+      <button class="nav-btn" data-go="feed"><span class="nav-icon">▤</span><span data-i18n="navFeed">Лента</span></button>
+      <button class="nav-btn" data-go="publish"><span class="nav-icon">＋</span><span data-i18n="navPublish">Создать</span></button>
+      <button class="nav-btn" data-go="pro"><span class="nav-icon">✦</span><span data-i18n="navPro">Pro</span></button>
+      <button class="nav-btn" data-go="account"><span class="nav-icon">◉</span><span data-i18n="navAccount">Профиль</span></button>
     </div>
-  </footer>
+  </nav>
 
-  <!--
-    НАСТРОЙКА:
-    1. Создай проект на Supabase.
-    2. Вставь Project URL и publishable/anon key ниже.
-    3. Выполни SQL из файла supabase.sql, который я пришлю отдельно.
-    4. Никогда не вставляй сюда service_role key, пароль или секретный ключ.
-  -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <div id="contactModal" class="modal-backdrop hidden" role="presentation">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+      <div class="modal-head">
+        <h2 id="contactModalTitle" data-i18n="contactModalTitle">Контакт проекта</h2>
+        <button class="modal-close" id="closeContactModal" aria-label="Close">✕</button>
+      </div>
+      <div id="contactModalBody"></div>
+    </div>
+  </div>
 
   <script>
-    "use strict";
-
-    // Вставь значения своего проекта Supabase.
+    // 1. Укажи URL своего проекта Supabase и Publishable/anon key.
+    // Никогда не вставляй сюда service_role key или секретный ключ платежей.
     const SUPABASE_URL = "ВСТАВЬТЕ_URL_ПРОЕКТА";
     const SUPABASE_ANON_KEY = "ВСТАВЬТЕ_PUBLISHABLE_ИЛИ_ANON_KEY";
 
-    // Вставь ссылку на страницу приёма платежей.
-    // Не вставляй номер личной карты или телефона в публичный код.
-    const DONATION_URL = "";
+    // 2. Платежи будут включены только после создания защищённой серверной функции.
+    // Нельзя безопасно подтверждать оплату только на стороне браузера.
+    const CHECKOUT_FUNCTION = "create-checkout";
 
-    const SUPABASE_CONFIGURED =
-      /^https:\/\/.+/.test(SUPABASE_URL) &&
-      !SUPABASE_URL.includes("ВСТАВЬТЕ") &&
+    const CATEGORY_KEYS = ["film", "casting", "team", "job", "collaboration"];
+    const tg = window.Telegram?.WebApp;
+    const validSupabaseConfig =
+      /^https:\/\/[a-zA-Z0-9-]+\.supabase\.co$/.test(SUPABASE_URL) &&
       SUPABASE_ANON_KEY.length > 20 &&
       !SUPABASE_ANON_KEY.includes("ВСТАВЬТЕ");
 
-    const translations = {
+    const i18n = {
       ru: {
-        navAcademy: "Киношкола",
-        navMarket: "Биржа",
-        navAbout: "О проекте",
-        navLogin: "Войти",
-        heroEyebrow: "Пространство для людей кино",
-        heroLine1: "Кино начинается",
-        heroLine2: "с людей.",
-        heroDescription: "Учись киноискусству, находи свою профессию и готовься к настоящим проектам.",
-        heroPrimary: "Исследовать киношколу",
-        heroSecondary: "Биржа проектов",
-        artLabel: "Твоя следующая сцена начинается здесь",
-        featuresKicker: "Начни отсюда",
-        featuresTitle: "Три шага в кино",
-        featuresDescription: "Разберись в профессиях, познакомься с проектами и сделай следующий шаг.",
-        featureAcademyTitle: "Киношкола",
-        featureAcademyText: "Изучай профессии, процессы съёмок и путь от идеи до экрана.",
-        featureMarketTitle: "Биржа проектов",
-        featureMarketText: "Публикуй кастинги, ищи команду и рассказывай о своём проекте.",
-        featureCommunityTitle: "Сообщество",
-        featureCommunityText: "Узнай, зачем создан «Кадр» и кто стоит за проектом.",
-        learnMore: "Начать обучение ↗",
-        viewMarket: "Открыть биржу ↗",
-        aboutLink: "О проекте ↗",
-        marketKicker: "Работа и сотрудничество",
-        marketTitle: "Биржа кино",
-        marketDescription: "Проекты, команды, кастинги и новые возможности.",
-        createProject: "＋ Создать объявление",
-        emptyTitle: "Здесь начинается следующий проект",
-        emptyDescription: "Объявлений пока нет. Зарегистрируйся, чтобы первым рассказать о своём проекте.",
-        accountKicker: "Твой следующий шаг",
-        accountTitle: "В кино — вместе.",
-        accountDescription: "Создай аккаунт, чтобы публиковать объявления на бирже и находить участников команды.",
-        accountPrivacy: "Для публикации требуется вход. Используй действующий email и надёжный пароль.",
-        authTitle: "Твой аккаунт",
-        authDescription: "Войди или зарегистрируйся, чтобы продолжить.",
-        loginTab: "Войти",
-        registerTab: "Регистрация",
-        emailLabel: "Email",
-        passwordLabel: "Пароль",
-        passwordPlaceholder: "Не менее 6 символов",
-        loginButton: "Войти",
-        registerButton: "Создать аккаунт",
-        welcomeTitle: "С возвращением!",
-        welcomeDescription: "Ты вошёл в аккаунт.",
-        logoutButton: "Выйти",
-        publishTitle: "Новое объявление",
-        publishDescription: "Опиши проект, укажи направление и способ связи.",
-        projectTitleLabel: "Название",
-        projectTitlePlaceholder: "Например, короткометражный фильм",
-        categoryLabel: "Категория",
-        categoryFilm: "Кинопроект",
-        categoryCasting: "Кастинг",
-        categoryTeam: "Поиск команды",
-        categoryJob: "Вакансия",
-        categoryCollab: "Сотрудничество",
-        descriptionLabel: "Описание",
-        descriptionPlaceholder: "Расскажи о задаче, сроках и необходимых участниках.",
-        contactLabel: "Контакт для связи",
-        contactPlaceholder: "Email, Telegram или другой контакт",
-        publishButton: "Опубликовать объявление",
-        supportKicker: "Поддержка проекта",
-        supportTitle: "Помоги «Кадру» расти.",
-        supportDescription: "Поддержка сообщества поможет развивать обучение и инструменты для людей кино.",
-        donateButton: "♥ Поддержать проект",
-        footerCopyright: "© Кадр. Пространство для людей кино.",
-        themeLight: "Переключить на светлую тему",
-        themeDark: "Переключить на тёмную тему",
-        setupError: "Авторизация пока не настроена. Добавь URL и ключ Supabase в index.html.",
-        authGenericError: "Не удалось выполнить запрос. Проверь подключение и настройки Supabase.",
-        loginSuccess: "Вход выполнен.",
-        registerSuccess: "Регистрация отправлена. Если включено подтверждение email, проверь почту и подтверди адрес.",
-        logoutSuccess: "Ты вышел из аккаунта.",
-        invalidCredentials: "Укажи корректный email и пароль длиной не менее 6 символов.",
-        projectSuccess: "Объявление опубликовано.",
-        projectLoadError: "Не удалось загрузить объявления. Проверь настройки таблицы projects.",
-        projectError: "Не удалось опубликовать объявление. Проверь SQL-схему и политики доступа.",
-        donateNotConfigured: "Ссылка на страницу донатов ещё не настроена.",
-        categoryFallback: "Проект",
-        contactPrefix: "Связь:",
-        noEmail: "Email не указан",
-        genericProject: "Кинопроект",
-        accountRequired: "Сначала войди в аккаунт, чтобы создать объявление.",
-        openAccount: "Перейти к аккаунту",
-        themeLabel: "Тема",
-        listingLoadSetup: "Чтобы подключить общую биржу, сначала настрой Supabase."
+        brandCaption:"Кино начинается здесь",heroEyebrow:"✦ СООБЩЕСТВО КИНО",
+        heroTitle:"Твой следующий проект начинается здесь.",
+        heroText:"Находи кастинги, собирай команду и превращай идеи в кино.",
+        heroButton:"＋ Разместить проект",statOne:"Найди команду",statTwo:"Найди кастинг",statThree:"Запусти проект",
+        feedTitle:"Лента возможностей",feedSubtitle:"Проекты, люди и новые роли",
+        searchPlaceholder:"Поиск по проектам",catAll:"Все",catFilm:"Кино",catCasting:"Кастинг",
+        catTeam:"Команда",catJob:"Работа",catCollab:"Коллаборация",loading:"Загружаем проекты…",
+        feedDisclaimer:"Проверяй условия участия и не отправляй деньги незнакомым людям за обещания ролей.",
+        publishTitle:"Опубликовать проект",publishSubtitle:"Расскажи о своей идее сообществу",
+        loginToPublish:"Для публикации необходимо войти в аккаунт.",fieldTitle:"Название",fieldCategory:"Категория",
+        fieldDescription:"Описание",fieldContact:"Контакт для связи",titlePlaceholder:"Например, короткометражный фильм",
+        descriptionPlaceholder:"Расскажи о проекте, задачах и требованиях…",
+        contactPlaceholder:"@username или рабочая почта",publishButton:"Опубликовать бесплатно",
+        contactWarning:"Контакт опубликованного объявления будет виден другим пользователям. Не указывай личные данные, которыми не хочешь делиться.",
+        monetizationTitle:"Кадр Pro",monetizationSubtitle:"Продвигай проекты и находи аудиторию быстрее",
+        proEyebrow:"✦ ДЛЯ СОЗДАТЕЛЕЙ",proTitle:"Пусть твой проект заметят.",
+        proText:"Продвижение помогает выделить объявление в ленте. Оплата и активация будут доступны после подключения платёжного сервера.",
+        viewPlans:"Посмотреть тарифы →",plansTitle:"Тарифы продвижения",plansSubtitle:"Бесплатное размещение остаётся доступным",
+        planBasicLabel:"СТАРТ",planBasicTitle:"Бесплатно",freePrice:"0 ₽",
+        basicFeature1:"Публикация объявления",basicFeature2:"Появление в общей ленте",basicFeature3:"Контакт для откликов",
+        basicButton:"Создать объявление",planBoostLabel:"✦ ПРОДВИЖЕНИЕ",planBoostTitle:"Boost на 7 дней",
+        boostPrice:"299 ₽",once:"/ разово",boostFeature1:"Выделение объявления",boostFeature2:"Метка «Продвигается»",
+        boostFeature3:"Приоритетное место в ленте",buyBoost:"Продвинуть проект",
+        planProLabel:"ДЛЯ ПРОФЕССИОНАЛОВ",planProTitle:"Кадр Pro",proPrice:"799 ₽",perMonth:"/ месяц",
+        proFeature1:"Пакет продвижений",proFeature2:"Инструменты для регулярных публикаций",
+        proFeature3:"Управление своими проектами",buyPro:"Выбрать Pro",planStudioLabel:"ДЛЯ СТУДИЙ",
+        planStudioTitle:"Studio",studioPrice:"1990 ₽",studioFeature1:"Регулярные объявления",
+        studioFeature2:"Несколько активных проектов",studioFeature3:"Для кастинг-директоров и команд",
+        buyStudio:"Выбрать Studio",
+        paymentNotice:"Тарифы — демонстрационные цены. Оплата не принимается, пока владелец приложения не подключит сервер оформления заказа, платёжного провайдера и проверку платежей. Не отправляй деньги вручную.",
+        accountTitle:"Аккаунт",accountSubtitle:"Вход для публикации проектов",accountLoading:"Проверяем подключение…",
+        emailLabel:"Электронная почта",passwordLabel:"Пароль",passwordPlaceholder:"Не менее 8 символов",
+        signIn:"Войти",signUp:"Создать аккаунт",signOut:"Выйти",footerTagline:"Пространство киноиндустрии",
+        footerNote:"Проверяй объявления самостоятельно. Кадр не гарантирует трудоустройство или участие в проектах.",
+        navHome:"Главная",navFeed:"Лента",navPublish:"Создать",navPro:"Pro",navAccount:"Профиль",
+        contactModalTitle:"Контакт проекта",allLoaded:"Пока нет опубликованных проектов. Стань одним из первых!",
+        noMatches:"Ничего не найдено. Попробуй изменить запрос или категорию.",
+        supabaseMissing:"База данных ещё не подключена. Настрой Supabase, чтобы загружать и публиковать объявления.",
+        authRequired:"Сначала войди в аккаунт.",publishing:"Публикуем…",published:"Объявление опубликовано!",
+        publishError:"Не удалось опубликовать. Проверь настройки Supabase и политики доступа.",
+        loginSuccess:"Вход выполнен.",signupSuccess:"Если регистрация прошла успешно, проверь почту для подтверждения.",
+        authError:"Не удалось выполнить запрос. Проверь email, пароль и настройки Supabase.",
+        logoutSuccess:"Ты вышел из аккаунта.",signedInAs:"Вход выполнен: ",notSignedIn:"Ты не вошёл в аккаунт.",
+        paymentUnavailable:"Покупки пока не подключены. Для реальных платежей нужно настроить платёжного провайдера и серверную проверку оплаты.",
+        contactUnavailable:"Контакт не указан.",contactCopy:"Скопировать контакт",copySuccess:"Контакт скопирован.",
+        promoted:"Продвигается",categoryLabel:"Категория",createdLabel:"Опубликовано",
+        missingTitle:"Укажи название и описание.",invalidContact:"Укажи рабочий контакт.",
+        telegramReady:"Открыто в Telegram",noProjects:"Объявлений пока нет.",unknownError:"Произошла ошибка."
       },
-
       en: {
-        navAcademy: "Film Academy",
-        navMarket: "Marketplace",
-        navAbout: "About",
-        navLogin: "Sign in",
-        heroEyebrow: "A space for film people",
-        heroLine1: "Cinema begins",
-        heroLine2: "with people.",
-        heroDescription: "Explore filmmaking, discover your role, and get ready for real projects.",
-        heroPrimary: "Explore the academy",
-        heroSecondary: "Project marketplace",
-        artLabel: "Your next scene starts here",
-        featuresKicker: "Start here",
-        featuresTitle: "Three steps into film",
-        featuresDescription: "Explore careers, discover projects, and take your next step.",
-        featureAcademyTitle: "Film Academy",
-        featureAcademyText: "Explore film careers, production, and the journey from idea to screen.",
-        featureMarketTitle: "Project marketplace",
-        featureMarketText: "Post castings, find a crew, and share your project.",
-        featureCommunityTitle: "Community",
-        featureCommunityText: "Learn why Kadr exists and who is building it.",
-        learnMore: "Start learning ↗",
-        viewMarket: "Open marketplace ↗",
-        aboutLink: "About the project ↗",
-        marketKicker: "Work and collaboration",
-        marketTitle: "Film marketplace",
-        marketDescription: "Projects, crews, castings, and new opportunities.",
-        createProject: "＋ Create a listing",
-        emptyTitle: "Your next project starts here",
-        emptyDescription: "There are no listings yet. Sign up to be the first to share a project.",
-        accountKicker: "Your next step",
-        accountTitle: "Better filmmaking, together.",
-        accountDescription: "Create an account to publish listings and find collaborators.",
-        accountPrivacy: "Sign in before publishing. Use a valid email and a strong password.",
-        authTitle: "Your account",
-        authDescription: "Sign in or create an account to continue.",
-        loginTab: "Sign in",
-        registerTab: "Sign up",
-        emailLabel: "Email",
-        passwordLabel: "Password",
-        passwordPlaceholder: "At least 6 characters",
-        loginButton: "Sign in",
-        registerButton: "Create account",
-        welcomeTitle: "Welcome back!",
-        welcomeDescription: "You are signed in.",
-        logoutButton: "Sign out",
-        publishTitle: "New listing",
-        publishDescription: "Describe the project, select a category, and add contact details.",
-        projectTitleLabel: "Title",
-        projectTitlePlaceholder: "For example, a short film",
-        categoryLabel: "Category",
-        categoryFilm: "Film project",
-        categoryCasting: "Casting",
-        categoryTeam: "Crew search",
-        categoryJob: "Job",
-        categoryCollab: "Collaboration",
-        descriptionLabel: "Description",
-        descriptionPlaceholder: "Describe the work, timeline, and people you need.",
-        contactLabel: "Contact",
-        contactPlaceholder: "Email, Telegram, or another contact",
-        publishButton: "Publish listing",
-        supportKicker: "Support the project",
-        supportTitle: "Help Kadr grow.",
-        supportDescription: "Your support helps us build learning resources and tools for film people.",
-        donateButton: "♥ Support the project",
-        footerCopyright: "© Kadr. A space for film people.",
-        themeLight: "Switch to light theme",
-        themeDark: "Switch to dark theme",
-        setupError: "Authentication is not configured. Add your Supabase URL and key in index.html.",
-        authGenericError: "The request failed. Check your connection and Supabase settings.",
-        loginSuccess: "You are signed in.",
-        registerSuccess: "Registration submitted. If email confirmation is enabled, check your inbox.",
-        logoutSuccess: "You have signed out.",
-        invalidCredentials: "Enter a valid email and a password of at least 6 characters.",
-        projectSuccess: "Listing published.",
-        projectLoadError: "Could not load listings. Check the projects table configuration.",
-        projectError: "Could not publish. Check the SQL schema and access policies.",
-        donateNotConfigured: "The donation page URL has not been configured yet.",
-        categoryFallback: "Project",
-        contactPrefix: "Contact:",
-        noEmail: "Email not provided",
-        genericProject: "Film project",
-        accountRequired: "Sign in before creating a listing.",
-        openAccount: "Go to account",
-        themeLabel: "Theme",
-        listingLoadSetup: "Configure Supabase to connect the shared marketplace."
+        brandCaption:"Where cinema begins",heroEyebrow:"✦ FILM COMMUNITY",
+        heroTitle:"Your next project starts here.",heroText:"Find castings, build your crew, and turn ideas into films.",
+        heroButton:"＋ Post a project",statOne:"Find a crew",statTwo:"Find a casting",statThree:"Launch a project",
+        feedTitle:"Opportunity feed",feedSubtitle:"Projects, people and new roles",searchPlaceholder:"Search projects",
+        catAll:"All",catFilm:"Film",catCasting:"Casting",catTeam:"Crew",catJob:"Jobs",catCollab:"Collaboration",
+        loading:"Loading projects…",feedDisclaimer:"Check every opportunity independently. Never pay strangers for promises of a role.",
+        publishTitle:"Post a project",publishSubtitle:"Share your idea with the community",
+        loginToPublish:"Sign in to publish a project.",fieldTitle:"Title",fieldCategory:"Category",
+        fieldDescription:"Description",fieldContact:"Contact",titlePlaceholder:"For example, a short film",
+        descriptionPlaceholder:"Describe the project, tasks and requirements…",contactPlaceholder:"@username or work email",
+        publishButton:"Publish for free",contactWarning:"Published contact details are visible to other users. Do not share private information.",
+        monetizationTitle:"Kadr Pro",monetizationSubtitle:"Promote projects and reach more people",
+        proEyebrow:"✦ FOR CREATORS",proTitle:"Get your project noticed.",
+        proText:"Promotion highlights your listing. Payments and activation require a connected payment backend.",
+        viewPlans:"View plans →",plansTitle:"Promotion plans",plansSubtitle:"Free listings remain available",
+        planBasicLabel:"START",planBasicTitle:"Free",freePrice:"€0",basicFeature1:"Publish a listing",
+        basicFeature2:"Appear in the main feed",basicFeature3:"Contact for replies",basicButton:"Create a listing",
+        planBoostLabel:"✦ PROMOTION",planBoostTitle:"7-day Boost",boostPrice:"€2.99",once:"/ one-time",
+        boostFeature1:"Highlighted listing",boostFeature2:"Promoted badge",boostFeature3:"Priority in the feed",
+        buyBoost:"Promote project",planProLabel:"FOR PROFESSIONALS",planProTitle:"Kadr Pro",
+        proPrice:"€7.99",perMonth:"/ month",proFeature1:"Promotion credits",
+        proFeature2:"Tools for regular publishing",proFeature3:"Manage your projects",buyPro:"Choose Pro",
+        planStudioLabel:"FOR STUDIOS",planStudioTitle:"Studio",studioPrice:"€19.90",
+        studioFeature1:"Regular listings",studioFeature2:"Multiple active projects",
+        studioFeature3:"For casting directors and crews",buyStudio:"Choose Studio",
+        paymentNotice:"These are example prices. No payment is accepted until a secure checkout backend and payment verification are configured. Do not send money manually.",
+        accountTitle:"Account",accountSubtitle:"Sign in to publish projects",accountLoading:"Checking connection…",
+        emailLabel:"Email",passwordLabel:"Password",passwordPlaceholder:"At least 8 characters",
+        signIn:"Sign in",signUp:"Create account",signOut:"Sign out",footerTagline:"A space for the film industry",
+        footerNote:"Check listings independently. Kadr does not guarantee employment or project participation.",
+        navHome:"Home",navFeed:"Feed",navPublish:"Create",navPro:"Pro",navAccount:"Profile",
+        contactModalTitle:"Project contact",allLoaded:"No projects yet. Be one of the first!",
+        noMatches:"No results. Try another search or category.",
+        supabaseMissing:"Database not connected. Configure Supabase to load and publish listings.",
+        authRequired:"Please sign in first.",publishing:"Publishing…",published:"Project published!",
+        publishError:"Could not publish. Check Supabase configuration and access policies.",
+        loginSuccess:"Signed in.",signupSuccess:"If registration succeeded, check your email to confirm.",
+        authError:"Request failed. Check your email, password and Supabase settings.",
+        logoutSuccess:"Signed out.",signedInAs:"Signed in as: ",notSignedIn:"You are not signed in.",
+        paymentUnavailable:"Purchases are not connected yet. Configure a payment provider and server-side verification first.",
+        contactUnavailable:"No contact provided.",contactCopy:"Copy contact",copySuccess:"Contact copied.",
+        promoted:"Promoted",categoryLabel:"Category",createdLabel:"Posted",
+        missingTitle:"Enter a title and description.",invalidContact:"Enter a valid contact.",
+        telegramReady:"Opened in Telegram",noProjects:"No listings yet.",unknownError:"Something went wrong."
       },
-
       zh: {
-        navAcademy: "电影学院",
-        navMarket: "项目市场",
-        navAbout: "关于项目",
-        navLogin: "登录",
-        heroEyebrow: "电影人的创作空间",
-        heroLine1: "电影始于",
-        heroLine2: "每一个人。",
-        heroDescription: "了解电影艺术，探索职业方向，为真正的影视项目做好准备。",
-        heroPrimary: "探索电影学院",
-        heroSecondary: "项目市场",
-        artLabel: "你的下一场戏从这里开始",
-        featuresKicker: "从这里开始",
-        featuresTitle: "进入电影行业的三步",
-        featuresDescription: "了解职业、发现项目，迈出下一步。",
-        featureAcademyTitle: "电影学院",
-        featureAcademyText: "了解电影职业、制作流程，以及从创意到银幕的过程。",
-        featureMarketTitle: "项目市场",
-        featureMarketText: "发布选角信息、寻找团队并介绍你的项目。",
-        featureCommunityTitle: "社区",
-        featureCommunityText: "了解 Kadr 的创立初衷和项目团队。",
-        learnMore: "开始学习 ↗",
-        viewMarket: "打开项目市场 ↗",
-        aboutLink: "了解项目 ↗",
-        marketKicker: "工作与合作",
-        marketTitle: "电影项目市场",
-        marketDescription: "项目、剧组、选角和新的机会。",
-        createProject: "＋ 发布信息",
-        emptyTitle: "下一个项目从这里开始",
-        emptyDescription: "目前还没有发布的信息。注册后，你可以第一个分享项目。",
-        accountKicker: "迈出下一步",
-        accountTitle: "一起创造电影。",
-        accountDescription: "创建账户，发布信息并寻找合作伙伴。",
-        accountPrivacy: "发布信息前需要登录。请使用有效邮箱和安全密码。",
-        authTitle: "你的账户",
-        authDescription: "登录或注册以继续。",
-        loginTab: "登录",
-        registerTab: "注册",
-        emailLabel: "邮箱",
-        passwordLabel: "密码",
-        passwordPlaceholder: "至少 6 个字符",
-        loginButton: "登录",
-        registerButton: "创建账户",
-        welcomeTitle: "欢迎回来！",
-        welcomeDescription: "你已登录。",
-        logoutButton: "退出登录",
-        publishTitle: "发布新信息",
-        publishDescription: "介绍项目、选择类别并填写联系方式。",
-        projectTitleLabel: "标题",
-        projectTitlePlaceholder: "例如：短片项目",
-        categoryLabel: "类别",
-        categoryFilm: "影视项目",
-        categoryCasting: "演员招募",
-        categoryTeam: "寻找团队",
-        categoryJob: "工作机会",
-        categoryCollab: "合作",
-        descriptionLabel: "项目描述",
-        descriptionPlaceholder: "介绍项目任务、时间安排和所需人员。",
-        contactLabel: "联系方式",
-        contactPlaceholder: "邮箱、Telegram 或其他联系方式",
-        publishButton: "发布信息",
-        supportKicker: "支持项目",
-        supportTitle: "帮助 Kadr 持续成长。",
-        supportDescription: "你的支持将帮助我们开发电影教育内容和创作工具。",
-        donateButton: "♥ 支持项目",
-        footerCopyright: "© Kadr. 电影人的创作空间。",
-        themeLight: "切换到浅色主题",
-        themeDark: "切换到深色主题",
-        setupError: "尚未配置身份验证。请在 index.html 中填写 Supabase URL 和密钥。",
-        authGenericError: "请求失败，请检查网络连接和 Supabase 设置。",
-        loginSuccess: "登录成功。",
-        registerSuccess: "注册请求已提交。如果需要邮箱验证，请检查收件箱。",
-        logoutSuccess: "已退出登录。",
-        invalidCredentials: "请输入有效邮箱和至少 6 位的密码。",
-        projectSuccess: "信息发布成功。",
-        projectLoadError: "无法加载信息，请检查 projects 表的设置。",
-        projectError: "发布失败，请检查 SQL 表结构和访问策略。",
-        donateNotConfigured: "尚未配置捐赠页面链接。",
-        categoryFallback: "项目",
-        contactPrefix: "联系方式：",
-        noEmail: "未提供邮箱",
-        genericProject: "影视项目",
-        accountRequired: "请先登录再发布信息。",
-        openAccount: "前往账户",
-        themeLabel: "主题",
-        listingLoadSetup: "配置 Supabase 后即可连接共享项目市场。"
+        brandCaption:"电影从这里开始",heroEyebrow:"✦ 电影创作社区",
+        heroTitle:"你的下一个项目，从这里开始。",heroText:"寻找选角机会、组建团队，把创意变成电影。",
+        heroButton:"＋ 发布项目",statOne:"寻找团队",statTwo:"寻找选角",statThree:"启动项目",
+        feedTitle:"机会动态",feedSubtitle:"项目、创作者与新角色",searchPlaceholder:"搜索项目",
+        catAll:"全部",catFilm:"电影",catCasting:"选角",catTeam:"团队",catJob:"工作",catCollab:"合作",
+        loading:"正在加载项目…",feedDisclaimer:"请自行核实项目条件，不要向陌生人支付所谓角色费用。",
+        publishTitle:"发布项目",publishSubtitle:"与社区分享你的创意",loginToPublish:"请先登录再发布项目。",
+        fieldTitle:"标题",fieldCategory:"类别",fieldDescription:"描述",fieldContact:"联系方式",
+        titlePlaceholder:"例如：短片项目",descriptionPlaceholder:"介绍项目、任务和要求…",
+        contactPlaceholder:"用户名或工作邮箱",publishButton:"免费发布",
+        contactWarning:"已发布的联系方式会向其他用户显示。请勿分享私人信息。",
+        monetizationTitle:"Kadr Pro",monetizationSubtitle:"推广项目，触达更多创作者",
+        proEyebrow:"✦ 创作者服务",proTitle:"让更多人看见你的项目。",
+        proText:"推广可突出显示项目。需先接入支付后端，才能收款并自动开通服务。",
+        viewPlans:"查看套餐 →",plansTitle:"推广套餐",plansSubtitle:"免费发布始终可用",
+        planBasicLabel:"入门",planBasicTitle:"免费",freePrice:"¥0",basicFeature1:"发布项目",
+        basicFeature2:"出现在公共动态",basicFeature3:"接收联系",basicButton:"创建项目",
+        planBoostLabel:"✦ 推广",planBoostTitle:"7天 Boost",boostPrice:"¥22",once:"/ 次",
+        boostFeature1:"突出显示项目",boostFeature2:"推广标记",boostFeature3:"动态优先展示",
+        buyBoost:"推广项目",planProLabel:"专业创作者",planProTitle:"Kadr Pro",proPrice:"¥58",
+        perMonth:"/ 月",proFeature1:"推广额度",proFeature2:"定期发布工具",proFeature3:"管理项目",
+        buyPro:"选择 Pro",planStudioLabel:"影视工作室",planStudioTitle:"Studio",studioPrice:"¥145",
+        studioFeature1:"定期发布",studioFeature2:"多个活跃项目",studioFeature3:"适合选角导演和团队",
+        buyStudio:"选择 Studio",
+        paymentNotice:"以上为示例价格。接入安全支付后端并完成付款验证之前，不会收取任何费用。请勿手动转账。",
+        accountTitle:"账户",accountSubtitle:"登录后发布项目",accountLoading:"正在检查连接…",
+        emailLabel:"邮箱",passwordLabel:"密码",passwordPlaceholder:"至少8个字符",signIn:"登录",
+        signUp:"创建账户",signOut:"退出",footerTagline:"电影行业交流空间",
+        footerNote:"请自行核实项目。Kadr 不保证就业或参与项目。",navHome:"首页",navFeed:"动态",
+        navPublish:"创建",navPro:"Pro",navAccount:"账户",contactModalTitle:"项目联系方式",
+        allLoaded:"暂无项目，来发布第一个项目吧！",noMatches:"没有找到结果，请更改搜索条件。",
+        supabaseMissing:"尚未连接数据库。请配置 Supabase。",authRequired:"请先登录。",
+        publishing:"正在发布…",published:"项目已发布！",publishError:"发布失败，请检查 Supabase 配置和访问策略。",
+        loginSuccess:"登录成功。",signupSuccess:"如果注册成功，请检查邮箱并完成验证。",
+        authError:"请求失败，请检查邮箱、密码和 Supabase 设置。",
+        logoutSuccess:"已退出。",signedInAs:"当前账户：",notSignedIn:"尚未登录。",
+        paymentUnavailable:"尚未接入购买功能。请先配置支付服务和服务器端付款验证。",
+        contactUnavailable:"未提供联系方式。",contactCopy:"复制联系方式",copySuccess:"已复制联系方式。",
+        promoted:"推广中",categoryLabel:"类别",createdLabel:"发布于",missingTitle:"请输入标题和描述。",
+        invalidContact:"请输入有效联系方式。",unknownError:"发生错误。"
       }
     };
 
-    let currentLanguage = "ru";
-    let authMode = "login";
-    let supabaseClient = null;
-    let currentSession = null;
-    let authSubscription = null;
-    let projectsChannel = null;
+    let language = localStorage.getItem("kadr-language") || "ru";
+    if (!i18n[language]) language = "ru";
+
+    let category = "all";
+    let projects = [];
+    let session = null;
+    let supabase = null;
+    let toastTimer = null;
 
     const $ = (id) => document.getElementById(id);
+    const tr = (key) => i18n[language]?.[key] ?? i18n.ru[key] ?? key;
 
-    function t(key) {
-      return translations[currentLanguage]?.[key]
-        ?? translations.ru[key]
-        ?? key;
-    }
-
-    function showMessage(element, message, type = "error") {
-      element.textContent = message;
-      element.className = `form-message visible ${type}`;
-    }
-
-    function clearMessage(element) {
-      element.textContent = "";
-      element.className = "form-message";
-    }
-
-    function setLanguage(language) {
-      currentLanguage = translations[language] ? language : "ru";
-      document.documentElement.lang = currentLanguage;
-      $("languageSelect").value = currentLanguage;
-
-      document.querySelectorAll("[data-i18n]").forEach((element) => {
-        const key = element.dataset.i18n;
-        if (translations[currentLanguage][key] !== undefined) {
-          element.textContent = translations[currentLanguage][key];
-        }
+    function applyTranslations() {
+      document.documentElement.lang = language === "zh" ? "zh-CN" : language;
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        if (tr(key)) el.textContent = tr(key);
       });
-
-      document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
-        const key = element.dataset.i18nPlaceholder;
-        if (translations[currentLanguage][key] !== undefined) {
-          element.placeholder = translations[currentLanguage][key];
-        }
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        el.placeholder = tr(el.dataset.i18nPlaceholder);
       });
-
-      updateAuthModeUI();
-      updateThemeButton();
-      renderProjects(lastProjects);
+      $("languageBtn").textContent = language.toUpperCase();
+      $("projectCategory").querySelectorAll("option").forEach(option => {
+        option.textContent = tr(option.dataset.i18n);
+      });
+      renderProjects();
+      updateAccountUI();
     }
 
-    function applyTheme(theme) {
-      const resolved = theme === "dark" ? "dark" : "light";
-      document.body.classList.toggle("dark", resolved === "dark");
-      localStorage.setItem("kadr-theme", resolved);
-      $("themeToggle").textContent = resolved === "dark" ? "☀" : "☾";
-      $("themeToggle").setAttribute(
-        "aria-label",
-        resolved === "dark" ? t("themeLight") : t("themeDark")
-      );
-      $("themeToggle").title =
-        resolved === "dark" ? t("themeLight") : t("themeDark");
+    function showToast(message) {
+      const el = $("toast");
+      el.textContent = message;
+      el.classList.remove("hidden");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.add("hidden"), 3500);
     }
 
-    function updateThemeButton() {
-      const isDark = document.body.classList.contains("dark");
-      $("themeToggle").textContent = isDark ? "☀" : "☾";
-      $("themeToggle").setAttribute(
-        "aria-label",
-        isDark ? t("themeLight") : t("themeDark")
-      );
-      $("themeToggle").title =
-        isDark ? t("themeLight") : t("themeDark");
+    function showMessage(id, message, type = "") {
+      const el = $(id);
+      el.textContent = message;
+      el.classList.remove("hidden", "error", "success");
+      if (type) el.classList.add(type);
     }
 
-    function updateAuthModeUI() {
-      $("loginTab").classList.toggle("active", authMode === "login");
-      $("registerTab").classList.toggle("active", authMode === "register");
-      $("authSubmit").textContent =
-        authMode === "login" ? t("loginButton") : t("registerButton");
-
-      $("authPassword").autocomplete =
-        authMode === "login" ? "current-password" : "new-password";
+    function clearMessage(id) {
+      $(id).classList.add("hidden");
     }
 
-    function setAuthenticatedUI(session) {
-      currentSession = session;
-      const signedIn = Boolean(session?.user);
+    function goTo(id) {
+      const el = $(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.go === id);
+      });
+      if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    }
 
-      $("signedOutPanel").classList.toggle("hidden", signedIn);
-      $("signedInPanel").classList.toggle("hidden", !signedIn);
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
 
-      if (signedIn) {
-        $("accountEmail").textContent =
-          session.user.email || t("noEmail");
+    function categoryName(key) {
+      const map = {
+        film: "catFilm", casting: "catCasting", team: "catTeam",
+        job: "catJob", collaboration: "catCollab"
+      };
+      return tr(map[key] || "catFilm");
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      try {
+        return new Intl.DateTimeFormat(
+          language === "zh" ? "zh-CN" : language,
+          { day: "numeric", month: "short" }
+        ).format(date);
+      } catch {
+        return "";
+      }
+    }
+
+    function filteredProjects() {
+      const query = $("searchInput").value.trim().toLocaleLowerCase();
+      return projects.filter(project => {
+        const matchesCategory = category === "all" || project.category === category;
+        const text = `${project.title || ""} ${project.description || ""} ${project.category || ""}`.toLocaleLowerCase();
+        return matchesCategory && text.includes(query);
+      }).sort((a, b) => {
+        const aPromoted = a.is_promoted && (!a.promotion_until || new Date(a.promotion_until) > new Date()) ? 1 : 0;
+        const bPromoted = b.is_promoted && (!b.promotion_until || new Date(b.promotion_until) > new Date()) ? 1 : 0;
+        return bPromoted - aPromoted || new Date(b.created_at || 0) - new Date(a.created_at || 0);
+      });
+    }
+
+    function renderProjects() {
+      const list = $("projectList");
+      const items = filteredProjects();
+
+      if (!validSupabaseConfig) {
+        list.innerHTML = `<div class="empty"><div class="empty-icon">⚙️</div>${escapeHTML(tr("supabaseMissing"))}</div>`;
+        return;
       }
 
-      $("createProjectTop").textContent = t("createProject");
-      $("createProjectTop").setAttribute(
-        "aria-label",
-        t("createProject")
-      );
-    }
-
-    function getSupabaseErrorMessage(error, fallback) {
-      if (!error) return fallback;
-
-      const knownMessages = [
-        "Invalid login credentials",
-        "Email not confirmed",
-        "User already registered",
-        "Password should be at least"
-      ];
-
-      const message = String(error.message || "");
-      if (knownMessages.some((known) => message.includes(known))) {
-        return message;
+      if (!items.length) {
+        const message = projects.length ? tr("noMatches") : tr("allLoaded");
+        list.innerHTML = `<div class="empty"><div class="empty-icon">🎬</div>${escapeHTML(message)}</div>`;
+        return;
       }
 
-      console.error(error);
-      return fallback;
+      list.innerHTML = items.map(project => {
+        const promoted = Boolean(project.is_promoted &&
+          (!project.promotion_until || new Date(project.promotion_until) > new Date()));
+        const description = String(project.description || "");
+        const contact = String(project.contact || "");
+        return `
+          <article class="project ${promoted ? "promoted" : ""}">
+            <div class="project-top">
+              <div class="project-category">${escapeHTML(categoryName(project.category))}</div>
+              ${promoted ? `<span class="tag premium">✦ ${escapeHTML(tr("promoted"))}</span>` : ""}
+            </div>
+            <h3>${escapeHTML(project.title)}</h3>
+            <div class="project-description">${escapeHTML(description)}</div>
+            <div class="project-meta">
+              <span>◷ ${escapeHTML(formatDate(project.created_at))}</span>
+              <span>● ${escapeHTML(tr("categoryLabel"))}: ${escapeHTML(categoryName(project.category))}</span>
+            </div>
+            <div class="project-actions">
+              <button class="button secondary small" onclick="showContact('${escapeHTML(String(project.id))}')">✉ ${escapeHTML(tr("contactModalTitle"))}</button>
+              <button class="button primary small" onclick="promoteProject('${escapeHTML(String(project.id))}')">✦ ${escapeHTML(tr("buyBoost"))}</button>
+            </div>
+          </article>`;
+      }).join("");
     }
 
-    async function handleAuthSubmit(event) {
+    async function loadProjects() {
+      if (!validSupabaseConfig || !supabase) {
+        renderProjects();
+        return;
+      }
+
+      $("projectList").innerHTML = `<div class="empty">${escapeHTML(tr("loading"))}</div>`;
+      try {
+        const { data, error } = await supabase
+          .from("projects")
+          .select("id,title,category,description,contact,status,created_at,is_promoted,promotion_until")
+          .eq("status", "published")
+          .order("created_at", { ascending: false })
+          .limit(100);
+
+        if (error) throw error;
+        projects = data || [];
+      } catch (error) {
+        console.error("Could not load projects:", error);
+        projects = [];
+        $("projectList").innerHTML = `<div class="empty">${escapeHTML(tr("publishError"))}</div>`;
+        return;
+      }
+      renderProjects();
+    }
+
+    function showContact(id) {
+      const project = projects.find(item => String(item.id) === String(id));
+      const contact = project?.contact?.trim();
+      const body = $("contactModalBody");
+
+      if (!contact) {
+        body.textContent = tr("contactUnavailable");
+      } else {
+        body.innerHTML = `
+          <div class="notice">${escapeHTML(contact)}</div>
+          <button class="button primary full" id="copyContactBtn">${escapeHTML(tr("contactCopy"))}</button>`;
+        $("copyContactBtn").addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(contact);
+            showToast(tr("copySuccess"));
+          } catch {
+            const input = document.createElement("textarea");
+            input.value = contact;
+            document.body.appendChild(input);
+            input.select();
+            const ok = document.execCommand("copy");
+            input.remove();
+            showToast(ok ? tr("copySuccess") : contact);
+          }
+        });
+      }
+      $("contactModal").classList.remove("hidden");
+    }
+
+    async function promoteProject(id) {
+      if (!session) {
+        showToast(tr("authRequired"));
+        goTo("account");
+        return;
+      }
+      // Не запускаем выдуманную оплату. Реальный checkout появится после
+      // настройки защищённой функции create-checkout на сервере.
+      showToast(tr("paymentUnavailable"));
+      goTo("plans");
+    }
+
+    async function buyPlan(planId) {
+      if (!session) {
+        showToast(tr("authRequired"));
+        goTo("account");
+        return;
+      }
+
+      if (!validSupabaseConfig || !supabase) {
+        showToast(tr("supabaseMissing"));
+        return;
+      }
+
+      try {
+        // Функция должна быть реализована на сервере и проверять пользователя,
+        // тариф, цену и подпись платежного провайдера. До этого покупки выключены.
+        const { data, error } = await supabase.functions.invoke(CHECKOUT_FUNCTION, {
+          body: { plan_id: planId }
+        });
+
+        if (error || !data?.checkout_url) {
+          console.warn("Checkout is not configured:", error || data);
+          showToast(tr("paymentUnavailable"));
+          return;
+        }
+
+        const checkoutUrl = new URL(data.checkout_url);
+        if (checkoutUrl.protocol !== "https:") {
+          showToast(tr("paymentUnavailable"));
+          return;
+        }
+
+        if (tg?.openLink) tg.openLink(checkoutUrl.href);
+        else window.location.href = checkoutUrl.href;
+      } catch (error) {
+        console.error("Checkout error:", error);
+        showToast(tr("paymentUnavailable"));
+      }
+    }
+
+    function updateAccountUI() {
+      const status = $("accountStatus");
+      const authNotice = $("publishAuthNotice");
+
+      if (!validSupabaseConfig) {
+        status.textContent = tr("supabaseMissing");
+        authNotice.textContent = tr("supabaseMissing");
+        $("authSubmit").disabled = true;
+        $("signUpBtn").disabled = true;
+        $("publishSubmit").disabled = true;
+        $("signOutBtn").classList.add("hidden");
+        return;
+      }
+
+      $("authSubmit").disabled = false;
+      $("signUpBtn").disabled = false;
+
+      if (session?.user) {
+        status.textContent = tr("signedInAs") + session.user.email;
+        authNotice.textContent = tr("signedInAs") + session.user.email;
+        $("publishSubmit").disabled = false;
+        $("signOutBtn").classList.remove("hidden");
+        $("authSubmit").classList.add("hidden");
+        $("signUpBtn").classList.add("hidden");
+      } else {
+        status.textContent = tr("notSignedIn");
+        authNotice.textContent = tr("loginToPublish");
+        $("publishSubmit").disabled = true;
+        $("signOutBtn").classList.add("hidden");
+        $("authSubmit").classList.remove("hidden");
+        $("signUpBtn").classList.remove("hidden");
+      }
+    }
+
+    async function handleAuth(event, isSignup) {
       event.preventDefault();
+      clearMessage("authMessage");
 
-      const message = $("authMessage");
-      clearMessage(message);
-
-      if (!SUPABASE_CONFIGURED || !supabaseClient) {
-        showMessage(message, t("setupError"));
+      if (!supabase) {
+        showMessage("authMessage", tr("supabaseMissing"), "error");
         return;
       }
 
       const email = $("authEmail").value.trim();
       const password = $("authPassword").value;
 
-      if (!email || password.length < 6) {
-        showMessage(message, t("invalidCredentials"));
+      if (!email || password.length < 8) {
+        showMessage("authMessage", tr("authError"), "error");
         return;
       }
 
       $("authSubmit").disabled = true;
+      $("signUpBtn").disabled = true;
 
       try {
-        let result;
+        const result = isSignup
+          ? await supabase.auth.signUp({
+              email,
+              password,
+              options: { emailRedirectTo: window.location.origin + window.location.pathname }
+            })
+          : await supabase.auth.signInWithPassword({ email, password });
 
-        if (authMode === "login") {
-          result = await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-          });
+        if (result.error) throw result.error;
+
+        if (isSignup) {
+          showMessage("authMessage", tr("signupSuccess"), "success");
         } else {
-          result = await supabaseClient.auth.signUp({
-            email,
-            password
-          });
-        }
-
-        if (result.error) {
-          showMessage(
-            message,
-            getSupabaseErrorMessage(result.error, t("authGenericError"))
-          );
-          return;
-        }
-
-        if (authMode === "login") {
-          showMessage(message, t("loginSuccess"), "success");
-        } else {
-          showMessage(message, t("registerSuccess"), "success");
-          $("authForm").reset();
+          session = result.data.session;
+          showMessage("authMessage", tr("loginSuccess"), "success");
+          updateAccountUI();
+          await loadProjects();
         }
       } catch (error) {
-        showMessage(
-          message,
-          getSupabaseErrorMessage(error, t("authGenericError"))
-        );
+        console.error("Authentication error:", error);
+        showMessage("authMessage", tr("authError"), "error");
       } finally {
         $("authSubmit").disabled = false;
+        $("signUpBtn").disabled = false;
       }
     }
 
-    async function handleLogout() {
-      if (!supabaseClient) return;
-
-      const message = $("projectMessage");
-      clearMessage(message);
-
-      const { error } = await supabaseClient.auth.signOut();
-
-      if (error) {
-        showMessage(message, t("authGenericError"));
-        return;
-      }
-
-      showMessage(message, t("logoutSuccess"), "success");
-    }
-
-    let lastProjects = [];
-
-    function categoryLabel(category) {
-      const map = {
-        film: "categoryFilm",
-        casting: "categoryCasting",
-        team: "categoryTeam",
-        job: "categoryJob",
-        collaboration: "categoryCollab"
-      };
-
-      return t(map[category] || "categoryFallback");
-    }
-
-    function renderProjects(projects) {
-      const list = $("projectList");
-      list.replaceChildren();
-
-      const safeProjects = Array.isArray(projects) ? projects : [];
-      $("marketEmpty").classList.toggle("hidden", safeProjects.length > 0);
-
-      if (safeProjects.length === 0) {
-        return;
-      }
-
-      safeProjects.forEach((project) => {
-        const card = document.createElement("article");
-        card.className = "project-card";
-
-        const category = document.createElement("span");
-        category.className = "project-category";
-        category.textContent = categoryLabel(project.category);
-
-        const title = document.createElement("h3");
-        title.textContent = project.title || t("genericProject");
-
-        const description = document.createElement("p");
-        description.textContent = project.description || "";
-
-        const contact = document.createElement("p");
-        contact.textContent = `${t("contactPrefix")} ${project.contact || ""}`;
-
-        card.append(category, title, description, contact);
-        list.appendChild(card);
-      });
-    }
-
-    async function loadProjects() {
-      if (!SUPABASE_CONFIGURED || !supabaseClient) {
-        lastProjects = [];
-        renderProjects([]);
-        return;
-      }
-
-      try {
-        const { data, error } = await supabaseClient
-          .from("projects")
-          .select("id, title, category, description, contact, created_at")
-          .eq("status", "published")
-          .order("created_at", { ascending: false })
-          .limit(100);
-
-        if (error) {
-          console.error("Could not load projects:", error);
-          lastProjects = [];
-          renderProjects([]);
-          return;
-        }
-
-        lastProjects = data || [];
-        renderProjects(lastProjects);
-      } catch (error) {
-        console.error(error);
-        lastProjects = [];
-        renderProjects([]);
-      }
-    }
-
-    async function handleProjectSubmit(event) {
+    async function handlePublish(event) {
       event.preventDefault();
+      clearMessage("publishMessage");
 
-      const message = $("projectMessage");
-      clearMessage(message);
-
-      if (!currentSession?.user) {
-        showMessage(message, t("accountRequired"));
+      if (!session) {
+        showMessage("publishMessage", tr("authRequired"), "error");
+        goTo("account");
         return;
       }
 
-      if (!supabaseClient) {
-        showMessage(message, t("setupError"));
+      const title = $("projectTitle").value.trim();
+      const categoryValue = $("projectCategory").value;
+      const description = $("projectDescription").value.trim();
+      const contact = $("projectContact").value.trim();
+
+      if (!title || !description) {
+        showMessage("publishMessage", tr("missingTitle"), "error");
         return;
       }
 
-      const form = $("projectForm");
-      const formData = new FormData(form);
-
-      const project = {
-        user_id: currentSession.user.id,
-        title: String(formData.get("title") || "").trim(),
-        category: String(formData.get("category") || ""),
-        description: String(formData.get("description") || "").trim(),
-        contact: String(formData.get("contact") || "").trim(),
-        status: "published"
-      };
-
-      if (
-        project.title.length < 1 ||
-        project.title.length > 100 ||
-        project.description.length < 20 ||
-        project.description.length > 5000 ||
-        project.contact.length < 1 ||
-        project.contact.length > 200
-      ) {
-        showMessage(message, t("projectError"));
+      if (!contact) {
+        showMessage("publishMessage", tr("invalidContact"), "error");
         return;
       }
 
-      $("publishButton").disabled = true;
+      if (!CATEGORY_KEYS.includes(categoryValue)) {
+        showMessage("publishMessage", tr("publishError"), "error");
+        return;
+      }
+
+      $("publishSubmit").disabled = true;
+      $("publishSubmit").textContent = tr("publishing");
 
       try {
-        const { error } = await supabaseClient
-          .from("projects")
-          .insert(project);
+        const { error } = await supabase.from("projects").insert({
+          user_id: session.user.id,
+          title,
+          category: categoryValue,
+          description,
+          contact,
+          status: "published"
+        });
 
-        if (error) {
-          console.error("Could not publish project:", error);
-          showMessage(message, t("projectError"));
-          return;
-        }
+        if (error) throw error;
 
-        form.reset();
-        showMessage(message, t("projectSuccess"), "success");
+        $("publishForm").reset();
+        showMessage("publishMessage", tr("published"), "success");
         await loadProjects();
+        goTo("feed");
       } catch (error) {
-        console.error(error);
-        showMessage(message, t("projectError"));
+        console.error("Publish error:", error);
+        showMessage("publishMessage", tr("publishError"), "error");
       } finally {
-        $("publishButton").disabled = false;
+        $("publishSubmit").disabled = !session;
+        $("publishSubmit").textContent = tr("publishButton");
       }
     }
 
-    function setupSupabase() {
-      if (!SUPABASE_CONFIGURED) {
-        console.info(
-          "Kadr: Supabase is not configured. Authentication and shared listings are disabled."
-        );
-        renderProjects([]);
-        return;
-      }
+    function cycleLanguage() {
+      const order = ["ru", "en", "zh"];
+      language = order[(order.indexOf(language) + 1) % order.length];
+      localStorage.setItem("kadr-language", language);
+      applyTranslations();
+    }
 
-      if (!window.supabase?.createClient) {
-        console.error("Supabase JS library did not load.");
-        showMessage($("authMessage"), t("authGenericError"));
-        return;
-      }
+    function initTheme() {
+      const saved = localStorage.getItem("kadr-theme");
+      if (saved === "light") document.body.classList.add("light");
+      updateThemeButton();
+    }
 
-      supabaseClient = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY,
-        {
-          auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true
-          }
-        }
-      );
+    function updateThemeButton() {
+      $("themeBtn").textContent = document.body.classList.contains("light") ? "☾" : "☼";
+    }
 
-      supabaseClient.auth.getSession().then(({ data, error }) => {
-        if (error) {
-          console.error(error);
-          return;
-        }
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+      localStorage.setItem("kadr-theme", document.body.classList.contains("light") ? "light" : "dark");
+      updateThemeButton();
+    }
 
-        setAuthenticatedUI(data.session);
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => goTo(btn.dataset.go));
+    });
+
+    $("languageBtn").addEventListener("click", cycleLanguage);
+    $("themeBtn").addEventListener("click", toggleTheme);
+    $("refreshBtn").addEventListener("click", loadProjects);
+    $("searchInput").addEventListener("input", renderProjects);
+
+    $("categoryChips").addEventListener("click", event => {
+      const button = event.target.closest("[data-category]");
+      if (!button) return;
+      category = button.dataset.category;
+      $("categoryChips").querySelectorAll(".chip").forEach(chip => {
+        chip.classList.toggle("active", chip === button);
       });
+      renderProjects();
+    });
 
-      const { data } = supabaseClient.auth.onAuthStateChange(
-        (_event, session) => {
-          setAuthenticatedUI(session);
+    $("authForm").addEventListener("submit", event => handleAuth(event, false));
+    $("signUpBtn").addEventListener("click", event => handleAuth(event, true));
+    $("signOutBtn").addEventListener("click", async () => {
+      if (!supabase) return;
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        showMessage("authMessage", tr("authError"), "error");
+        return;
+      }
+      session = null;
+      updateAccountUI();
+      showMessage("authMessage", tr("logoutSuccess"), "success");
+    });
+    $("publishForm").addEventListener("submit", handlePublish);
 
-          // Avoid running database queries inside the auth callback.
-          setTimeout(() => {
-            loadProjects();
-          }, 0);
-        }
-      );
+    $("closeContactModal").addEventListener("click", () => {
+      $("contactModal").classList.add("hidden");
+    });
+    $("contactModal").addEventListener("click", event => {
+      if (event.target === $("contactModal")) $("contactModal").classList.add("hidden");
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") $("contactModal").classList.add("hidden");
+    });
 
-      authSubscription = data?.subscription || null;
-      loadProjects();
+    async function init() {
+      $("year").textContent = new Date().getFullYear();
+      initTheme();
+
+      if (tg) {
+        tg.ready();
+        tg.expand();
+        try {
+          tg.setHeaderColor?.(document.body.classList.contains("light") ? "#f5f4fa" : "#101014");
+          tg.setBackgroundColor?.(document.body.classList.contains("light") ? "#f5f4fa" : "#101014");
+        } catch {}
+      }
+
+      applyTranslations();
+
+      if (validSupabaseConfig && window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+        });
+
+        const { data } = await supabase.auth.getSession();
+        session = data?.session || null;
+
+        supabase.auth.onAuthStateChange((_event, newSession) => {
+          session = newSession;
+          updateAccountUI();
+        });
+
+        updateAccountUI();
+        await loadProjects();
+      } else {
+        updateAccountUI();
+        renderProjects();
+      }
     }
 
-    $("languageSelect").addEventListener("change", (event) => {
-      setLanguage(event.target.value);
-      localStorage.setItem("kadr-language", event.target.value);
-    });
-
-    $("themeToggle").addEventListener("click", () => {
-      const nextTheme = document.body.classList.contains("dark")
-        ? "light"
-        : "dark";
-      applyTheme(nextTheme);
-    });
-
-    $("loginTab").addEventListener("click", () => {
-      authMode = "login";
-      clearMessage($("authMessage"));
-      updateAuthModeUI();
-    });
-
-    $("registerTab").addEventListener("click", () => {
-      authMode = "register";
-      clearMessage($("authMessage"));
-      updateAuthModeUI();
-    });
-
-    $("authForm").addEventListener("submit", handleAuthSubmit);
-    $("logoutButton").addEventListener("click", handleLogout);
-    $("projectForm").addEventListener("submit", handleProjectSubmit);
-
-    $("createProjectTop").addEventListener("click", () => {
-      if (!currentSession?.user) {
-        $("account").scrollIntoView({ behavior: "smooth" });
-        showMessage($("authMessage"), t("accountRequired"));
-        return;
-      }
-
-      $("account").scrollIntoView({ behavior: "smooth" });
-      $("projectTitle").focus({ preventScroll: true });
-    });
-
-    $("donateButton").addEventListener("click", () => {
-      if (!DONATION_URL.trim()) {
-        alert(t("donateNotConfigured"));
-        return;
-      }
-
-      try {
-        const url = new URL(DONATION_URL);
-
-        if (url.protocol !== "https:") {
-          alert(t("donateNotConfigured"));
-          return;
-        }
-
-        window.open(url.href, "_blank", "noopener,noreferrer");
-      } catch {
-        alert(t("donateNotConfigured"));
-      }
-    });
-
-    // По умолчанию используется светлая тема.
-    const savedTheme = localStorage.getItem("kadr-theme");
-    applyTheme(savedTheme === "dark" ? "dark" : "light");
-
-    const savedLanguage = localStorage.getItem("kadr-language") || "ru";
-    setLanguage(savedLanguage);
-
-    setupSupabase();
+    init();
   </script>
 </body>
 </html>
