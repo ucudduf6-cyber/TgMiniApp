@@ -4,200 +4,328 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0a0a0c">
-<title>UNMIND — Make the internet useful</title>
+<meta name="theme-color" content="#f7f6f0">
+<title>UNMIND — Всё важное в одном месте</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
-
-:root{--bg:#0a0a0c;--panel:#111114;--line:#242429;--muted:#8a8a98;--text:#f5f5f7;--purple:#a78bfa;--green:#b7f7cf}
+:root{
+--bg:#f7f6f0;--white:#fff;--ink:#243129;--muted:#7b847b;
+--green:#28634b;--green-light:#e6f0e6;--purple:#eee9fa;
+--border:#e8e8df;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}
 button,input,select{font:inherit}
 button{cursor:pointer}
-.layout{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
-aside{border-right:1px solid var(--line);padding:27px 18px;display:flex;flex-direction:column;gap:34px}
-.logo{font-family:Manrope,sans-serif;font-size:23px;font-weight:800;letter-spacing:-1.4px;padding:0 10px}
-.logo span{color:var(--purple)}
-.tag{font-size:10px;letter-spacing:2px;color:var(--muted);padding:0 10px;margin-bottom:12px}
-.nav{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:none;color:#a5a5b0;padding:12px 11px;border-radius:10px;font-size:13px}
-.nav.active,.nav:hover{background:#1a1822;color:white}
-.nav.active{box-shadow:inset 2px 0 var(--purple)}
-.nav .ico{width:20px;text-align:center;font-size:16px}
-.bottom{margin-top:auto;border:1px solid var(--line);border-radius:14px;padding:15px;background:linear-gradient(140deg,#19151f,#101013)}
-.bottom p{font-size:12px;color:var(--muted);line-height:1.6}
-.smallbtn{border:1px solid #393342;color:#e5d9ff;background:#211a2b;border-radius:8px;padding:9px 11px;font-size:12px}
-main{padding:30px clamp(20px,4vw,56px);max-width:1600px;width:100%;margin:auto}
-.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:48px}
-.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--purple)}
-h1,h2,h3,p{margin-top:0}
-h1{font:700 clamp(30px,4vw,47px)/1.15 Manrope,sans-serif;letter-spacing:-2px;margin:13px 0}
-.sub{color:var(--muted);font-size:14px;line-height:1.7}
-.avatar{width:39px;height:39px;display:grid;place-items:center;border:1px solid #38303f;border-radius:50%;background:#211a2b;color:#ddceff}
-.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:30px}
-.primary{border:0;background:#e9ddff;color:#17101f;border-radius:10px;padding:13px 18px;font-size:13px;font-weight:700;transition:.2s}
-.primary:hover{background:white;transform:translateY(-1px)}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:36px}
-.stat,.card,.searchbox,.empty{border:1px solid var(--line);background:var(--panel);border-radius:15px}
-.stat{padding:19px}
-.stat-label{font-size:12px;color:var(--muted)}
-.stat-num{font:700 29px Manrope,sans-serif;letter-spacing:-1px;margin:12px 0 5px}
-.stat-note{font-size:11px;color:#b8b0c8}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #b8a5e9;outline-offset:2px}
+.app{min-height:100vh;display:grid;grid-template-columns:230px 1fr}
+.sidebar{background:#fbfaf6;border-right:1px solid var(--border);padding:25px 16px;display:flex;flex-direction:column;gap:35px}
+.logo{font-size:24px;font-weight:900;letter-spacing:-1px;padding:0 10px}
+.logo span{color:var(--green)}
+.logo small{display:block;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:6px}
+.nav-label{font-size:10px;letter-spacing:1.5px;color:#999f95;padding:0 10px;margin-bottom:10px}
+.nav{width:100%;border:0;background:transparent;color:#657067;text-align:left;padding:12px;border-radius:11px;margin:2px 0;font-size:13px;display:flex;gap:12px;align-items:center}
+.nav:hover{background:#f0f0e8}
+.nav.active{background:var(--green-light);color:var(--green);font-weight:bold}
+.nav span{width:20px;text-align:center;font-size:17px}
+.side-box{margin-top:auto;background:var(--green);color:white;padding:17px;border-radius:16px}
+.side-box strong{font-size:14px}
+.side-box p{font-size:12px;line-height:1.6;color:#e2eee4}
+.side-box button{width:100%;border:0;border-radius:9px;padding:11px;background:white;color:var(--green);font-weight:bold;font-size:12px}
+main{padding:28px clamp(17px,4vw,52px);max-width:1500px;width:100%;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:38px}
+.welcome-small{font-size:13px;color:var(--muted)}
+.avatar{width:39px;height:39px;border-radius:50%;background:#e4eddf;display:grid;place-items:center;color:var(--green);font-weight:bold}
+.view{display:none}.view.active{display:block}
+.eyebrow{font-size:10px;letter-spacing:1.8px;font-weight:bold;color:var(--green)}
+h1{font-size:clamp(30px,4vw,46px);line-height:1.14;letter-spacing:-1.8px;margin:13px 0}
+h2{font-size:21px;letter-spacing:-.5px;margin:0}
+.muted{color:var(--muted);line-height:1.7;font-size:14px}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:25px;background:linear-gradient(120deg,#fff,#fff 65%,#edf4e9);border:1px solid var(--border);border-radius:24px;padding:clamp(23px,4vw,42px);margin-bottom:22px}
+.hero-copy{max-width:620px}
+.hero-copy p{font-size:14px;line-height:1.8;color:var(--muted);margin:0 0 22px}
+.hero-art{width:135px;height:135px;flex-shrink:0;border-radius:38px;background:#e5efdf;display:grid;place-items:center;font-size:58px;transform:rotate(4deg)}
+.primary{background:var(--green);color:white;border:0;border-radius:11px;padding:13px 17px;font-size:13px;font-weight:bold;transition:.2s}
+.primary:hover{background:#1c503a;transform:translateY(-1px)}
+.secondary{border:1px solid var(--border);background:white;color:var(--ink);border-radius:10px;padding:11px 14px;font-size:12px;font-weight:bold}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:37px}
+.step{display:flex;gap:12px;background:white;border:1px solid var(--border);border-radius:15px;padding:16px}
+.step-num{width:31px;height:31px;border-radius:10px;background:var(--purple);color:#715ba7;display:grid;place-items:center;font-weight:bold;flex-shrink:0}
+.step strong{display:block;font-size:13px;margin:2px 0 6px}
+.step p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:17px}
-h2{font:700 19px Manrope,sans-serif;letter-spacing:-.5px;margin:0}
-.searchbox{display:flex;align-items:center;gap:10px;padding:0 14px;max-width:360px;width:100%}
-.searchbox input{width:100%;background:none;border:0;outline:0;color:white;padding:13px 0;font-size:12px}
-.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:19px;padding-bottom:4px}
-.filter{white-space:nowrap;border:1px solid var(--line);border-radius:9px;background:transparent;color:var(--muted);padding:9px 13px;font-size:12px}
-.filter.active{background:#211b2b;border-color:#55416d;color:#e8dcff}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
-.card{padding:17px;min-width:0;transition:.2s;display:flex;flex-direction:column;min-height:210px}
-.card:hover{border-color:#4a4059;transform:translateY(-2px)}
-.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}
-.site-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:11px;background:#201c29;font-size:17px}
-.kind{font-size:10px;color:var(--purple);background:#1c1825;padding:6px 8px;border-radius:6px}
-.card h3{font:600 15px/1.5 Manrope,sans-serif;letter-spacing:-.3px;margin-bottom:8px;overflow-wrap:anywhere}
-.card p{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:17px}
-.card-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto}
-.domain{font-size:10px;color:#777783;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.actions{display:flex;gap:6px}
-.iconbtn{border:1px solid var(--line);background:#17171b;color:#c6c5d0;border-radius:8px;padding:7px 9px}
-.iconbtn:hover{border-color:#73628e}
-.empty{padding:42px 20px;text-align:center;color:var(--muted);grid-column:1/-1;font-size:13px}
-footer{border-top:1px solid var(--line);margin-top:48px;padding-top:20px;display:flex;justify-content:space-between;gap:15px;color:#62626e;font-size:11px}
-dialog{width:min(460px,calc(100% - 28px));background:#121216;color:white;border:1px solid #35313d;border-radius:18px;padding:25px}
-dialog::backdrop{background:#000b;backdrop-filter:blur(6px)}
-dialog h2{margin-bottom:20px}
-.field{display:flex;flex-direction:column;gap:8px;margin-bottom:15px}
-.field label{font-size:12px;color:#aaa6b5}
-.field input,.field select{width:100%;padding:12px;background:#0b0b0e;border:1px solid #302e37;border-radius:9px;color:white;outline:none}
-.field input:focus,.field select:focus{border-color:#8c72b5}
-.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
-.secondary{border:1px solid var(--line);background:transparent;color:#ccc;padding:11px 15px;border-radius:9px}
-.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:#e9ddff;color:#17101f;border-radius:10px;padding:12px 18px;font-size:12px;box-shadow:0 8px 40px #0008;z-index:10}
+.search{display:flex;align-items:center;gap:9px;background:white;border:1px solid var(--border);border-radius:11px;padding:0 13px;width:min(340px,100%)}
+.search input{width:100%;border:0;outline:0;background:transparent;padding:12px 0;font-size:12px}
+.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:17px;padding-bottom:3px}
+.chip{white-space:nowrap;border:1px solid var(--border);background:white;color:var(--muted);border-radius:9px;padding:9px 13px;font-size:12px}
+.chip.active{background:var(--green-light);border-color:#d4e3d4;color:var(--green);font-weight:bold}
+.resources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.resource{background:white;border:1px solid var(--border);border-radius:16px;padding:16px;min-width:0;min-height:198px;display:flex;flex-direction:column;transition:.2s}
+.resource:hover{border-color:#c4d7c4;transform:translateY(-2px)}
+.resource-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.resource-icon{width:37px;height:37px;border-radius:11px;background:#f1efe7;display:grid;place-items:center;font-size:18px}
+.category{font-size:10px;background:var(--purple);color:#715ba7;padding:6px 8px;border-radius:7px}
+.resource h3{font-size:14px;line-height:1.5;margin:0 0 7px;overflow-wrap:anywhere}
+.resource p{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 15px}
+.resource-bottom{display:flex;justify-content:space-between;align-items:center;gap:7px;margin-top:auto}
+.domain{font-size:10px;color:#8c938b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions{display:flex;gap:4px}
+.mini{border:1px solid var(--border);background:white;border-radius:7px;padding:6px 8px;color:#647065}
+.mini:hover{background:#f0f4ed}
+.empty{grid-column:1/-1;border:1px dashed #d9dbd1;background:#fbfaf6;text-align:center;padding:35px 20px;border-radius:15px;color:var(--muted);font-size:13px;line-height:1.7}
+.empty strong{display:block;color:var(--ink);margin-bottom:6px}
+.banner{display:flex;justify-content:space-between;align-items:center;gap:15px;background:var(--purple);padding:19px;border-radius:16px;margin-top:24px}
+.banner p{font-size:12px;color:#766b8a;margin:6px 0 0}
+.pricing-intro{text-align:center;max-width:630px;margin:15px auto 27px}
+.pricing-intro h1{font-size:clamp(32px,4vw,43px)}
+.pricing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;max-width:870px;margin:auto}
+.plan{background:white;border:1px solid var(--border);border-radius:20px;padding:25px;position:relative}
+.plan.pro{border:2px solid var(--green);box-shadow:0 12px 30px #28634b12}
+.popular{position:absolute;right:14px;top:14px;background:var(--green-light);color:var(--green);padding:6px 8px;border-radius:7px;font-size:9px;font-weight:bold}
+.plan h2{margin-bottom:10px}
+.plan-desc{font-size:12px;line-height:1.6;color:var(--muted);min-height:40px}
+.price{font-size:39px;font-weight:900;letter-spacing:-1.5px;margin:18px 0 5px}
+.price small{font-size:12px;font-weight:normal;letter-spacing:0;color:var(--muted)}
+.billing{font-size:11px;color:var(--muted);margin-bottom:20px}
+.plan ul{list-style:none;padding:0;margin:0 0 24px}
+.plan li{font-size:12px;line-height:1.5;margin:13px 0;color:#4f5d52}
+.plan li:before{content:"✓";color:var(--green);font-weight:bold;margin-right:9px}
+.plan button{width:100%}
+.notice{max-width:870px;margin:17px auto;background:#fff8e8;border:1px solid #eadfc2;color:#786742;padding:14px 16px;border-radius:12px;font-size:12px;line-height:1.7}
+.settings-card{background:white;border:1px solid var(--border);border-radius:15px;padding:20px;margin:17px 0;max-width:720px}
+.settings-card p{font-size:13px;color:var(--muted);line-height:1.7}
+footer{display:flex;justify-content:space-between;align-items:center;gap:15px;border-top:1px solid var(--border);margin-top:40px;padding-top:18px;font-size:10px;color:#92988f}
+dialog{width:min(460px,calc(100% - 25px));border:1px solid var(--border);border-radius:19px;padding:24px;background:white;color:var(--ink)}
+dialog::backdrop{background:#26342a77;backdrop-filter:blur(4px)}
+dialog h2{margin:10px 0 20px}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.field label{font-size:12px;color:var(--muted);font-weight:bold}
+.field input,.field select{width:100%;border:1px solid var(--border);background:#fbfaf7;border-radius:9px;padding:12px;color:var(--ink)}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:19px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#243e30;color:white;padding:12px 17px;border-radius:11px;z-index:10;font-size:12px;max-width:calc(100% - 24px)}
 .hidden{display:none!important}
-@media(max-width:1050px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:720px){.layout{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--line);padding:17px;gap:17px}.logo{padding:0}.navwrap{display:flex;gap:5px;overflow:auto}.nav{width:auto;white-space:nowrap;padding:10px}.nav .ico{width:auto}.bottom,.tag{display:none}main{padding:25px 17px}.top{margin-bottom:32px}.hero{align-items:flex-start;flex-direction:column}.stats{gap:8px}.stat{padding:12px}.stat-num{font-size:24px}.stat-note{font-size:10px}.grid{grid-template-columns:1fr}.card{min-height:175px}.section-head{align-items:flex-start;flex-direction:column}.searchbox{max-width:none}footer{flex-direction:column}}
+@media(max-width:1050px){.resources{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){
+.app{grid-template-columns:1fr}.sidebar{padding:16px 12px;gap:16px;border-right:0;border-bottom:1px solid var(--border)}
+.logo{padding:0 5px}.nav-group{display:flex;gap:4px;overflow-x:auto}.nav-label,.side-box{display:none}
+.nav{width:auto;white-space:nowrap;margin:0;padding:10px;font-size:11px;gap:7px}.nav span{width:auto}
+main{padding:22px 14px}.top{margin-bottom:25px}.hero{padding:23px;align-items:flex-start}.hero-art{display:none}
+.steps{grid-template-columns:1fr;gap:8px}.step{padding:13px}.section-head{align-items:flex-start;flex-direction:column}.search{width:100%}
+.resources{grid-template-columns:1fr}.resource{min-height:170px}.pricing-grid{grid-template-columns:1fr}.plan{padding:22px}
+.banner{align-items:flex-start;flex-direction:column}footer{align-items:flex-start;flex-direction:column}
+}
 </style>
 </head>
 <body>
-<div class="layout">
-<aside>
-  <div class="logo">UN<span>MIND</span><div style="font-size:10px;color:#777783;font-weight:500;letter-spacing:2px;margin-top:5px">YOUR SECOND BRAIN</div></div>
-  <div>
-    <div class="tag">WORKSPACE</div>
-    <div class="navwrap">
-      <button class="nav active" data-filter="Все"><span class="ico">◈</span> Обзор</button>
-      <button class="nav" data-filter="Идеи"><span class="ico">✳</span> Идеи</button>
-      <button class="nav" data-filter="Учёба"><span class="ico">⌘</span> Учёба</button>
-      <button class="nav" data-filter="Работа"><span class="ico">▧</span> Работа</button>
-      <button class="nav" data-filter="На потом"><span class="ico">◷</span> На потом</button>
-    </div>
+<div class="app">
+<aside class="sidebar">
+ <div class="logo">UN<span>MIND</span><small>ТВОИ ИДЕИ В ПОРЯДКЕ</small></div>
+ <div>
+  <div class="nav-label">ТВОЁ ПРОСТРАНСТВО</div>
+  <div class="nav-group">
+   <button class="nav active" data-view="home"><span>⌂</span>Главная</button>
+   <button class="nav" data-view="library"><span>▤</span>Мои сохранения</button>
+   <button class="nav" data-view="favorites"><span>☆</span>Избранное</button>
+   <button class="nav" data-view="pricing"><span>✦</span>Подписка Pro</button>
   </div>
-  <div class="bottom">
-    <div style="font-size:13px;font-weight:700">Меньше хаоса.</div>
-    <div style="font-size:13px;font-weight:700;color:#c9b4f7">Больше результата.</div>
-    <p>Сохраняй важное. Возвращайся к нужному. Двигайся вперёд.</p>
-    <button class="smallbtn" onclick="openModal()">+ Добавить материал</button>
-  </div>
+ </div>
+ <div class="side-box"><strong>Хочешь больше возможностей?</strong><p>Посмотри, что предлагает расширенная подписка.</p><button onclick="showView('pricing')">Посмотреть Pro →</button></div>
 </aside>
 
 <main>
-  <div class="top">
-    <div><div class="eyebrow">PERSONAL KNOWLEDGE SPACE</div><div style="font-size:12px;color:var(--muted);margin-top:7px">ТВОЁ ПРОСТРАНСТВО · ТВОИ ПРАВИЛА</div></div>
-    <div class="avatar">U</div>
+ <div class="top"><div class="welcome-small">Привет! Добро пожаловать в UNMIND 👋</div><div class="avatar">U</div></div>
+
+ <section class="view active" id="view-home">
+  <div class="hero">
+   <div class="hero-copy">
+    <div class="eyebrow">ТВОЁ МЕСТО ДЛЯ ПОЛЕЗНОГО</div>
+    <h1>Нашёл что-то полезное?<br><span style="color:var(--green)">Не потеряй это.</span></h1>
+    <p>Сохраняй интересные ссылки, идеи и полезные материалы в одном месте. Когда понадобится — просто найди их здесь.</p>
+    <button class="primary" onclick="openModal()">＋ Сохранить первую ссылку</button>
+   </div>
+   <div class="hero-art" aria-hidden="true">🌱</div>
   </div>
-  <section class="hero">
-    <div><div class="eyebrow">ТВОЙ ВТОРОЙ МОЗГ</div>
-      <h1>Меньше искать.<br><span style="color:var(--purple)">Больше создавать.</span></h1>
-      <p class="sub">Всё полезное из интернета — в одном месте.<br>Организуй идеи и превращай их в реальные действия.</p>
-    </div>
-    <button class="primary" onclick="openModal()">＋ Сохранить материал</button>
-  </section>
-  <section class="stats">
-    <div class="stat"><div class="stat-label">В твоей библиотеке</div><div class="stat-num" id="total">0</div><div class="stat-note">Материалы под рукой</div></div>
-    <div class="stat"><div class="stat-label">Категории</div><div class="stat-num" id="categories">0</div><div class="stat-note">Твои области интереса</div></div>
-    <div class="stat"><div class="stat-label">Избранное</div><div class="stat-num" id="favorites">0</div><div class="stat-note">Самое важное</div></div>
-  </section>
-  <section>
-    <div class="section-head">
-      <div><div class="eyebrow" style="margin-bottom:9px">YOUR LIBRARY</div><h2>Твоя коллекция</h2></div>
-      <div class="searchbox"><span>⌕</span><input id="search" placeholder="Найти идею, ссылку, тему..." aria-label="Поиск материалов"></div>
-    </div>
-    <div class="filters" id="filters">
-      <button class="filter active" data-filter="Все">Всё</button>
-      <button class="filter" data-filter="Идеи">✳ Идеи</button>
-      <button class="filter" data-filter="Учёба">⌘ Учёба</button>
-      <button class="filter" data-filter="Работа">▧ Работа</button>
-      <button class="filter" data-filter="На потом">◷ На потом</button>
-      <button class="filter" data-filter="Избранное">☆ Избранное</button>
-    </div>
-    <div class="grid" id="grid"></div>
-  </section>
-  <footer><span>UNMIND © 2026 · MADE FOR YOUR MIND</span><span>Твои данные хранятся в этом браузере</span></footer>
+
+  <div class="steps">
+   <div class="step"><div class="step-num">1</div><div><strong>Сохрани</strong><p>Добавь ссылку на статью, видео или полезный сайт.</p></div></div>
+   <div class="step"><div class="step-num">2</div><div><strong>Выбери тему</strong><p>Разложи материалы по категориям.</p></div></div>
+   <div class="step"><div class="step-num">3</div><div><strong>Найди снова</strong><p>Используй поиск, когда материал понадобится.</p></div></div>
+  </div>
+
+  <div class="section-head"><div><div class="eyebrow" style="margin-bottom:8px">ТВОЯ КОЛЛЕКЦИЯ</div><h2>Недавно сохранено</h2></div><button class="secondary" onclick="showView('library')">Все материалы →</button></div>
+  <div class="resources" id="homeResources"></div>
+  <div class="banner"><div><strong>Больше порядка и возможностей?</strong><p>Сравни бесплатный тариф и UNMIND Pro.</p></div><button class="secondary" onclick="showView('pricing')">Сравнить тарифы →</button></div>
+ </section>
+
+ <section class="view" id="view-library">
+  <div class="eyebrow">ТВОИ МАТЕРИАЛЫ</div><h1>Мои сохранения</h1>
+  <p class="muted">Все ссылки, идеи и заметки, которые ты сохранил.</p>
+  <div class="section-head" style="margin-top:25px"><h2>Библиотека</h2><div class="search"><span>⌕</span><input id="search" placeholder="Найти материал..." aria-label="Поиск материалов"></div></div>
+  <div class="filters">
+   <button class="chip active" data-cat="Все">Все</button><button class="chip" data-cat="Учёба">Учёба</button><button class="chip" data-cat="Идеи">Идеи</button><button class="chip" data-cat="Работа">Работа</button><button class="chip" data-cat="На потом">На потом</button>
+  </div>
+  <div class="resources" id="libraryResources"></div>
+  <button class="primary" style="margin-top:20px" onclick="openModal()">＋ Добавить ссылку</button>
+ </section>
+
+ <section class="view" id="view-favorites">
+  <div class="eyebrow">САМОЕ ВАЖНОЕ</div><h1>Избранное</h1>
+  <p class="muted">Нажми на звёздочку у любого материала, чтобы он появился здесь.</p>
+  <div class="resources" id="favoriteResources" style="margin-top:25px"></div>
+ </section>
+
+ <section class="view" id="view-pricing">
+  <div class="pricing-intro"><div class="eyebrow">ПОНЯТНЫЕ ТАРИФЫ</div><h1>Начни бесплатно.<br><span style="color:var(--green)">Расти, когда готов.</span></h1><p class="muted">Используй основные функции бесплатно. Перейди на Pro, когда понадобятся дополнительные возможности.</p></div>
+  <div class="pricing-grid">
+   <article class="plan">
+    <h2>Free</h2><p class="plan-desc">Всё необходимое, чтобы навести порядок в своих ссылках.</p>
+    <div class="price">€0</div><div class="billing">Бесплатно навсегда</div>
+    <ul><li>Сохранение ссылок и идей</li><li>Поиск по материалам</li><li>Категории и избранное</li><li>Хранение в текущем браузере</li></ul>
+    <button class="secondary" onclick="showView('home')">Продолжить бесплатно</button>
+   </article>
+   <article class="plan pro">
+    <span class="popular">PRO</span><h2>UNMIND Pro</h2><p class="plan-desc">Для тех, кто хочет организовывать больше и экономить время.</p>
+    <div class="price">€5,99<small> / месяц</small></div><div class="billing">Предварительная цена — можно изменить</div>
+    <ul><li>Все функции бесплатного тарифа</li><li>Планируемые инструменты ИИ</li><li>Планируемая синхронизация устройств</li><li>Расширенные возможности организации</li><li>Поддержка развития продукта</li></ul>
+    <button class="primary" onclick="startPayment()">Выбрать Pro →</button>
+   </article>
+  </div>
+  <div class="notice"><strong>Оплата ещё не подключена.</strong> Это экран подписки, а не работающий платёжный сервис. Пока платёжная ссылка не добавлена, деньги не списываются и платный доступ не активируется. Перед запуском потребуется настроить оплату и проверку подписки на сервере.</div>
+ </section>
+
+ <section class="view" id="view-settings">
+  <div class="eyebrow">НАСТРОЙКИ</div><h1>Твои данные</h1>
+  <div class="settings-card"><h2>Резервная копия</h2><p>Материалы сохраняются в браузере на этом устройстве. Очистка данных браузера может удалить их.</p><button class="secondary" onclick="exportData()">Скачать резервную копию</button></div>
+  <div class="settings-card"><h2>Удалить материалы</h2><p>Это удалит все сохранённые ссылки с этого устройства. Действие нельзя отменить.</p><button class="secondary" onclick="clearData()">Удалить всё</button></div>
+ </section>
+
+ <footer><span>UNMIND © 2026 · Меньше хаоса, больше идей.</span><button class="secondary" onclick="showView('settings')">Настройки и данные</button></footer>
 </main>
 </div>
 
-<dialog id="modal">
-  <form id="saveForm">
-    <div class="eyebrow" style="margin-bottom:10px">ADD TO YOUR WORLD</div>
-    <h2>Сохрани полезное.</h2>
-    <div class="field"><label for="title">Название</label><input id="title" required maxlength="100" placeholder="Например, курс по дизайну"></div>
-    <div class="field"><label for="url">Ссылка</label><input id="url" type="url" required placeholder="https://..."></div>
-    <div class="field"><label for="category">Категория</label><select id="category"><option>Идеи</option><option>Учёба</option><option>Работа</option><option>На потом</option></select></div>
-    <div class="field"><label for="note">Почему это важно? (необязательно)</label><input id="note" maxlength="180" placeholder="Что хочешь отсюда получить?"></div>
-    <div class="modal-actions"><button type="button" class="secondary" onclick="closeModal()">Отмена</button><button class="primary" type="submit">Сохранить ↗</button></div>
-  </form>
+<dialog id="addDialog">
+ <form id="saveForm">
+  <div class="eyebrow">ДОБАВИТЬ МАТЕРИАЛ</div><h2>Что хочешь сохранить?</h2>
+  <div class="field"><label for="title">Название</label><input id="title" maxlength="100" required placeholder="Например, полезное видео по дизайну"></div>
+  <div class="field"><label for="url">Ссылка</label><input id="url" type="url" required placeholder="https://example.com"></div>
+  <div class="field"><label for="category">Категория</label><select id="category"><option>Учёба</option><option>Идеи</option><option>Работа</option><option>На потом</option></select></div>
+  <div class="field"><label for="note">Заметка (необязательно)</label><input id="note" maxlength="180" placeholder="Почему хочешь к этому вернуться?"></div>
+  <div class="modal-actions"><button type="button" class="secondary" onclick="closeModal()">Отмена</button><button class="primary" type="submit">Сохранить</button></div>
+ </form>
 </dialog>
 <div id="toast" class="toast hidden" role="status"></div>
 
 <script>
-const KEY='unmind-library-v1';
+// Когда будет готова платёжная ссылка, вставь её между кавычками ниже.
+// Пример: const PAYMENT_URL = "https://ссылка-от-платёжного-сервиса";
+const PAYMENT_URL = "";
+
+const KEY="unmind-items-v3";
 const demo=[
- {id:1,title:'Как научиться быстрее учиться',url:'https://www.coursera.org',category:'Учёба',note:'Найти полезные курсы и выстроить план обучения',icon:'⌘',favorite:true},
- {id:2,title:'Идеи для будущего проекта',url:'https://www.producthunt.com',category:'Идеи',note:'Изучить, какие проблемы решают новые продукты',icon:'✳',favorite:false},
- {id:3,title:'Инструменты для продуктивной работы',url:'https://www.notion.so',category:'Работа',note:'Собрать инструменты в единый рабочий процесс',icon:'▧',favorite:false},
- {id:4,title:'Прочитать в свободное время',url:'https://www.wikipedia.org',category:'На потом',note:'Любопытная тема, к которой стоит вернуться',icon:'◷',favorite:false}
+{id:1,title:"Найти полезные курсы",url:"https://www.coursera.org",category:"Учёба",note:"Собрать материалы для изучения новой темы",favorite:true},
+{id:2,title:"Вдохновение для проектов",url:"https://www.producthunt.com",category:"Идеи",note:"Посмотреть, какие продукты создают другие люди",favorite:false},
+{id:3,title:"Инструменты для работы",url:"https://www.notion.so",category:"Работа",note:"Изучить способы лучше организовать задачи",favorite:false}
 ];
 let items=[];
-try{const stored=localStorage.getItem(KEY);items=stored?JSON.parse(stored):demo;if(!Array.isArray(items))items=demo}catch(e){items=demo}
-let active='Все';
+try{const raw=localStorage.getItem(KEY);items=raw?JSON.parse(raw):demo;if(!Array.isArray(items))items=demo}catch(e){items=demo}
+let activeCategory="Все";
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){toast('Не удалось сохранить. Возможно, хранилище заполнено.')}}
-function getDomain(url){try{return new URL(url).hostname.replace(/^www\./,'')}catch(e){return url}}
-function iconFor(c){return {'Идеи':'✳','Учёба':'⌘','Работа':'▧','На потом':'◷'}[c]||'◈'}
-function toast(s){$('toast').textContent=s;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),2200)}
-function render(){
- const q=$('search').value.trim().toLowerCase();
- const shown=items.filter(x=>(active==='Все'||(active==='Избранное'?x.favorite:x.category===active))&&[x.title,x.url,x.note,x.category].some(v=>String(v||'').toLowerCase().includes(q)));
- $('total').textContent=items.length;
- $('categories').textContent=new Set(items.map(x=>x.category)).size;
- $('favorites').textContent=items.filter(x=>x.favorite).length;
- $('grid').innerHTML=shown.length?shown.map(x=>`
- <article class="card">
-  <div class="card-top"><div class="site-icon">${esc(x.icon||iconFor(x.category))}</div><span class="kind">${esc(x.category)}</span></div>
-  <h3>${esc(x.title)}</h3><p>${esc(x.note||'Сохранено, чтобы вернуться к этому позже.')}</p>
-  <div class="card-foot"><span class="domain">${esc(getDomain(x.url))}</span><div class="actions">
-   <button class="iconbtn" title="${x.favorite?'Убрать из избранного':'В избранное'}" onclick="toggleFav(${Number(x.id)})">${x.favorite?'★':'☆'}</button>
-   <button class="iconbtn" title="Удалить" onclick="removeItem(${Number(x.id)})">×</button>
-   <button class="iconbtn" title="Открыть ссылку" onclick="openLink(${Number(x.id)})">↗</button>
-  </div></div>
- </article>`).join(''):'<div class="empty">Ничего не найдено.<br><br>Попробуй изменить запрос или сохрани новый материал.</div>';
- document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter===active));
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const icon=c=>({"Учёба":"📚","Идеи":"💡","Работа":"🗂️","На потом":"⏳"}[c]||"🔖");
+
+function persist(){
+ try{localStorage.setItem(KEY,JSON.stringify(items));return true}
+ catch(e){notify("Не удалось сохранить данные. Возможно, хранилище заполнено.");return false}
 }
-function openModal(){$('modal').showModal();setTimeout(()=>$('title').focus(),50)}
-function closeModal(){$('modal').close()}
-function toggleFav(id){items=items.map(x=>x.id===id?{...x,favorite:!x.favorite}:x);persist();render()}
-function removeItem(id){if(!confirm('Удалить материал из коллекции?'))return;items=items.filter(x=>x.id!==id);persist();render();toast('Материал удалён')}
-function openLink(id){const x=items.find(x=>x.id===id);if(x)window.open(x.url,'_blank','noopener,noreferrer')}
-document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{active=b.dataset.filter;render()}));
-$('search').addEventListener('input',render);
-$('saveForm').addEventListener('submit',e=>{
+function notify(message){
+ $("toast").textContent=message;$("toast").classList.remove("hidden");
+ clearTimeout(notify.timer);notify.timer=setTimeout(()=>$("toast").classList.add("hidden"),3000);
+}
+function showView(name){
+ document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="view-"+name));
+ document.querySelectorAll(".nav[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
+ if(name==="library")renderLibrary();
+ if(name==="favorites")renderFavorites();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function openModal(){$("addDialog").showModal();setTimeout(()=>$("title").focus(),50)}
+function closeModal(){$("addDialog").close()}
+function domain(url){try{return new URL(url).hostname.replace(/^www\./,"")}catch(e){return url}}
+
+function card(x){
+ return `<article class="resource">
+ <div class="resource-top"><div class="resource-icon">${icon(x.category)}</div><span class="category">${esc(x.category)}</span></div>
+ <h3>${esc(x.title)}</h3>
+ <p>${esc(x.note||"Сохранил, чтобы вернуться к этому позже.")}</p>
+ <div class="resource-bottom"><span class="domain">${esc(domain(x.url))}</span>
+ <div class="actions">
+ <button class="mini" title="Добавить в избранное" aria-label="Избранное" onclick="toggleFavorite(${Number(x.id)})">${x.favorite?"★":"☆"}</button>
+ <button class="mini" title="Открыть ссылку" aria-label="Открыть" onclick="openResource(${Number(x.id)})">↗</button>
+ <button class="mini" title="Удалить" aria-label="Удалить" onclick="deleteResource(${Number(x.id)})">×</button>
+ </div></div></article>`;
+}
+function empty(title,text){
+ return `<div class="empty"><strong>${title}</strong>${text}</div>`;
+}
+function renderHome(){
+ const recent=items.slice(0,3);
+ $("homeResources").innerHTML=recent.length?recent.map(card).join(""):empty("Пока здесь пусто — и это нормально!","Нажми «Сохранить первую ссылку», чтобы добавить первый материал.");
+}
+function renderLibrary(){
+ const q=$("search").value.trim().toLowerCase();
+ const list=items.filter(x=>(activeCategory==="Все"||x.category===activeCategory)&&[x.title,x.url,x.note,x.category].some(v=>String(v||"").toLowerCase().includes(q)));
+ $("libraryResources").innerHTML=list.length?list.map(card).join(""):empty("Материалы не найдены","Попробуй другой запрос или добавь новую ссылку.");
+ document.querySelectorAll("[data-cat]").forEach(b=>b.classList.toggle("active",b.dataset.cat===activeCategory));
+}
+function renderFavorites(){
+ const list=items.filter(x=>x.favorite);
+ $("favoriteResources").innerHTML=list.length?list.map(card).join(""):empty("Избранное пока пустое","Нажми ☆ на карточке, чтобы сохранить здесь самое важное.");
+}
+function render(){renderHome();renderLibrary();renderFavorites()}
+function toggleFavorite(id){
+ items=items.map(x=>x.id===id?{...x,favorite:!x.favorite}:x);
+ persist();render();
+}
+function deleteResource(id){
+ if(!confirm("Удалить этот материал?"))return;
+ items=items.filter(x=>x.id!==id);persist();render();notify("Материал удалён.");
+}
+function openResource(id){
+ const x=items.find(x=>x.id===id);if(!x)return;
+ try{const u=new URL(x.url);if(!["https:","http:"].includes(u.protocol))throw Error();window.open(u.href,"_blank","noopener,noreferrer")}
+ catch(e){notify("Эта ссылка выглядит некорректно.")}
+}
+function startPayment(){
+ if(!PAYMENT_URL.trim()){
+  notify("Оплата пока не подключена. Добавь платёжную ссылку в код.");
+  return;
+ }
+ try{
+  const u=new URL(PAYMENT_URL);
+  if(u.protocol!=="https:")throw Error();
+  window.location.href=u.href;
+ }catch(e){notify("Проверь платёжную ссылку в коде.")}
+}
+function exportData(){
+ const blob=new Blob([JSON.stringify(items,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);const a=document.createElement("a");
+ a.href=url;a.download="unmind-backup.json";a.click();URL.revokeObjectURL(url);
+ notify("Резервная копия подготовлена.");
+}
+function clearData(){
+ if(!confirm("Удалить все сохранённые материалы? Это нельзя отменить."))return;
+ items=[];persist();render();notify("Материалы удалены.");
+}
+document.querySelectorAll(".nav[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+document.querySelectorAll("[data-cat]").forEach(b=>b.addEventListener("click",()=>{activeCategory=b.dataset.cat;renderLibrary()}));
+$("search").addEventListener("input",renderLibrary);
+$("saveForm").addEventListener("submit",e=>{
  e.preventDefault();
- const title=$('title').value.trim(),url=$('url').value.trim(),category=$('category').value,note=$('note').value.trim();
- try{const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))throw Error()}catch(e){toast('Укажи корректную ссылку, начинающуюся с https://');return}
- items.unshift({id:Date.now(),title,url,category,note,icon:iconFor(category),favorite:false});
- persist();active='Все';$('search').value='';render();closeModal();e.target.reset();toast('Сохранено. Теперь это не потеряется.')
+ const title=$("title").value.trim(),url=$("url").value.trim();
+ const category=$("category").value,note=$("note").value.trim();
+ try{const u=new URL(url);if(!["https:","http:"].includes(u.protocol))throw Error()}
+ catch(err){notify("Введи корректную ссылку, например https://example.com");return}
+ items.unshift({id:Date.now(),title,url,category,note,favorite:false});
+ persist();render();closeModal();e.target.reset();showView("library");notify("Готово! Ссылка сохранена.");
 });
 render();
 </script>
