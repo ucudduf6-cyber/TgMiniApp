@@ -3,450 +3,628 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101010">
-<title>KADR Studio — подарки со смыслом</title>
-<meta name="description" content="Создай персональный постер для особенного человека. Бесплатный редактор и индивидуальный дизайн на заказ.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101522">
+<title>My College — расписание пар</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root {
-  --bg:#101010; --card:#191919; --white:#f5f1e9;
-  --muted:#a6a198; --gold:#d5b47a; --line:#33312e;
+  --bg:#101522;--panel:#191f2e;--panel2:#222a3b;
+  --line:#30394c;--text:#f4f6ff;--muted:#929db4;
+  --green:#a9f17a;--blue:#91aaff;--orange:#ffcb83;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
-button,input,textarea,select{font:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-a{color:inherit;text-decoration:none}
-.wrap{width:min(1240px,calc(100% - 48px));margin:auto}
-header{position:absolute;top:0;left:0;right:0;z-index:3;border-bottom:1px solid #ffffff20}
-nav{height:84px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.logo{font-size:23px;font-weight:900;letter-spacing:3px}
-.logo span{color:var(--gold)}
-.navlinks{display:flex;gap:28px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase}
-.navlinks a:hover{color:var(--gold)}
-.navcta,.btn{border:1px solid var(--gold);background:var(--gold);color:#15130f;padding:14px 20px;display:inline-flex;justify-content:center;align-items:center;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;transition:.2s}
-.btn:hover,.navcta:hover{background:#edce95;transform:translateY(-2px)}
-.btn-outline{color:var(--white);border-color:#ffffff65;background:transparent}
-.btn-outline:hover{border-color:var(--gold);color:var(--gold);background:transparent}
-.hero{min-height:720px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:30px;padding-top:100px;position:relative;overflow:hidden}
-.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 78% 45%,#74542b30,transparent 45%);pointer-events:none}
-.eyebrow{font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
-h1{font-size:clamp(48px,7.5vw,100px);line-height:.93;letter-spacing:-5px;margin:26px 0}
-h1 span{font-family:Georgia,serif;font-weight:400;font-style:italic;color:var(--gold)}
-.hero p{max-width:430px;color:#c3bdb3;line-height:1.8;font-size:15px}
-.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-.hero-note{margin-top:22px;font-size:10px!important;color:#918a80!important;letter-spacing:1px}
-.hero-art{display:flex;justify-content:center;align-items:center;position:relative;padding:40px 0}
-.poster{
- width:min(100%,365px);aspect-ratio:3/4;position:relative;overflow:hidden;
- background:linear-gradient(155deg,#8e7b64,#332e29 48%,#111);
- box-shadow:0 30px 90px #000b;
- display:flex;flex-direction:column;justify-content:space-between;padding:26px;
-}
-.poster:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#0a0908e8 0%,transparent 65%),radial-gradient(ellipse at 60% 35%,#e0c39745,transparent 48%)}
-.poster>*{position:relative}
-.poster-top{display:flex;justify-content:space-between;font-size:9px;letter-spacing:2px}
-.poster-center{text-align:center}
-.poster-kicker{font-size:9px;letter-spacing:4px;margin-bottom:16px}
-.poster-name{font-family:Georgia,serif;font-size:clamp(32px,5vw,55px);line-height:1.02;overflow-wrap:anywhere}
-.poster-message{font-size:11px;line-height:1.6;max-width:230px;margin:18px auto 0;white-space:pre-wrap;overflow-wrap:anywhere}
-.poster-bottom{display:flex;justify-content:space-between;align-items:end;font-size:8px;letter-spacing:2px}
-.poster-bottom strong{font-family:Georgia,serif;font-size:20px;letter-spacing:0}
-.poster.style-light{background:linear-gradient(140deg,#e7dfd0,#b5a38a);color:#29231c}
-.poster.style-light:before{background:linear-gradient(0deg,#eee5d5f2,transparent 80%),radial-gradient(ellipse at 50% 35%,#fff9,transparent 50%)}
-.poster.style-light .poster-kicker,.poster.style-light .poster-bottom{color:#554633}
-.poster.style-red{background:linear-gradient(145deg,#7c2424,#251010 75%);color:#fff1dd}
-.poster.style-red:before{background:linear-gradient(0deg,#140909f2,transparent 75%),radial-gradient(ellipse at 50% 35%,#d78b6a55,transparent 50%)}
-.poster.style-blue{background:linear-gradient(145deg,#667f88,#172d3a 75%);color:#edf0e8}
-.poster.style-blue:before{background:linear-gradient(0deg,#09171ff2,transparent 75%),radial-gradient(ellipse at 50% 35%,#d3e6df40,transparent 50%)}
-.hero-stamp{position:absolute;bottom:8px;right:0;border:1px solid #d5b47a70;border-radius:50%;width:105px;height:105px;display:grid;place-items:center;text-align:center;font-size:9px;letter-spacing:2px;transform:rotate(12deg);color:var(--gold);line-height:1.8}
-section.block{padding:100px 0;border-top:1px solid var(--line)}
-.section-top{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:45px}
-h2{font-size:clamp(34px,5vw,60px);letter-spacing:-2px;line-height:1;margin:15px 0}
-.section-top p{max-width:350px;color:var(--muted);font-size:13px;line-height:1.8}
-.editor{display:grid;grid-template-columns:.85fr 1.15fr;gap:20px;align-items:start}
-.panel{background:var(--card);border:1px solid var(--line);padding:28px}
-.panel h3{margin:0 0 24px;font-size:18px}
-.field{margin-bottom:19px}
-label{display:block;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#c3bcb1;margin-bottom:9px}
-input,textarea,select{width:100%;background:#111;border:1px solid #3b3934;color:var(--white);padding:13px;outline:none;border-radius:0}
-input:focus,textarea:focus,select:focus{border-color:var(--gold)}
-textarea{resize:vertical;min-height:85px}
-.style-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.style-choice{height:66px;border:1px solid #47423a;background:#292520;color:#fff;font-size:10px;letter-spacing:.5px}
-.style-choice:nth-child(2){background:#d8c9ae;color:#211b15}
-.style-choice:nth-child(3){background:#652020}
-.style-choice:nth-child(4){background:#263e4c}
-.style-choice.active{outline:2px solid var(--gold);outline-offset:2px}
-.preview-wrap{background:#0a0a0a;padding:25px;display:flex;align-items:center;justify-content:center;min-height:500px}
-.preview-wrap .poster{width:min(100%,350px)}
-.form-note{color:var(--muted);font-size:11px;line-height:1.7;margin-top:15px}
-.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.gallery-item{min-width:0}
-.gallery .poster{width:100%;box-shadow:none}
-.gallery-caption{display:flex;justify-content:space-between;gap:10px;padding:15px 0;border-bottom:1px solid var(--line)}
-.gallery-caption strong{font-size:12px;letter-spacing:1px}
-.gallery-caption span{font-size:10px;color:var(--muted)}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.step{border-top:1px solid var(--gold);padding-top:20px}
-.step-number{color:var(--gold);font-family:Georgia,serif;font-size:38px}
-.step h3{font-size:17px}
-.step p{color:var(--muted);font-size:13px;line-height:1.8}
-.order{background:#191814;display:grid;grid-template-columns:1fr 1fr;gap:35px;padding:40px}
-.order p{color:var(--muted);line-height:1.8;font-size:14px}
-.price{font-size:40px;font-family:Georgia,serif;margin:18px 0}
-.price small{font-family:Arial,sans-serif;font-size:11px;color:var(--muted)}
-.order form{align-self:center}
-footer{padding:32px 0;border-top:1px solid var(--line);color:var(--muted);font-size:11px}
-.footer-row{display:flex;justify-content:space-between;gap:25px;flex-wrap:wrap}
-footer a{text-decoration:underline;text-underline-offset:4px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#f4e8d2;color:#18130c;padding:14px 20px;z-index:20;display:none;font-size:12px;max-width:90%;text-align:center}
+.wrap{width:min(1120px,calc(100% - 32px));margin:auto}
+header{border-bottom:1px solid var(--line);background:#101522;position:sticky;top:0;z-index:5}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.logo{font-size:21px;font-weight:900;letter-spacing:-1px}
+.logo span{color:var(--green)}
+.tag{font-size:11px;color:var(--muted)}
+.hero{padding:40px 0 25px}
+.eyebrow{color:var(--green);font-size:11px;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:clamp(35px,6vw,56px);letter-spacing:-2px;line-height:1.05;margin:14px 0}
+.subtitle{color:var(--muted);line-height:1.7;max-width:620px;font-size:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}
+h2{font-size:19px;margin:0 0 17px}
+h3{font-size:15px;margin:0 0 10px}
+.setup{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:14px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}
+input,select,textarea{width:100%;padding:12px;background:#111725;border:1px solid #354056;border-radius:10px;color:var(--text);min-width:0}
+input[type=file]{font-size:12px}
+button{border:0;border-radius:10px;padding:12px 15px;font-weight:750}
+.primary{background:var(--green);color:#172013}
+.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+button:hover{filter:brightness(1.08)}
+.full{width:100%}
+.small{font-size:12px;color:var(--muted);line-height:1.65}
+.drop{border:1px dashed #52617a;border-radius:13px;padding:20px;text-align:center;background:#141b29}
+.drop strong{display:block;margin-bottom:8px}
+.drop input{margin-top:12px}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.stat{padding:17px;background:var(--panel);border:1px solid var(--line);border-radius:15px}
+.stat-label{font-size:11px;color:var(--muted)}
+.stat-value{font-size:clamp(18px,3vw,26px);font-weight:850;margin-top:9px}
+.green{color:var(--green)}
+.blue{color:var(--blue)}
+.orange{color:var(--orange)}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:30px 0 14px}
+.section-head h2{margin:0}
+.current{background:linear-gradient(130deg,#263b35,#1b2930);border:1px solid #476653;border-radius:18px;padding:23px;margin:15px 0}
+.current .label{font-size:11px;color:#b7d6bf;letter-spacing:1.5px;text-transform:uppercase}
+.current h2{font-size:26px;margin:12px 0 7px}
+.current p{color:#d0dfd4;font-size:13px;line-height:1.6;margin:5px 0}
+.time{font-size:20px;font-weight:850;margin-top:13px}
+.timeline{display:grid;gap:10px}
+.lesson{display:grid;grid-template-columns:100px 1fr auto;gap:15px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.lesson.active{border-color:var(--green);background:#202b2b}
+.lesson-time{font-weight:800;font-size:13px}
+.lesson-time small{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+.lesson-name{font-weight:750;overflow-wrap:anywhere}
+.lesson-meta{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.6}
+.badge{font-size:10px;padding:6px 9px;border-radius:999px;background:#293143;color:#c8d2e7;white-space:nowrap}
+.lesson.active .badge{background:#314c36;color:var(--green)}
+.empty{padding:30px 18px;border:1px dashed #46516a;border-radius:14px;text-align:center;color:var(--muted);line-height:1.7}
+details{margin-top:15px}
+summary{cursor:pointer;color:var(--blue);font-size:13px}
+.manual{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}
+.manual .field{margin:0}
+.notice{background:#252438;border:1px solid #454060;border-radius:12px;padding:13px;color:#d5d1ff;font-size:12px;line-height:1.6;margin-top:14px}
+footer{border-top:1px solid var(--line);margin-top:45px;padding:25px 0;color:var(--muted);font-size:11px;line-height:1.7}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#efffe4;color:#152013;padding:13px 18px;border-radius:12px;display:none;z-index:10;font-size:13px;max-width:90%;text-align:center}
 .toast.show{display:block}
-@media(max-width:800px){
- .wrap{width:calc(100% - 30px)}
- nav{height:70px}
- .navlinks{display:none}
- .hero{grid-template-columns:1fr;padding-top:120px;padding-bottom:55px;gap:0}
- .hero-art{padding:30px 15px}
- .hero-stamp{right:0;bottom:0}
- .editor{grid-template-columns:1fr}
- .preview-wrap{min-height:auto}
- .gallery{grid-template-columns:1fr 1fr}
- .steps{grid-template-columns:1fr}
- .order{grid-template-columns:1fr;padding:24px}
- section.block{padding:65px 0}
- .section-top{display:block}
- h1{letter-spacing:-2px}
+@media(max-width:700px){
+ .setup{grid-template-columns:1fr}
+ .stats{gap:7px}
+ .stat{padding:12px}
+ .lesson{grid-template-columns:78px 1fr;gap:10px}
+ .lesson>.badge{grid-column:2;justify-self:start}
+ .panel{padding:16px}
+ .hero{padding-top:30px}
+ .tag{display:none}
 }
-@media(max-width:480px){
- .gallery{grid-template-columns:1fr}
- .gallery .poster{max-width:350px;margin:auto}
- .navcta{padding:12px;font-size:9px}
- .style-grid{grid-template-columns:repeat(2,1fr)}
- .panel{padding:20px}
-}
+@media(max-width:390px){.manual{grid-template-columns:1fr}.lesson-time{font-size:12px}}
 </style>
 </head>
 <body>
 <header>
- <div class="wrap">
-  <nav>
-   <a class="logo" href="#home">KADR<span>.</span></a>
-   <div class="navlinks">
-    <a href="#works">Работы</a>
-    <a href="#editor">Конструктор</a>
-    <a href="#order">Заказать</a>
-   </div>
-   <a class="navcta" href="#editor">Создать постер ↗</a>
-  </nav>
+ <div class="wrap nav">
+  <div class="logo">MY COLLEGE<span>.</span></div>
+  <div class="tag">ТВОЁ РАСПИСАНИЕ · ВСЕГДА ПОД РУКОЙ</div>
+  <button class="secondary" id="todayBtn">Сегодня ↻</button>
  </div>
 </header>
 
-<main>
-<section class="wrap hero" id="home">
- <div>
-  <div class="eyebrow">KADR STUDIO · PERSONAL DESIGN</div>
-  <h1>Обычный<br>момент.<br><span>Особенная</span><br>история.</h1>
-  <p>Преврати имя, воспоминание или несколько важных слов в красивый постер. Создай свой дизайн бесплатно или закажи индивидуальную работу.</p>
-  <div class="hero-actions">
-   <a class="btn" href="#editor">Создать бесплатно ↗</a>
-   <a class="btn btn-outline" href="#works">Смотреть работы</a>
-  </div>
-  <p class="hero-note">БЕЗ РЕГИСТРАЦИИ · СВОЙ ТЕКСТ · СКАЧИВАНИЕ PNG</p>
- </div>
- <div class="hero-art">
-  <div class="poster" id="heroPoster">
-   <div class="poster-top"><span>KADR STUDIO</span><span>NO. 001</span></div>
-   <div class="poster-center">
-    <div class="poster-kicker">A STORY ABOUT YOU</div>
-    <div class="poster-name">Your<br>Story</div>
-    <div class="poster-message">Самые важные истории<br>начинаются с простого момента.</div>
-   </div>
-   <div class="poster-bottom"><span>PERSONAL EDITION</span><strong>K.</strong></div>
-  </div>
-  <div class="hero-stamp">MADE FOR<br>YOUR STORY<br>✳</div>
- </div>
-</section>
+<main class="wrap">
+ <section class="hero">
+  <div class="eyebrow">STUDENT PLANNER</div>
+  <h1>Знай, что у тебя<br>за следующая пара.</h1>
+  <p class="subtitle">Загрузи расписание один раз. Выбери курс и дату — приложение покажет текущую пару, следующую и весь оставшийся учебный день.</p>
+ </section>
 
-<section class="block" id="works">
- <div class="wrap">
-  <div class="section-top">
-   <div><div class="eyebrow">SELECTED CONCEPTS</div><h2>Истории в кадре.</h2></div>
-   <p>Выбери настроение. Измени слова и создай собственную версию прямо на сайте.</p>
+ <section class="setup">
+  <div class="panel">
+   <h2>01 / Твоё расписание</h2>
+   <div class="drop">
+    <strong>📂 Загрузи файл расписания</strong>
+    <div class="small">Excel, CSV, PDF или TXT. Файл обрабатывается в браузере.</div>
+    <input id="fileInput" type="file" accept=".xlsx,.xls,.csv,.pdf,.txt">
+   </div>
+   <p class="small" id="fileStatus">Расписание ещё не загружено. Можно попробовать демо-данные.</p>
+   <div class="actions">
+    <button class="secondary" id="demoBtn">Показать пример</button>
+    <button class="secondary" id="clearBtn">Удалить расписание</button>
+   </div>
+   <div class="notice">Совет: в Excel лучше всего работает таблица, где отдельные столбцы содержат день, курс или группу, время, предмет, преподавателя и аудиторию. Формат расписания у колледжей различается, поэтому импорт нужно проверить.</div>
   </div>
-  <div class="gallery">
-   <div class="gallery-item">
-    <div class="poster style-light">
-     <div class="poster-top"><span>KADR STUDIO</span><span>01</span></div>
-     <div class="poster-center"><div class="poster-kicker">THE PEOPLE WE LOVE</div><div class="poster-name">Моя<br>семья</div><div class="poster-message">Дом — это люди,<br>к которым возвращаешься.</div></div>
-     <div class="poster-bottom"><span>PERSONAL EDITION</span><strong>K.</strong></div>
-    </div>
-    <div class="gallery-caption"><strong>01 / СЕМЬЯ</strong><span>Тёплый минимализм</span></div>
-   </div>
-   <div class="gallery-item">
-    <div class="poster style-red">
-     <div class="poster-top"><span>KADR STUDIO</span><span>02</span></div>
-     <div class="poster-center"><div class="poster-kicker">ONE DAY · ONE STORY</div><div class="poster-name">Наш<br>день</div><div class="poster-message">Есть моменты, которые<br>хочется сохранить.</div></div>
-     <div class="poster-bottom"><span>PERSONAL EDITION</span><strong>K.</strong></div>
-    </div>
-    <div class="gallery-caption"><strong>02 / ПАМЯТЬ</strong><span>Кинематографичный</span></div>
-   </div>
-   <div class="gallery-item">
-    <div class="poster style-blue">
-     <div class="poster-top"><span>KADR STUDIO</span><span>03</span></div>
-     <div class="poster-center"><div class="poster-kicker">TO SOMEONE SPECIAL</div><div class="poster-name">Для<br>тебя</div><div class="poster-message">Маленькое напоминание<br>о том, как ты важен.</div></div>
-     <div class="poster-bottom"><span>PERSONAL EDITION</span><strong>K.</strong></div>
-    </div>
-    <div class="gallery-caption"><strong>03 / ПОДАРОК</strong><span>Спокойный синий</span></div>
-   </div>
-  </div>
- </div>
-</section>
 
-<section class="block" id="editor">
- <div class="wrap">
-  <div class="section-top">
-   <div><div class="eyebrow">YOUR OWN DESIGN</div><h2>Создай свой кадр.</h2></div>
-   <p>Заполни несколько полей. Предпросмотр обновляется автоматически, а результат можно сохранить как PNG.</p>
-  </div>
-  <div class="editor">
-   <div class="panel">
-    <h3>Настрой свой постер</h3>
-    <div class="field">
-     <label for="posterName">Главный текст / имя</label>
-     <input id="posterName" maxlength="45" value="Моя история" placeholder="Например, Мама">
-    </div>
-    <div class="field">
-     <label for="posterMessage">Пожелание или подпись</label>
-     <textarea id="posterMessage" maxlength="180" placeholder="Несколько важных слов...">Спасибо за тепло, поддержку и самые важные моменты.</textarea>
-    </div>
-    <div class="field">
-     <label for="posterOccasion">Повод</label>
-     <select id="posterOccasion">
-      <option value="A STORY ABOUT YOU">Просто так</option>
-      <option value="HAPPY BIRTHDAY">День рождения</option>
-      <option value="FOR MY FAMILY">Семья</option>
-      <option value="OUR STORY">Годовщина</option>
-      <option value="THANK YOU">Благодарность</option>
-      <option value="TO SOMEONE SPECIAL">Особенный человек</option>
-     </select>
-    </div>
-    <div class="field">
-     <label>Выбери стиль</label>
-     <div class="style-grid">
-      <button type="button" class="style-choice active" data-style="dark">NOIR</button>
-      <button type="button" class="style-choice" data-style="light">SAND</button>
-      <button type="button" class="style-choice" data-style="red">CINEMA</button>
-      <button type="button" class="style-choice" data-style="blue">OCEAN</button>
-     </div>
-    </div>
-    <button class="btn" id="downloadBtn" style="width:100%">Скачать постер PNG ↓</button>
-    <p class="form-note">Постер создаётся прямо в браузере. Для скачивания не нужно создавать аккаунт. Не используй чужие фотографии и материалы без разрешения.</p>
+  <div class="panel">
+   <h2>02 / Укажи свои данные</h2>
+   <div class="field">
+    <label for="course">Курс</label>
+    <input id="course" list="courseOptions" placeholder="Например, 1 курс">
+    <datalist id="courseOptions"></datalist>
    </div>
-
-   <div class="preview-wrap">
-    <div class="poster" id="livePoster">
-     <div class="poster-top"><span>KADR STUDIO</span><span>NO. 001</span></div>
-     <div class="poster-center">
-      <div class="poster-kicker" id="liveOccasion">A STORY ABOUT YOU</div>
-      <div class="poster-name" id="liveName">Моя<br>история</div>
-      <div class="poster-message" id="liveMessage">Спасибо за тепло, поддержку и самые важные моменты.</div>
-     </div>
-     <div class="poster-bottom"><span>MADE JUST FOR YOU</span><strong>K.</strong></div>
-    </div>
+   <div class="field">
+    <label for="group">Группа (если есть)</label>
+    <input id="group" list="groupOptions" placeholder="Например, ICT-1A">
+    <datalist id="groupOptions"></datalist>
    </div>
-  </div>
- </div>
-</section>
-
-<section class="block">
- <div class="wrap">
-  <div class="section-top">
-   <div><div class="eyebrow">HOW IT WORKS</div><h2>Три шага.</h2></div>
-   <p>Никаких сложных программ и дизайнерских навыков.</p>
-  </div>
-  <div class="steps">
-   <div class="step"><div class="step-number">01</div><h3>Напиши свою историю</h3><p>Добавь имя, повод или слова, которые имеют значение именно для тебя.</p></div>
-   <div class="step"><div class="step-number">02</div><h3>Выбери настроение</h3><p>Попробуй разные цветовые стили и посмотри, какой лучше подходит.</p></div>
-   <div class="step"><div class="step-number">03</div><h3>Сохрани или подари</h3><p>Скачай изображение и отправь близкому человеку или распечатай.</p></div>
-  </div>
- </div>
-</section>
-
-<section class="block" id="order">
- <div class="wrap">
-  <div class="order">
-   <div>
-    <div class="eyebrow">MADE FOR YOU</div>
-    <h2>Хочешь что-то<br><span style="font-family:Georgia,serif;font-style:italic;color:var(--gold)">особенное?</span></h2>
-    <p>Закажи персональный дизайн: постер для подарка, памятную дату или семейную историю. Сначала отправь запрос — детали и стоимость согласуем до начала работы.</p>
-    <div class="price">от €5 <small> / примерная стартовая цена</small></div>
-    <p style="font-size:11px">Это ориентировочная цена, не оферта. Фактическая стоимость зависит от задачи и согласуется заранее.</p>
+   <div class="field">
+    <label for="dayDate">На какую дату показать пары?</label>
+    <input id="dayDate" type="date">
    </div>
-   <form id="orderForm">
-    <div class="field"><label for="orderName">Как к тебе обращаться</label><input id="orderName" maxlength="80" required placeholder="Твоё имя"></div>
-    <div class="field"><label for="orderEmail">Email для ответа</label><input id="orderEmail" type="email" maxlength="150" required placeholder="you@example.com"></div>
-    <div class="field"><label for="orderDetails">Что хочешь создать?</label><textarea id="orderDetails" maxlength="1000" required placeholder="Для кого постер, какой повод, какие пожелания..."></textarea></div>
-    <button class="btn" type="submit" style="width:100%">Подготовить запрос ↗</button>
-    <p class="form-note">Кнопка откроет твою почтовую программу. Запрос не отправится, пока ты сам не нажмёшь «Отправить» в ней. Перед запуском замени адрес владельца сайта в коде.</p>
-   </form>
+   <div class="field">
+    <label for="startTime">Начало учебного дня (если не указано в файле)</label>
+    <input id="startTime" type="time" value="08:30">
+   </div>
+   <button class="primary full" id="applyBtn">Показать моё расписание →</button>
+   <p class="small">Курс и группа фильтруют данные, если эти сведения есть в таблице.</p>
   </div>
+ </section>
+
+ <div class="stats">
+  <div class="stat"><div class="stat-label">ПАР НА ДЕНЬ</div><div class="stat-value green" id="statTotal">0</div></div>
+  <div class="stat"><div class="stat-label">СЛЕДУЮЩАЯ ПАРА</div><div class="stat-value blue" id="statNext">—</div></div>
+  <div class="stat"><div class="stat-label">ДО НАЧАЛА</div><div class="stat-value orange" id="statCountdown">—</div></div>
  </div>
-</section>
+
+ <section>
+  <div class="section-head"><h2>Сейчас</h2><span class="small" id="displayDate">—</span></div>
+  <div id="currentLesson" class="current">
+   <div class="label">ГОТОВ К РАБОТЕ</div>
+   <h2>Сначала загрузи расписание</h2>
+   <p>Выбери файл и свой курс, чтобы увидеть занятия.</p>
+  </div>
+ </section>
+
+ <section>
+  <div class="section-head">
+   <h2>Пары на этот день</h2>
+   <span class="small" id="daySummary">0 занятий</span>
+  </div>
+  <div id="lessonList" class="timeline">
+   <div class="empty">Здесь появятся твои пары.</div>
+  </div>
+ </section>
+
+ <section class="panel" style="margin-top:25px">
+  <h2>Добавить пару вручную</h2>
+  <p class="small">Если импорт не распознал формат таблицы, добавь занятие здесь. Можно также использовать этот раздел, чтобы проверить работу приложения.</p>
+  <form id="manualForm">
+   <div class="manual">
+    <div class="field"><label for="mDate">Дата</label><input type="date" id="mDate" required></div>
+    <div class="field"><label for="mCourse">Курс</label><input id="mCourse" placeholder="1 курс"></div>
+    <div class="field"><label for="mGroup">Группа</label><input id="mGroup" placeholder="ICT-1A"></div>
+    <div class="field"><label for="mName">Предмет</label><input id="mName" required placeholder="Математика"></div>
+    <div class="field"><label for="mStart">Начало</label><input type="time" id="mStart" required value="08:30"></div>
+    <div class="field"><label for="mEnd">Окончание</label><input type="time" id="mEnd" required value="10:00"></div>
+    <div class="field"><label for="mRoom">Аудитория</label><input id="mRoom" placeholder="B204"></div>
+    <div class="field"><label for="mTeacher">Преподаватель</label><input id="mTeacher" placeholder="Имя преподавателя"></div>
+   </div>
+   <button class="primary" type="submit" style="margin-top:15px">Сохранить пару</button>
+  </form>
+ </section>
+
+ <details>
+  <summary>Как должен выглядеть файл, чтобы импорт сработал лучше?</summary>
+  <div class="panel" style="margin-top:12px">
+   <p class="small">Пример структуры Excel или CSV:</p>
+   <div style="overflow-x:auto">
+    <table style="border-collapse:collapse;width:100%;font-size:12px">
+     <tr><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Дата</th><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Курс</th><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Предмет</th><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Начало</th><th style="text-align:left;padding:8px;border-bottom:1px solid #394156">Конец</th></tr>
+     <tr><td style="padding:8px">2026-10-16</td><td style="padding:8px">1 курс</td><td style="padding:8px">Математика</td><td style="padding:8px">08:30</td><td style="padding:8px">10:00</td></tr>
+    </table>
+   </div>
+   <p class="small">Для недельного расписания вместо конкретной даты можно использовать столбец «День недели». Если расписание содержит отдельные листы для курсов, приложение также попробует использовать название листа.</p>
+  </div>
+ </details>
 </main>
 
-<footer>
- <div class="wrap footer-row">
-  <div><a class="logo" href="#home">KADR<span>.</span></a><p>Небольшая студия персональных историй.</p></div>
-  <div><p>© <span id="year"></span> KADR Studio</p><p>Концептуальный проект. Не связан с Art Pictures Studio.</p></div>
- </div>
-</footer>
+<footer><div class="wrap">My College — личный планировщик расписания. Данные сохраняются в браузере на этом устройстве. Эта версия не отправляет push-уведомления, когда страница закрыта.</div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-const $ = id => document.getElementById(id);
-let selectedStyle = "dark";
+"use strict";
 
-const styles = {
- dark: {bg:["#85715b","#28231e","#0d0c0b"], text:"#f5ead7", shade:"#0a0908"},
- light:{bg:["#eee3ce","#c9b697","#a58f70"],text:"#29231c",shade:"#eee5d5"},
- red:  {bg:["#922d2d","#4a1818","#160909"],text:"#fff0dc",shade:"#140909"},
- blue: {bg:["#809ba3","#385361","#122630"],text:"#edf4f0",shade:"#09171f"}
+if(window.pdfjsLib){
+ pdfjsLib.GlobalWorkerOptions.workerSrc =
+ "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
+
+const STORE_KEY="my_college_lessons_v1";
+const PREF_KEY="my_college_preferences_v1";
+let lessons=loadLessons();
+let fileCourses=[];
+let fileGroups=[];
+let activeDay=[];
+let timer=null;
+
+const $=id=>document.getElementById(id);
+const todayISO=()=>{
+ const d=new Date();
+ d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
+ return d.toISOString().slice(0,10);
 };
+$("dayDate").value=todayISO();
+$("mDate").value=todayISO();
 
-function updatePoster() {
-  const name = $("posterName").value.trim() || "Твоя история";
-  const message = $("posterMessage").value.trim();
-  $("liveName").innerHTML = escapeHTML(name).replace(/\n/g,"<br>");
-  $("liveMessage").textContent = message;
-  $("liveOccasion").textContent = $("posterOccasion").value;
-  $("livePoster").className = "poster" + (selectedStyle === "dark" ? "" : " style-" + selectedStyle);
+function loadLessons(){
+ try{
+  const v=JSON.parse(localStorage.getItem(STORE_KEY)||"[]");
+  return Array.isArray(v)?v.filter(x=>x&&x.subject&&x.date):[];
+ }catch{return [];}
 }
-
-function escapeHTML(s) {
- return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-
-["posterName","posterMessage","posterOccasion"].forEach(id=>{
-  $(id).addEventListener("input",updatePoster);
-  $(id).addEventListener("change",updatePoster);
-});
-
-document.querySelectorAll(".style-choice").forEach(button=>{
- button.addEventListener("click",()=>{
-  selectedStyle=button.dataset.style;
-  document.querySelectorAll(".style-choice").forEach(b=>b.classList.toggle("active",b===button));
-  updatePoster();
- });
-});
-
-function drawWrappedText(ctx,text,x,y,maxWidth,lineHeight,maxLines=5) {
- const words = String(text).split(/\s+/);
- let line = "", lines = [];
- words.forEach(word=>{
-  const test = line ? line+" "+word : word;
-  if(ctx.measureText(test).width > maxWidth && line) {
-   lines.push(line); line=word;
-  } else line=test;
- });
- if(line) lines.push(line);
- lines=lines.slice(0,maxLines);
- lines.forEach((l,i)=>ctx.fillText(l,x,y+i*lineHeight));
-}
-
-$("downloadBtn").addEventListener("click",()=>{
- const canvas=document.createElement("canvas");
- canvas.width=1200; canvas.height=1600;
- const ctx=canvas.getContext("2d");
- const palette=styles[selectedStyle];
- const grad=ctx.createLinearGradient(0,0,1200,1600);
- grad.addColorStop(0,palette.bg[0]);
- grad.addColorStop(.52,palette.bg[1]);
- grad.addColorStop(1,palette.bg[2]);
- ctx.fillStyle=grad;ctx.fillRect(0,0,1200,1600);
-
- const glow=ctx.createRadialGradient(720,540,20,720,540,600);
- glow.addColorStop(0,"rgba(255,230,190,.20)");
- glow.addColorStop(1,"rgba(0,0,0,0)");
- ctx.fillStyle=glow;ctx.fillRect(0,0,1200,1200);
-
- const color=palette.text;
- ctx.fillStyle=color;
- ctx.textBaseline="alphabetic";
- ctx.font="22px Arial";
- ctx.textAlign="left";
- ctx.fillText("KADR STUDIO",90,100);
- ctx.textAlign="right";
- ctx.fillText("NO. 001",1110,100);
- ctx.strokeStyle=color+"55";ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(90,130);ctx.lineTo(1110,130);ctx.stroke();
-
- ctx.textAlign="center";
- ctx.font="22px Arial";
- ctx.letterSpacing="7px";
- ctx.fillText($("posterOccasion").value,600,400);
-
- const name=$("posterName").value.trim()||"Твоя история";
- const words=name.split(/\s+/);
- let lines=[],line="";
- const maxWidth=1020;
- words.forEach(word=>{
-  const test=line?line+" "+word:word;
-  ctx.font="bold 105px Georgia";
-  if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=word;}
-  else line=test;
- });
- if(line)lines.push(line);
- lines=lines.slice(0,3);
- ctx.fillStyle=color;
- ctx.font="bold 105px Georgia";
- let y=650-(lines.length-1)*65;
- lines.forEach(l=>{ctx.fillText(l,600,y);y+=125;});
-
- ctx.font="30px Arial";
- ctx.letterSpacing="0px";
- const message=$("posterMessage").value.trim();
- drawWrappedText(ctx,message,600,y+40,850,46,5);
-
- ctx.strokeStyle=color+"55";
- ctx.beginPath();ctx.moveTo(90,1440);ctx.lineTo(1110,1440);ctx.stroke();
- ctx.textAlign="left";ctx.font="20px Arial";
- ctx.fillText("MADE JUST FOR YOU",90,1490);
- ctx.textAlign="right";ctx.font="54px Georgia";
- ctx.fillText("K.",1110,1500);
-
- const a=document.createElement("a");
- a.download="kadr-personal-poster.png";
- a.href=canvas.toDataURL("image/png");
- a.click();
- showToast("Постер скачивается в формате PNG.");
-});
-
-function showToast(message) {
- const toast=$("toast");
- toast.textContent=message;toast.classList.add("show");
- clearTimeout(showToast.timer);
- showToast.timer=setTimeout(()=>toast.classList.remove("show"),3200);
-}
-
-$("orderForm").addEventListener("submit",event=>{
- event.preventDefault();
- const ownerEmail="YOUR_EMAIL@example.com";
- if(ownerEmail==="YOUR_EMAIL@example.com"){
-  showToast("Сначала замени YOUR_EMAIL@example.com в коде на свой email.");
-  return;
+function saveLessons(){
+ try{
+  localStorage.setItem(STORE_KEY,JSON.stringify(lessons));
+  return true;
+ }catch{
+  toast("Не удалось сохранить данные. Возможно, хранилище браузера заполнено.");
+  return false;
  }
- const name=$("orderName").value.trim();
- const email=$("orderEmail").value.trim();
- const details=$("orderDetails").value.trim();
- const subject=encodeURIComponent("Новый запрос на дизайн — KADR Studio");
- const body=encodeURIComponent("Имя: "+name+"\nEmail клиента: "+email+"\n\nЗапрос:\n"+details);
- window.location.href="mailto:"+ownerEmail+"?subject="+subject+"&body="+body;
-});
+}
+function savePrefs(){
+ try{
+  localStorage.setItem(PREF_KEY,JSON.stringify({
+   course:$("course").value,group:$("group").value,
+   startTime:$("startTime").value
+  }));
+ }catch{}
+}
+function loadPrefs(){
+ try{
+  const p=JSON.parse(localStorage.getItem(PREF_KEY)||"{}");
+  $("course").value=p.course||"";
+  $("group").value=p.group||"";
+  $("startTime").value=p.startTime||"08:30";
+ }catch{}
+}
+function toast(msg){
+ const el=$("toast");el.textContent=msg;el.classList.add("show");
+ clearTimeout(toast.t);
+ toast.t=setTimeout(()=>el.classList.remove("show"),3500);
+}
+function esc(s){
+ return String(s??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
+}
+function normalize(s){
+ return String(s??"").toLowerCase().trim().replace(/ё/g,"е");
+}
+function parseTime(v){
+ if(v===null||v===undefined||v==="")return "";
+ if(typeof v==="number"&&v>=0&&v<1){
+  const m=Math.round(v*1440);
+  return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+ }
+ if(v instanceof Date){
+  return String(v.getHours()).padStart(2,"0")+":"+String(v.getMinutes()).padStart(2,"0");
+ }
+ const s=String(v).trim();
+ const m=s.match(/(?:^|\D)(\d{1,2})[:.](\d{2})(?:\D|$)/);
+ if(m&&+m[1]<24&&+m[2]<60)return String(+m[1]).padStart(2,"0")+":"+m[2];
+ return "";
+}
+function timeMinutes(t){
+ const m=(t||"").match(/^(\d{1,2}):(\d{2})$/);
+ return m?Number(m[1])*60+Number(m[2]):null;
+}
+function dateFromCell(v){
+ if(v instanceof Date&&!isNaN(v)){
+  const d=new Date(v.getTime());d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
+  return d.toISOString().slice(0,10);
+ }
+ if(typeof v==="number"&&v>20000&&v<80000){
+  const d=XLSX.SSF.parse_date_code(v);
+  if(d)return `${d.y}-${String(d.m).padStart(2,"0")}-${String(d.d).padStart(2,"0")}`;
+ }
+ const s=String(v??"").trim();
+ let m=s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+ if(m)return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
+ m=s.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
+ if(m)return `${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;
+ return "";
+}
+function weekdayName(s){
+ const map={
+  "понедельник":1,"пн":1,"monday":1,"mon":1,
+  "вторник":2,"вт":2,"tuesday":2,"tue":2,
+  "среда":3,"ср":3,"wednesday":3,"wed":3,
+  "четверг":4,"чт":4,"thursday":4,"thu":4,
+  "пятница":5,"пт":5,"friday":5,"fri":5,
+  "суббота":6,"сб":6,"saturday":6,"sat":6,
+  "воскресенье":0,"вс":0,"sunday":0,"sun":0
+ };
+ return map[normalize(s)]??null;
+}
+function weekDay(date){
+ return new Date(date+"T12:00:00").getDay();
+}
+function colIndex(headers,patterns){
+ return headers.findIndex(h=>patterns.some(p=>p.test(normalize(h))));
+}
+function cleanLesson(x){
+ if(!x.subject||!x.date)return null;
+ return {
+  id:x.id||makeId(),date:String(x.date),weekday:x.weekday??null,
+  course:String(x.course||"").trim(),
+  group:String(x.group||"").trim(),
+  subject:String(x.subject).trim(),
+  start:parseTime(x.start)||"",
+  end:parseTime(x.end)||"",
+  room:String(x.room||"").trim(),
+  teacher:String(x.teacher||"").trim()
+ };
+}
+function makeId(){
+ return window.crypto?.randomUUID?.()||
+ Date.now().toString(36)+Math.random().toString(36).slice(2);
+}
+function parseRows(rows,sheetName=""){
+ if(!rows.length)return [];
+ let headerIndex=0,headers=rows[0].map(x=>String(x??""));
+ const aliases={
+  date:[/^(дата|date|число)$/,/дата занятия/],
+  day:[/^(день|weekday|day|день недели)$/],
+  course:[/курс/,/course/],
+  group:[/групп/,/group/],
+  subject:[/предмет/,/дисциплин/,/заняти/,/subject/,/lesson/],
+  start:[/начало/,/время начала/,/start/,/^с$/],
+  end:[/окончан/,/конец/,/время конца/,/end/,/^до$/],
+  time:[/^время$/,/пара и время/],
+  room:[/аудитор/,/кабинет/,/room/],
+  teacher:[/преподавател/,/teacher/,/лектор/]
+ };
+ let ix={};
+ for(const k in aliases)ix[k]=colIndex(headers,aliases[k]);
 
-$("year").textContent=new Date().getFullYear();
-updatePoster();
+ if(ix.subject<0){
+  const maybe=rows.findIndex(r=>r.some(c=>/предмет|дисциплин|subject|заняти/i.test(String(c??""))));
+  if(maybe>=0){headerIndex=maybe;headers=rows[maybe].map(x=>String(x??""));for(const k in aliases)ix[k]=colIndex(headers,aliases[k]);}
+ }
+ const out=[];
+ for(let r=headerIndex+1;r<rows.length;r++){
+  const row=rows[r]||[];
+  const get=k=>ix[k]>=0?row[ix[k]]:"";
+  const subject=String(get("subject")??"").trim();
+  if(!subject)continue;
+  let date=dateFromCell(get("date"));
+  const day=weekdayName(get("day"));
+  const timeCell=String(get("time")??"");
+  let start=parseTime(get("start")),end=parseTime(get("end"));
+  if(!start){
+   const times=[...timeCell.matchAll(/\d{1,2}[:.]\d{2}/g)].map(m=>parseTime(m[0]));
+   start=times[0]||"";
+   end=end||times[1]||"";
+  }
+  let course=String(get("course")||sheetName||"").trim();
+  let group=String(get("group")||"").trim();
+  if(!date&&day!==null){
+   out.push(cleanLesson({date:"",weekday:day,course,group,subject,start,end,room:get("room"),teacher:get("teacher")}));
+  }else if(date){
+   out.push(cleanLesson({date,weekday:weekDay(date),course,group,subject,start,end,room:get("room"),teacher:get("teacher")}));
+  }
+ }
+ return out.filter(Boolean);
+}
+function unique(arr){return [...new Set(arr.filter(Boolean))].sort();}
+function populateOptions(){
+ fileCourses=unique(lessons.map(x=>x.course));
+ fileGroups=unique(lessons.map(x=>x.group));
+ $("courseOptions").innerHTML=fileCourses.map(x=>`<option value="${esc(x)}"></option>`).join("");
+ $("groupOptions").innerHTML=fileGroups.map(x=>`<option value="${esc(x)}"></option>`).join("");
+}
+function mergeLessons(imported){
+ let added=0;
+ for(const x of imported){
+  if(!x)continue;
+  const duplicate=lessons.some(y=>y.date===x.date&&y.weekday===x.weekday&&
+   normalize(y.course)===normalize(x.course)&&normalize(y.group)===normalize(x.group)&&
+   normalize(y.subject)===normalize(x.subject)&&y.start===x.start);
+  if(!duplicate){lessons.push({...x,id:makeId()});added++;}
+ }
+ return added;
+}
+async function readFile(file){
+ if(!file)return;
+ const name=file.name.toLowerCase();
+ $("fileStatus").textContent="Читаю файл…";
+ try{
+  let imported=[];
+  if(name.endsWith(".xlsx")||name.endsWith(".xls")||name.endsWith(".csv")){
+   const data=await file.arrayBuffer();
+   const wb=XLSX.read(data,{type:"array",cellDates:true});
+   for(const sheet of wb.SheetNames){
+    const rows=XLSX.utils.sheet_to_json(wb.Sheets[sheet],{header:1,defval:""});
+    imported.push(...parseRows(rows,sheet));
+   }
+  }else if(name.endsWith(".txt")){
+   const txt=await file.text();
+   imported=parseText(txt);
+  }else if(name.endsWith(".pdf")){
+   if(!window.pdfjsLib)throw new Error("Не удалось загрузить PDF.js. Проверь интернет и попробуй снова.");
+   const data=new Uint8Array(await file.arrayBuffer());
+   const pdf=await pdfjsLib.getDocument({data}).promise;
+   let text="";
+   for(let i=1;i<=pdf.numPages;i++){
+    const page=await pdf.getPage(i);
+    const content=await page.getTextContent();
+    text+=content.items.map(it=>it.str).join(" ")+"\n";
+   }
+   imported=parseText(text);
+   if(!imported.length){
+    $("fileStatus").textContent="PDF прочитан, но расписание автоматически не распознано. Попробуй Excel/CSV или добавь пары вручную.";
+    toast("Возможно, это скан или нестандартный PDF.");
+    return;
+   }
+  }else{
+   throw new Error("Формат не поддерживается. Используй Excel, CSV, PDF или TXT.");
+  }
+  if(!imported.length){
+   $("fileStatus").textContent="Файл прочитан, но не найдены строки расписания. Проверь названия столбцов или добавь пары вручную.";
+   toast("Не удалось автоматически распознать расписание.");
+   return;
+  }
+  const count=mergeLessons(imported);
+  if(!saveLessons())return;
+  populateOptions();
+  $("fileStatus").textContent=`Файл: ${file.name}. Распознано записей: ${imported.length}; добавлено новых: ${count}.`;
+  render();
+  toast(`Импорт завершён: ${count} новых записей.`);
+ }catch(e){
+  $("fileStatus").textContent="Ошибка чтения: "+e.message;
+  toast("Не получилось прочитать файл. Попробуй другой формат.");
+ }
+}
+function parseText(text){
+ const lines=text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+ const rows=lines.map(line=>line.split(/\t|;|\s{2,}/).map(s=>s.trim()));
+ let imported=parseRows(rows);
+ if(imported.length)return imported;
+ const out=[];
+ for(const line of lines){
+  const m=line.match(/(\d{4}-\d{2}-\d{2}|\d{1,2}[./-]\d{1,2}[./-]\d{4})\s+(\d{1,2}[:.]\d{2})\s*[-–—]\s*(\d{1,2}[:.]\d{2})\s+(.+)/);
+  if(m){
+   const date=dateFromCell(m[1]);
+   if(date)out.push(cleanLesson({date,weekday:weekDay(date),start:m[2],end:m[3],subject:m[4]}));
+  }
+ }
+ return out;
+}
+$("fileInput").addEventListener("change",e=>readFile(e.target.files[0]));
+function lessonDayMatch(x,date){
+ if(x.date)return x.date===date;
+ return x.weekday===weekDay(date);
+}
+function filterDay(date){
+ const course=normalize($("course").value);
+ const group=normalize($("group").value);
+ return lessons.filter(x=>{
+  if(!lessonDayMatch(x,date))return false;
+  if(course&&x.course&&normalize(x.course)!==course)return false;
+  if(group&&x.group&&normalize(x.group)!==group)return false;
+  return true;
+ }).sort((a,b)=>(timeMinutes(a.start)??9999)-(timeMinutes(b.start)??9999));
+}
+function fmtDate(date){
+ return new Intl.DateTimeFormat("ru-RU",{weekday:"long",day:"numeric",month:"long"}).format(new Date(date+"T12:00:00"));
+}
+function fmtRange(x){
+ if(x.start&&x.end)return `${x.start} — ${x.end}`;
+ if(x.start)return `Начало в ${x.start}`;
+ return "Время не указано";
+}
+function findState(day,date){
+ const now=new Date();
+ const selectedToday=date===todayISO();
+ const minute=now.getHours()*60+now.getMinutes();
+ const entries=day.map((x,i)=>{
+  const start=timeMinutes(x.start);
+  let end=timeMinutes(x.end);
+  if(end===null&&start!==null)end=start+90;
+  return {...x,_i:i,_start:start,_end:end};
+ });
+ let current=null,next=null;
+ if(selectedToday){
+  current=entries.find(x=>x._start!==null&&x._end!==null&&minute>=x._start&&minute<x._end)||null;
+  next=entries.find(x=>x._start!==null&&x._start>minute)||null;
+ }else{
+  next=entries.find(x=>x._start!==null)||null;
+ }
+ return {current,next,entries,minute,selectedToday};
+}
+function render(){
+ savePrefs();
+ const date=$("dayDate").value||todayISO();
+ $("displayDate").textContent=fmtDate(date);
+ const day=filterDay(date);
+ activeDay=day;
+ const state=findState(day,date);
+ $("statTotal").textContent=day.length;
+ $("statNext").textContent=state.current?"Сейчас":state.next?state.next.start||"Есть":"—";
+ $("statCountdown").textContent="—";
+ const cur=$("currentLesson");
+ if(!day.length){
+  cur.innerHTML=`<div class="label">НЕТ ДАННЫХ</div><h2>Пары не найдены</h2><p>Проверь курс, группу и дату. Если расписание еженедельное, импорт должен содержать день недели.</p>`;
+ }else if(state.current){
+  cur.innerHTML=`<div class="label">● ИДЁТ СЕЙЧАС</div><h2>${esc(state.current.subject)}</h2>
+   <p>${esc(fmtRange(state.current))}</p>
+   <p>${state.current.room?"Аудитория: "+esc(state.current.room)+" · ":""}${state.current.teacher?"Преподаватель: "+esc(state.current.teacher):""}</p>
+   <div class="time">Не опоздай на следующую пару.</div>`;
+ }else if(state.next){
+  let mins=state.next._start-state.minute;
+  if(!state.selectedToday){
+   cur.innerHTML=`<div class="label">СЛЕДУЮЩАЯ ПО РАСПИСАНИЮ</div><h2>${esc(state.next.subject)}</h2><p>${esc(fmtRange(state.next))}</p><p>${state.next.room?"Аудитория: "+esc(state.next.room):""}</p>`;
+   $("statCountdown").textContent=state.next.start||"—";
+  }else{
+   cur.innerHTML=`<div class="label">СЛЕДУЮЩАЯ ПАРА</div><h2>${esc(state.next.subject)}</h2>
+    <p>${esc(fmtRange(state.next))}</p>
+    <p>${state.next.room?"Аудитория: "+esc(state.next.room)+" · ":""}${state.next.teacher?"Преподаватель: "+esc(state.next.teacher):""}</p>
+    <div class="time">${mins>0?`Через ${mins} мин.`:"Скоро начинается"}</div>`;
+   $("statCountdown").textContent=mins>0?`${mins} мин.`:"Скоро";
+  }
+ }else{
+  cur.innerHTML=`<div class="label">НА СЕГОДНЯ</div><h2>Больше пар не найдено</h2><p>По загруженным данным новых занятий на выбранную дату нет.</p>`;
+ }
+ $("daySummary").textContent=`${day.length} ${plural(day.length,"пара","пары","пар")}`;
+ const list=$("lessonList");
+ if(!day.length){
+  list.innerHTML=`<div class="empty">Нет пар для выбранных параметров.<br>Загрузи файл, измени курс или добавь занятие вручную.</div>`;
+ }else{
+  list.innerHTML=state.entries.map((x,i)=>{
+   const isCurrent=state.current&&state.current.id===x.id;
+   let badge=isCurrent?"ИДЁТ СЕЙЧАС":x._start!==null&&state.selectedToday&&x._start>state.minute?"ВПЕРЕДИ":"ПО РАСПИСАНИЮ";
+   if(state.selectedToday&&x._end!==null&&x._end<=state.minute)badge="ЗАВЕРШЕНО";
+   return `<article class="lesson ${isCurrent?"active":""}">
+    <div class="lesson-time">${esc(x.start||"—")}<small>${esc(x.end||"—")}</small></div>
+    <div><div class="lesson-name">${esc(x.subject)}</div>
+    <div class="lesson-meta">${x.room?"Аудитория: "+esc(x.room)+" · ":""}${x.teacher?"Преподаватель: "+esc(x.teacher):""}${x.course?" · "+esc(x.course):""}${x.group?" · "+esc(x.group):""}</div></div>
+    <span class="badge">${badge}</span>
+   </article>`;
+  }).join("");
+ }
+}
+function plural(n,a,b,c){
+ const n10=n%10,n100=n%100;
+ if(n10===1&&n100!==11)return a;
+ if(n10>=2&&n10<=4&&(n100<12||n100>14))return b;
+ return c;
+}
+$("applyBtn").addEventListener("click",render);
+$("todayBtn").addEventListener("click",()=>{$("dayDate").value=todayISO();render();});
+$("dayDate").addEventListener("change",render);
+$("course").addEventListener("change",render);
+$("group").addEventListener("change",render);
+$("startTime").addEventListener("change",savePrefs);
+$("clearBtn").addEventListener("click",()=>{
+ if(!confirm("Удалить всё сохранённое расписание?"))return;
+ lessons=[];saveLessons();populateOptions();render();
+ $("fileStatus").textContent="Расписание удалено.";
+});
+$("manualForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const date=$("mDate").value;
+ const start=$("mStart").value,end=$("mEnd").value;
+ if(timeMinutes(end)<=timeMinutes(start)){
+  toast("Время окончания должно быть позже начала.");return;
+ }
+ const item=cleanLesson({
+  date,weekday:weekDay(date),course:$("mCourse").value,
+  group:$("mGroup").value,subject:$("mName").value,
+  start,end,room:$("mRoom").value,teacher:$("mTeacher").value
+ });
+ if(!item)return;
+ lessons.push(item);
+ if(!saveLessons()){lessons.pop();return;}
+ $("course").value=item.course||$("course").value;
+ $("group").value=item.group||$("group").value;
+ $("dayDate").value=date;
+ populateOptions();render();toast("Пара сохранена.");
+});
+$("demoBtn").addEventListener("click",()=>{
+ const date=$("dayDate").value||todayISO();
+ const dow=weekDay(date);
+ const demo=[
+  {subject:"Математика",start:"08:30",end:"10:00",room:"B204",teacher:"Пример преподавателя"},
+  {subject:"Информатика",start:"10:15",end:"11:45",room:"Lab 2",teacher:"Пример преподавателя"},
+  {subject:"Английский язык",start:"12:15",end:"13:45",room:"A105",teacher:"Пример преподавателя"}
+ ].map(x=>cleanLesson({...x,date,weekday:dow,course:"1 курс",group:"DEMO-1"}));
+ mergeLessons(demo);saveLessons();populateOptions();
+ $("course").value="1 курс";$("group").value="DEMO-1";
+ $("fileStatus").textContent="Демо-расписание добавлено. Это вымышленные данные для проверки интерфейса.";
+ render();toast("Демо-данные загружены.");
+});
+loadPrefs();
+populateOptions();
+render();
+timer=setInterval(render,30000);
 </script>
 </body>
 </html>
