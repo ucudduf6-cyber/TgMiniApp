@@ -3,819 +3,450 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101114">
-<meta name="description" content="Min Up помогает фрилансерам следить за неоплаченными счетами и создавать вежливые напоминания клиентам.">
-<title>Min Up — получай оплату вовремя</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101010">
+<title>KADR Studio — подарки со смыслом</title>
+<meta name="description" content="Создай персональный постер для особенного человека. Бесплатный редактор и индивидуальный дизайн на заказ.">
 <style>
 :root {
-  --bg: #101114;
-  --panel: #181a20;
-  --panel2: #202229;
-  --text: #f4f4f5;
-  --muted: #9699a6;
-  --accent: #c5f36b;
-  --border: #30323a;
-  --red: #ff8585;
-  --yellow: #f5ce75;
+  --bg:#101010; --card:#191919; --white:#f5f1e9;
+  --muted:#a6a198; --gold:#d5b47a; --line:#33312e;
 }
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-  line-height: 1.5;
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1240px,calc(100% - 48px));margin:auto}
+header{position:absolute;top:0;left:0;right:0;z-index:3;border-bottom:1px solid #ffffff20}
+nav{height:84px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{font-size:23px;font-weight:900;letter-spacing:3px}
+.logo span{color:var(--gold)}
+.navlinks{display:flex;gap:28px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase}
+.navlinks a:hover{color:var(--gold)}
+.navcta,.btn{border:1px solid var(--gold);background:var(--gold);color:#15130f;padding:14px 20px;display:inline-flex;justify-content:center;align-items:center;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;transition:.2s}
+.btn:hover,.navcta:hover{background:#edce95;transform:translateY(-2px)}
+.btn-outline{color:var(--white);border-color:#ffffff65;background:transparent}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);background:transparent}
+.hero{min-height:720px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:30px;padding-top:100px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 78% 45%,#74542b30,transparent 45%);pointer-events:none}
+.eyebrow{font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+h1{font-size:clamp(48px,7.5vw,100px);line-height:.93;letter-spacing:-5px;margin:26px 0}
+h1 span{font-family:Georgia,serif;font-weight:400;font-style:italic;color:var(--gold)}
+.hero p{max-width:430px;color:#c3bdb3;line-height:1.8;font-size:15px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hero-note{margin-top:22px;font-size:10px!important;color:#918a80!important;letter-spacing:1px}
+.hero-art{display:flex;justify-content:center;align-items:center;position:relative;padding:40px 0}
+.poster{
+ width:min(100%,365px);aspect-ratio:3/4;position:relative;overflow:hidden;
+ background:linear-gradient(155deg,#8e7b64,#332e29 48%,#111);
+ box-shadow:0 30px 90px #000b;
+ display:flex;flex-direction:column;justify-content:space-between;padding:26px;
 }
-button, input, select, textarea { font: inherit; }
-button { cursor: pointer; }
-button:focus-visible, input:focus-visible,
-select:focus-visible, textarea:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+.poster:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#0a0908e8 0%,transparent 65%),radial-gradient(ellipse at 60% 35%,#e0c39745,transparent 48%)}
+.poster>*{position:relative}
+.poster-top{display:flex;justify-content:space-between;font-size:9px;letter-spacing:2px}
+.poster-center{text-align:center}
+.poster-kicker{font-size:9px;letter-spacing:4px;margin-bottom:16px}
+.poster-name{font-family:Georgia,serif;font-size:clamp(32px,5vw,55px);line-height:1.02;overflow-wrap:anywhere}
+.poster-message{font-size:11px;line-height:1.6;max-width:230px;margin:18px auto 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.poster-bottom{display:flex;justify-content:space-between;align-items:end;font-size:8px;letter-spacing:2px}
+.poster-bottom strong{font-family:Georgia,serif;font-size:20px;letter-spacing:0}
+.poster.style-light{background:linear-gradient(140deg,#e7dfd0,#b5a38a);color:#29231c}
+.poster.style-light:before{background:linear-gradient(0deg,#eee5d5f2,transparent 80%),radial-gradient(ellipse at 50% 35%,#fff9,transparent 50%)}
+.poster.style-light .poster-kicker,.poster.style-light .poster-bottom{color:#554633}
+.poster.style-red{background:linear-gradient(145deg,#7c2424,#251010 75%);color:#fff1dd}
+.poster.style-red:before{background:linear-gradient(0deg,#140909f2,transparent 75%),radial-gradient(ellipse at 50% 35%,#d78b6a55,transparent 50%)}
+.poster.style-blue{background:linear-gradient(145deg,#667f88,#172d3a 75%);color:#edf0e8}
+.poster.style-blue:before{background:linear-gradient(0deg,#09171ff2,transparent 75%),radial-gradient(ellipse at 50% 35%,#d3e6df40,transparent 50%)}
+.hero-stamp{position:absolute;bottom:8px;right:0;border:1px solid #d5b47a70;border-radius:50%;width:105px;height:105px;display:grid;place-items:center;text-align:center;font-size:9px;letter-spacing:2px;transform:rotate(12deg);color:var(--gold);line-height:1.8}
+section.block{padding:100px 0;border-top:1px solid var(--line)}
+.section-top{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:45px}
+h2{font-size:clamp(34px,5vw,60px);letter-spacing:-2px;line-height:1;margin:15px 0}
+.section-top p{max-width:350px;color:var(--muted);font-size:13px;line-height:1.8}
+.editor{display:grid;grid-template-columns:.85fr 1.15fr;gap:20px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);padding:28px}
+.panel h3{margin:0 0 24px;font-size:18px}
+.field{margin-bottom:19px}
+label{display:block;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#c3bcb1;margin-bottom:9px}
+input,textarea,select{width:100%;background:#111;border:1px solid #3b3934;color:var(--white);padding:13px;outline:none;border-radius:0}
+input:focus,textarea:focus,select:focus{border-color:var(--gold)}
+textarea{resize:vertical;min-height:85px}
+.style-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.style-choice{height:66px;border:1px solid #47423a;background:#292520;color:#fff;font-size:10px;letter-spacing:.5px}
+.style-choice:nth-child(2){background:#d8c9ae;color:#211b15}
+.style-choice:nth-child(3){background:#652020}
+.style-choice:nth-child(4){background:#263e4c}
+.style-choice.active{outline:2px solid var(--gold);outline-offset:2px}
+.preview-wrap{background:#0a0a0a;padding:25px;display:flex;align-items:center;justify-content:center;min-height:500px}
+.preview-wrap .poster{width:min(100%,350px)}
+.form-note{color:var(--muted);font-size:11px;line-height:1.7;margin-top:15px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.gallery-item{min-width:0}
+.gallery .poster{width:100%;box-shadow:none}
+.gallery-caption{display:flex;justify-content:space-between;gap:10px;padding:15px 0;border-bottom:1px solid var(--line)}
+.gallery-caption strong{font-size:12px;letter-spacing:1px}
+.gallery-caption span{font-size:10px;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step{border-top:1px solid var(--gold);padding-top:20px}
+.step-number{color:var(--gold);font-family:Georgia,serif;font-size:38px}
+.step h3{font-size:17px}
+.step p{color:var(--muted);font-size:13px;line-height:1.8}
+.order{background:#191814;display:grid;grid-template-columns:1fr 1fr;gap:35px;padding:40px}
+.order p{color:var(--muted);line-height:1.8;font-size:14px}
+.price{font-size:40px;font-family:Georgia,serif;margin:18px 0}
+.price small{font-family:Arial,sans-serif;font-size:11px;color:var(--muted)}
+.order form{align-self:center}
+footer{padding:32px 0;border-top:1px solid var(--line);color:var(--muted);font-size:11px}
+.footer-row{display:flex;justify-content:space-between;gap:25px;flex-wrap:wrap}
+footer a{text-decoration:underline;text-underline-offset:4px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#f4e8d2;color:#18130c;padding:14px 20px;z-index:20;display:none;font-size:12px;max-width:90%;text-align:center}
+.toast.show{display:block}
+@media(max-width:800px){
+ .wrap{width:calc(100% - 30px)}
+ nav{height:70px}
+ .navlinks{display:none}
+ .hero{grid-template-columns:1fr;padding-top:120px;padding-bottom:55px;gap:0}
+ .hero-art{padding:30px 15px}
+ .hero-stamp{right:0;bottom:0}
+ .editor{grid-template-columns:1fr}
+ .preview-wrap{min-height:auto}
+ .gallery{grid-template-columns:1fr 1fr}
+ .steps{grid-template-columns:1fr}
+ .order{grid-template-columns:1fr;padding:24px}
+ section.block{padding:65px 0}
+ .section-top{display:block}
+ h1{letter-spacing:-2px}
 }
-.container { max-width: 1120px; margin: auto; padding: 0 22px; }
-header {
-  border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 5;
-  background: rgba(16,17,20,.94);
-  backdrop-filter: blur(14px);
-}
-.nav {
-  min-height: 72px; display: flex; align-items: center;
-  justify-content: space-between; gap: 16px;
-}
-.logo { font-size: 23px; font-weight: 850; letter-spacing: -1px; }
-.logo span { color: var(--accent); }
-.nav-right { display: flex; gap: 10px; align-items: center; }
-button {
-  border: 0; border-radius: 11px; padding: 11px 16px;
-  font-weight: 700; transition: .18s;
-}
-button:hover { transform: translateY(-1px); }
-.primary { background: var(--accent); color: #14170e; }
-.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
-.ghost { background: transparent; color: var(--muted); }
-.danger { color: var(--red); background: transparent; border: 1px solid #553333; }
-.hero { padding: 62px 0 35px; }
-.eyebrow {
-  display: inline-flex; gap: 8px; align-items: center;
-  border: 1px solid #3c4930; background: #20281a;
-  color: var(--accent); padding: 6px 11px;
-  border-radius: 999px; font-size: 12px; font-weight: 800;
-}
-h1 {
-  font-size: clamp(38px, 6vw, 66px); line-height: 1.04;
-  letter-spacing: -3px; max-width: 750px; margin: 20px 0 16px;
-}
-h1 em { color: var(--accent); font-style: normal; }
-.subtitle { color: var(--muted); font-size: 17px; max-width: 650px; }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-.stats {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 14px; margin: 28px 0;
-}
-.stat, .panel, .invoice-card, .feature {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 17px;
-}
-.stat { padding: 20px; }
-.stat-label { color: var(--muted); font-size: 13px; }
-.stat-value { font-size: clamp(22px,3vw,32px); font-weight: 800; margin-top: 6px; overflow-wrap: anywhere; }
-.stat-value.green { color: var(--accent); }
-.stat-value.red { color: var(--red); }
-.section-head {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 14px; margin: 35px 0 16px;
-}
-h2 { font-size: 23px; letter-spacing: -.7px; margin: 0; }
-.muted { color: var(--muted); }
-.small { font-size: 12px; color: var(--muted); }
-.workspace {
-  display: grid; grid-template-columns: 1.1fr .9fr;
-  gap: 16px; align-items: start;
-}
-.panel { padding: 22px; min-width: 0; }
-.panel h3 { margin: 0 0 18px; font-size: 17px; }
-label { display: block; font-size: 13px; color: #c4c5cd; margin-bottom: 7px; }
-.field { margin-bottom: 15px; }
-input, select, textarea {
-  width: 100%; background: #111216; border: 1px solid var(--border);
-  border-radius: 10px; padding: 12px; color: var(--text);
-}
-input::placeholder, textarea::placeholder { color: #656875; }
-textarea { resize: vertical; min-height: 100px; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.full { width: 100%; }
-.notice {
-  background: #22251d; border: 1px solid #414a32; color: #d6e9b7;
-  border-radius: 10px; padding: 12px; font-size: 12px; margin-top: 13px;
-}
-.usage { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
-.usage-line { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; }
-.usage-track { height: 6px; border-radius: 9px; background: #30323a; margin-top: 9px; overflow: hidden; }
-.usage-fill { height: 100%; background: var(--accent); width: 0%; transition: width .2s; }
-.toolbar { display: flex; flex-wrap: wrap; gap: 9px; }
-.toolbar select { width: auto; min-width: 145px; }
-.invoice-list { display: grid; gap: 12px; }
-.invoice-card { padding: 17px; }
-.invoice-top { display: flex; justify-content: space-between; gap: 12px; }
-.invoice-name { font-weight: 800; overflow-wrap: anywhere; }
-.invoice-client { font-size: 13px; color: var(--muted); margin-top: 4px; }
-.invoice-amount { font-weight: 800; white-space: nowrap; }
-.invoice-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
-.pill { font-size: 11px; border-radius: 999px; padding: 5px 9px; background: #292b32; color: #d5d6de; }
-.pill.overdue { color: #ffaaaa; background: #3b2427; }
-.pill.paid { color: #c5f36b; background: #27311f; }
-.pill.due { color: #f5ce75; background: #373020; }
-.invoice-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
-.invoice-actions button { font-size: 12px; padding: 8px 10px; }
-.empty {
-  padding: 35px 20px; text-align: center; color: var(--muted);
-  background: var(--panel); border: 1px dashed var(--border); border-radius: 16px;
-}
-.features {
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 20px 0 60px;
-}
-.feature { padding: 19px; }
-.feature-icon { font-size: 22px; margin-bottom: 12px; }
-.feature h3 { font-size: 15px; margin: 0 0 7px; }
-.feature p { font-size: 13px; color: var(--muted); margin: 0; }
-footer { border-top: 1px solid var(--border); padding: 26px 0 35px; color: var(--muted); font-size: 12px; }
-.footer-links { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 12px; }
-.footer-links button { font-size: 12px; padding: 0; }
-.modal-backdrop {
-  display: none; position: fixed; inset: 0; z-index: 20;
-  background: rgba(0,0,0,.76); padding: 18px;
-  align-items: center; justify-content: center;
-}
-.modal-backdrop.open { display: flex; }
-.modal {
-  width: min(100%, 510px); max-height: 90vh; overflow-y: auto;
-  padding: 25px; background: #1a1c22; border: 1px solid #393b44;
-  border-radius: 20px; box-shadow: 0 20px 90px #0009;
-}
-.modal h2 { margin-bottom: 12px; }
-.modal p, .modal li { color: #c1c2cb; font-size: 14px; }
-.modal .price { font-size: 39px; font-weight: 850; margin: 18px 0; }
-.modal .price small { font-size: 14px; color: var(--muted); font-weight: 500; }
-.modal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-.toast {
-  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
-  z-index: 50; background: #f4f4f5; color: #141414;
-  border-radius: 12px; padding: 12px 18px; font-size: 13px;
-  font-weight: 700; max-width: calc(100% - 30px); display: none;
-}
-.toast.show { display: block; }
-@media(max-width:760px) {
-  .workspace { grid-template-columns: 1fr; }
-  .features { grid-template-columns: 1fr; }
-  .hero { padding-top: 42px; }
-  .stats { gap: 8px; }
-  .stat { padding: 13px; }
-  .nav { min-height: 64px; }
-  .nav-right .secondary { display: none; }
-  h1 { letter-spacing: -1.8px; }
-}
-@media(max-width:420px) {
-  .container { padding: 0 14px; }
-  .stats { grid-template-columns: 1fr; }
-  .form-grid { grid-template-columns: 1fr; gap: 0; }
-  .panel { padding: 16px; }
-  .invoice-top { flex-direction: column; }
+@media(max-width:480px){
+ .gallery{grid-template-columns:1fr}
+ .gallery .poster{max-width:350px;margin:auto}
+ .navcta{padding:12px;font-size:9px}
+ .style-grid{grid-template-columns:repeat(2,1fr)}
+ .panel{padding:20px}
 }
 </style>
 </head>
-
 <body>
 <header>
-  <div class="container nav">
-    <div class="logo">min<span>.</span>up</div>
-    <div class="nav-right">
-      <button class="secondary" onclick="showModal('privacy')">Конфиденциальность</button>
-      <button class="primary" onclick="showModal('pro')">Min Up Pro ↗</button>
-    </div>
-  </div>
+ <div class="wrap">
+  <nav>
+   <a class="logo" href="#home">KADR<span>.</span></a>
+   <div class="navlinks">
+    <a href="#works">Работы</a>
+    <a href="#editor">Конструктор</a>
+    <a href="#order">Заказать</a>
+   </div>
+   <a class="navcta" href="#editor">Создать постер ↗</a>
+  </nav>
+ </div>
 </header>
 
-<main class="container">
-  <section class="hero">
-    <span class="eyebrow">✳ ДЛЯ ФРИЛАНСЕРОВ И МАЛЫХ КОМАНД</span>
-    <h1>Тебе должны деньги.<br><em>Пора их получить.</em></h1>
-    <p class="subtitle">
-      Следи за неоплаченными счетами, замечай просрочки и создавай
-      вежливые напоминания клиентам за несколько секунд.
-    </p>
-    <div class="hero-actions">
-      <button class="primary" onclick="document.getElementById('invoiceName').focus();document.getElementById('workspace').scrollIntoView({behavior:'smooth'})">
-        + Добавить счёт
-      </button>
-      <button class="secondary" onclick="exportCSV()">Экспортировать CSV ↓</button>
-    </div>
-  </section>
+<main>
+<section class="wrap hero" id="home">
+ <div>
+  <div class="eyebrow">KADR STUDIO · PERSONAL DESIGN</div>
+  <h1>Обычный<br>момент.<br><span>Особенная</span><br>история.</h1>
+  <p>Преврати имя, воспоминание или несколько важных слов в красивый постер. Создай свой дизайн бесплатно или закажи индивидуальную работу.</p>
+  <div class="hero-actions">
+   <a class="btn" href="#editor">Создать бесплатно ↗</a>
+   <a class="btn btn-outline" href="#works">Смотреть работы</a>
+  </div>
+  <p class="hero-note">БЕЗ РЕГИСТРАЦИИ · СВОЙ ТЕКСТ · СКАЧИВАНИЕ PNG</p>
+ </div>
+ <div class="hero-art">
+  <div class="poster" id="heroPoster">
+   <div class="poster-top"><span>KADR STUDIO</span><span>NO. 001</span></div>
+   <div class="poster-center">
+    <div class="poster-kicker">A STORY ABOUT YOU</div>
+    <div class="poster-name">Your<br>Story</div>
+    <div class="poster-message">Самые важные истории<br>начинаются с простого момента.</div>
+   </div>
+   <div class="poster-bottom"><span>PERSONAL EDITION</span><strong>K.</strong></div>
+  </div>
+  <div class="hero-stamp">MADE FOR<br>YOUR STORY<br>✳</div>
+ </div>
+</section>
 
-  <section class="stats" aria-label="Статистика счетов">
-    <div class="stat">
-      <div class="stat-label">Всего ожидает оплаты</div>
-      <div class="stat-value green" id="totalOutstanding">€0.00</div>
+<section class="block" id="works">
+ <div class="wrap">
+  <div class="section-top">
+   <div><div class="eyebrow">SELECTED CONCEPTS</div><h2>Истории в кадре.</h2></div>
+   <p>Выбери настроение. Измени слова и создай собственную версию прямо на сайте.</p>
+  </div>
+  <div class="gallery">
+   <div class="gallery-item">
+    <div class="poster style-light">
+     <div class="poster-top"><span>KADR STUDIO</span><span>01</span></div>
+     <div class="poster-center"><div class="poster-kicker">THE PEOPLE WE LOVE</div><div class="poster-name">Моя<br>семья</div><div class="poster-message">Дом — это люди,<br>к которым возвращаешься.</div></div>
+     <div class="poster-bottom"><span>PERSONAL EDITION</span><strong>K.</strong></div>
     </div>
-    <div class="stat">
-      <div class="stat-label">Просрочено</div>
-      <div class="stat-value red" id="totalOverdue">€0.00</div>
+    <div class="gallery-caption"><strong>01 / СЕМЬЯ</strong><span>Тёплый минимализм</span></div>
+   </div>
+   <div class="gallery-item">
+    <div class="poster style-red">
+     <div class="poster-top"><span>KADR STUDIO</span><span>02</span></div>
+     <div class="poster-center"><div class="poster-kicker">ONE DAY · ONE STORY</div><div class="poster-name">Наш<br>день</div><div class="poster-message">Есть моменты, которые<br>хочется сохранить.</div></div>
+     <div class="poster-bottom"><span>PERSONAL EDITION</span><strong>K.</strong></div>
     </div>
-    <div class="stat">
-      <div class="stat-label">Получено</div>
-      <div class="stat-value" id="totalPaid">€0.00</div>
+    <div class="gallery-caption"><strong>02 / ПАМЯТЬ</strong><span>Кинематографичный</span></div>
+   </div>
+   <div class="gallery-item">
+    <div class="poster style-blue">
+     <div class="poster-top"><span>KADR STUDIO</span><span>03</span></div>
+     <div class="poster-center"><div class="poster-kicker">TO SOMEONE SPECIAL</div><div class="poster-name">Для<br>тебя</div><div class="poster-message">Маленькое напоминание<br>о том, как ты важен.</div></div>
+     <div class="poster-bottom"><span>PERSONAL EDITION</span><strong>K.</strong></div>
     </div>
-  </section>
+    <div class="gallery-caption"><strong>03 / ПОДАРОК</strong><span>Спокойный синий</span></div>
+   </div>
+  </div>
+ </div>
+</section>
 
-  <section id="workspace">
-    <div class="section-head">
-      <h2>Твой рабочий стол</h2>
-      <span class="small">Данные сохраняются в этом браузере</span>
+<section class="block" id="editor">
+ <div class="wrap">
+  <div class="section-top">
+   <div><div class="eyebrow">YOUR OWN DESIGN</div><h2>Создай свой кадр.</h2></div>
+   <p>Заполни несколько полей. Предпросмотр обновляется автоматически, а результат можно сохранить как PNG.</p>
+  </div>
+  <div class="editor">
+   <div class="panel">
+    <h3>Настрой свой постер</h3>
+    <div class="field">
+     <label for="posterName">Главный текст / имя</label>
+     <input id="posterName" maxlength="45" value="Моя история" placeholder="Например, Мама">
     </div>
-
-    <div class="workspace">
-      <section class="panel">
-        <h3>＋ Добавить счёт</h3>
-        <form id="invoiceForm">
-          <div class="field">
-            <label for="invoiceName">Название счёта или проекта *</label>
-            <input id="invoiceName" maxlength="100" required placeholder="Например, Дизайн сайта">
-          </div>
-          <div class="field">
-            <label for="clientName">Клиент или компания *</label>
-            <input id="clientName" maxlength="100" required placeholder="Например, Alex Studio">
-          </div>
-          <div class="form-grid">
-            <div class="field">
-              <label for="amount">Сумма (€) *</label>
-              <input id="amount" type="number" min="0.01" max="999999999" step="0.01" required placeholder="450.00">
-            </div>
-            <div class="field">
-              <label for="dueDate">Срок оплаты *</label>
-              <input id="dueDate" type="date" required>
-            </div>
-          </div>
-          <div class="field">
-            <label for="clientEmail">Email клиента (необязательно)</label>
-            <input id="clientEmail" type="email" maxlength="200" placeholder="client@example.com">
-          </div>
-          <button class="primary full" type="submit">Сохранить счёт</button>
-        </form>
-        <div class="notice">
-          🔒 В этой версии данные хранятся локально в браузере.
-          Они не отправляются на наш сервер, потому что сервер ещё не подключён.
-        </div>
-        <div class="usage">
-          <div class="usage-line">
-            <span class="muted">Бесплатные напоминания</span>
-            <strong id="usageText">0 из 3</strong>
-          </div>
-          <div class="usage-track"><div class="usage-fill" id="usageFill"></div></div>
-          <p class="small" id="usageHint">Три бесплатных создания текста напоминания.</p>
-        </div>
-      </section>
-
-      <section class="panel">
-        <h3>✉️ Напоминание клиенту</h3>
-        <p class="small">Выбери счёт в списке, чтобы создать персональное сообщение.</p>
-        <div class="field">
-          <label for="reminderInvoice">Счёт</label>
-          <select id="reminderInvoice">
-            <option value="">Сначала добавь счёт</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="reminderTone">Тон сообщения</label>
-          <select id="reminderTone">
-            <option value="friendly">Дружелюбный</option>
-            <option value="professional">Деловой</option>
-            <option value="firm">Более настойчивый</option>
-          </select>
-        </div>
-        <button class="primary full" id="generateReminder">Создать напоминание</button>
-        <div class="field" style="margin-top:16px">
-          <label for="reminderText">Текст сообщения</label>
-          <textarea id="reminderText" maxlength="3000" placeholder="Текст напоминания появится здесь..." readonly></textarea>
-        </div>
-        <div class="form-grid">
-          <button class="secondary" id="copyReminder" type="button">Копировать текст</button>
-          <button class="secondary" id="emailReminder" type="button">Открыть email</button>
-        </div>
-        <p class="small">Сообщение не отправляется автоматически. Перед отправкой проверь сумму и данные клиента.</p>
-      </section>
+    <div class="field">
+     <label for="posterMessage">Пожелание или подпись</label>
+     <textarea id="posterMessage" maxlength="180" placeholder="Несколько важных слов...">Спасибо за тепло, поддержку и самые важные моменты.</textarea>
     </div>
-  </section>
-
-  <section>
-    <div class="section-head">
-      <h2>Счета</h2>
-      <div class="toolbar">
-        <select id="filterStatus" aria-label="Фильтр счетов">
-          <option value="all">Все счета</option>
-          <option value="unpaid">Ожидают оплаты</option>
-          <option value="overdue">Просроченные</option>
-          <option value="paid">Оплаченные</option>
-        </select>
-        <button class="secondary" onclick="loadDemo()">Пример</button>
-      </div>
+    <div class="field">
+     <label for="posterOccasion">Повод</label>
+     <select id="posterOccasion">
+      <option value="A STORY ABOUT YOU">Просто так</option>
+      <option value="HAPPY BIRTHDAY">День рождения</option>
+      <option value="FOR MY FAMILY">Семья</option>
+      <option value="OUR STORY">Годовщина</option>
+      <option value="THANK YOU">Благодарность</option>
+      <option value="TO SOMEONE SPECIAL">Особенный человек</option>
+     </select>
     </div>
-    <div id="invoiceList" class="invoice-list"></div>
-  </section>
-
-  <section>
-    <div class="section-head"><h2>Меньше рутины. Больше контроля.</h2></div>
-    <div class="features">
-      <article class="feature">
-        <div class="feature-icon">◷</div>
-        <h3>Не пропускай сроки</h3>
-        <p>Видно, какие счета ожидают оплаты, а какие уже просрочены.</p>
-      </article>
-      <article class="feature">
-        <div class="feature-icon">✉</div>
-        <h3>Напоминай без неловкости</h3>
-        <p>Подготовь вежливое сообщение вместо того, чтобы каждый раз писать с нуля.</p>
-      </article>
-      <article class="feature">
-        <div class="feature-icon">↗</div>
-        <h3>Забирай свои данные</h3>
-        <p>Экспортируй список счетов в CSV для таблиц и дальнейшей работы.</p>
-      </article>
+    <div class="field">
+     <label>Выбери стиль</label>
+     <div class="style-grid">
+      <button type="button" class="style-choice active" data-style="dark">NOIR</button>
+      <button type="button" class="style-choice" data-style="light">SAND</button>
+      <button type="button" class="style-choice" data-style="red">CINEMA</button>
+      <button type="button" class="style-choice" data-style="blue">OCEAN</button>
+     </div>
     </div>
-  </section>
+    <button class="btn" id="downloadBtn" style="width:100%">Скачать постер PNG ↓</button>
+    <p class="form-note">Постер создаётся прямо в браузере. Для скачивания не нужно создавать аккаунт. Не используй чужие фотографии и материалы без разрешения.</p>
+   </div>
+
+   <div class="preview-wrap">
+    <div class="poster" id="livePoster">
+     <div class="poster-top"><span>KADR STUDIO</span><span>NO. 001</span></div>
+     <div class="poster-center">
+      <div class="poster-kicker" id="liveOccasion">A STORY ABOUT YOU</div>
+      <div class="poster-name" id="liveName">Моя<br>история</div>
+      <div class="poster-message" id="liveMessage">Спасибо за тепло, поддержку и самые важные моменты.</div>
+     </div>
+     <div class="poster-bottom"><span>MADE JUST FOR YOU</span><strong>K.</strong></div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="block">
+ <div class="wrap">
+  <div class="section-top">
+   <div><div class="eyebrow">HOW IT WORKS</div><h2>Три шага.</h2></div>
+   <p>Никаких сложных программ и дизайнерских навыков.</p>
+  </div>
+  <div class="steps">
+   <div class="step"><div class="step-number">01</div><h3>Напиши свою историю</h3><p>Добавь имя, повод или слова, которые имеют значение именно для тебя.</p></div>
+   <div class="step"><div class="step-number">02</div><h3>Выбери настроение</h3><p>Попробуй разные цветовые стили и посмотри, какой лучше подходит.</p></div>
+   <div class="step"><div class="step-number">03</div><h3>Сохрани или подари</h3><p>Скачай изображение и отправь близкому человеку или распечатай.</p></div>
+  </div>
+ </div>
+</section>
+
+<section class="block" id="order">
+ <div class="wrap">
+  <div class="order">
+   <div>
+    <div class="eyebrow">MADE FOR YOU</div>
+    <h2>Хочешь что-то<br><span style="font-family:Georgia,serif;font-style:italic;color:var(--gold)">особенное?</span></h2>
+    <p>Закажи персональный дизайн: постер для подарка, памятную дату или семейную историю. Сначала отправь запрос — детали и стоимость согласуем до начала работы.</p>
+    <div class="price">от €5 <small> / примерная стартовая цена</small></div>
+    <p style="font-size:11px">Это ориентировочная цена, не оферта. Фактическая стоимость зависит от задачи и согласуется заранее.</p>
+   </div>
+   <form id="orderForm">
+    <div class="field"><label for="orderName">Как к тебе обращаться</label><input id="orderName" maxlength="80" required placeholder="Твоё имя"></div>
+    <div class="field"><label for="orderEmail">Email для ответа</label><input id="orderEmail" type="email" maxlength="150" required placeholder="you@example.com"></div>
+    <div class="field"><label for="orderDetails">Что хочешь создать?</label><textarea id="orderDetails" maxlength="1000" required placeholder="Для кого постер, какой повод, какие пожелания..."></textarea></div>
+    <button class="btn" type="submit" style="width:100%">Подготовить запрос ↗</button>
+    <p class="form-note">Кнопка откроет твою почтовую программу. Запрос не отправится, пока ты сам не нажмёшь «Отправить» в ней. Перед запуском замени адрес владельца сайта в коде.</p>
+   </form>
+  </div>
+ </div>
+</section>
 </main>
 
 <footer>
-  <div class="container">
-    <div><strong>min.up</strong> — простой помощник для работы со счетами.</div>
-    <div class="footer-links">
-      <button class="ghost" onclick="showModal('privacy')">Конфиденциальность</button>
-      <button class="ghost" onclick="showModal('terms')">Условия использования</button>
-      <button class="ghost" onclick="showModal('pro')">Тарифы</button>
-      <button class="ghost" onclick="clearAllData()">Удалить мои данные</button>
-    </div>
-    <p>Это ранняя версия продукта. Она не является бухгалтерской или юридической консультацией.</p>
-  </div>
+ <div class="wrap footer-row">
+  <div><a class="logo" href="#home">KADR<span>.</span></a><p>Небольшая студия персональных историй.</p></div>
+  <div><p>© <span id="year"></span> KADR Studio</p><p>Концептуальный проект. Не связан с Art Pictures Studio.</p></div>
+ </div>
 </footer>
-
-<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="backdropClose(event)">
-  <div class="modal">
-    <h2 id="modalTitle">Min Up</h2>
-    <div id="modalContent"></div>
-    <div class="modal-actions">
-      <button class="secondary" onclick="closeModal()">Закрыть</button>
-      <button class="primary" id="modalAction" onclick="modalPrimaryAction()">Понятно</button>
-    </div>
-  </div>
-</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-"use strict";
+const $ = id => document.getElementById(id);
+let selectedStyle = "dark";
 
-const DATA_KEY = "minup_invoices_v1";
-const USAGE_KEY = "minup_free_reminders_v1";
-const FREE_LIMIT = 3;
+const styles = {
+ dark: {bg:["#85715b","#28231e","#0d0c0b"], text:"#f5ead7", shade:"#0a0908"},
+ light:{bg:["#eee3ce","#c9b697","#a58f70"],text:"#29231c",shade:"#eee5d5"},
+ red:  {bg:["#922d2d","#4a1818","#160909"],text:"#fff0dc",shade:"#140909"},
+ blue: {bg:["#809ba3","#385361","#122630"],text:"#edf4f0",shade:"#09171f"}
+};
 
-let invoices = readInvoices();
-let reminderUses = readUsage();
-let currentModal = "";
-let lastFocus = null;
-
-function readInvoices() {
-  try {
-    const value = JSON.parse(localStorage.getItem(DATA_KEY) || "[]");
-    return Array.isArray(value) ? value.filter(x =>
-      x && typeof x.id === "string" &&
-      typeof x.name === "string" &&
-      typeof x.client === "string" &&
-      Number.isFinite(Number(x.amount))
-    ) : [];
-  } catch {
-    return [];
-  }
+function updatePoster() {
+  const name = $("posterName").value.trim() || "Твоя история";
+  const message = $("posterMessage").value.trim();
+  $("liveName").innerHTML = escapeHTML(name).replace(/\n/g,"<br>");
+  $("liveMessage").textContent = message;
+  $("liveOccasion").textContent = $("posterOccasion").value;
+  $("livePoster").className = "poster" + (selectedStyle === "dark" ? "" : " style-" + selectedStyle);
 }
 
-function readUsage() {
-  try {
-    const n = Number(localStorage.getItem(USAGE_KEY) || 0);
-    return Number.isFinite(n) && n >= 0 ? Math.floor(n) : 0;
-  } catch {
-    return 0;
-  }
+function escapeHTML(s) {
+ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
-function saveInvoices() {
-  try {
-    localStorage.setItem(DATA_KEY, JSON.stringify(invoices));
-    return true;
-  } catch {
-    notify("Не удалось сохранить данные. Проверь свободное место в браузере.");
-    return false;
-  }
-}
-
-function saveUsage() {
-  try {
-    localStorage.setItem(USAGE_KEY, String(reminderUses));
-  } catch {
-    notify("Браузер не смог сохранить счётчик.");
-  }
-}
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, ch => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;",
-    '"': "&quot;", "'": "&#39;"
-  })[ch]);
-}
-
-function money(value) {
-  return new Intl.NumberFormat("en-IE", {
-    style: "currency", currency: "EUR"
-  }).format(Number(value) || 0);
-}
-
-function localToday() {
-  const d = new Date();
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-  return d.toISOString().slice(0, 10);
-}
-
-function getStatus(invoice) {
-  if (invoice.paid) return "paid";
-  if (invoice.dueDate && invoice.dueDate < localToday()) return "overdue";
-  return "unpaid";
-}
-
-function statusLabel(status) {
-  return ({
-    paid: "Оплачен",
-    overdue: "Просрочен",
-    unpaid: "Ожидает оплаты"
-  })[status];
-}
-
-function notify(message) {
-  const el = document.getElementById("toast");
-  el.textContent = message;
-  el.classList.add("show");
-  clearTimeout(notify.timer);
-  notify.timer = setTimeout(() => el.classList.remove("show"), 2800);
-}
-
-function render() {
-  const outstanding = invoices.filter(x => !x.paid)
-    .reduce((sum, x) => sum + Number(x.amount), 0);
-  const overdue = invoices.filter(x => getStatus(x) === "overdue")
-    .reduce((sum, x) => sum + Number(x.amount), 0);
-  const paid = invoices.filter(x => x.paid)
-    .reduce((sum, x) => sum + Number(x.amount), 0);
-
-  document.getElementById("totalOutstanding").textContent = money(outstanding);
-  document.getElementById("totalOverdue").textContent = money(overdue);
-  document.getElementById("totalPaid").textContent = money(paid);
-
-  const filter = document.getElementById("filterStatus").value;
-  const visible = invoices.filter(x => {
-    if (filter === "all") return true;
-    if (filter === "overdue") return getStatus(x) === "overdue";
-    if (filter === "paid") return x.paid;
-    return !x.paid;
-  }).sort((a,b) => {
-    if (a.paid !== b.paid) return a.paid ? 1 : -1;
-    return String(a.dueDate).localeCompare(String(b.dueDate));
-  });
-
-  const list = document.getElementById("invoiceList");
-  if (!visible.length) {
-    list.innerHTML = `<div class="empty">
-      <div style="font-size:28px;margin-bottom:8px">↗</div>
-      <strong>Здесь пока пусто</strong>
-      <p>Добавь счёт или нажми «Пример», чтобы посмотреть, как работает Min Up.</p>
-    </div>`;
-  } else {
-    list.innerHTML = visible.map(x => {
-      const status = getStatus(x);
-      return `<article class="invoice-card">
-        <div class="invoice-top">
-          <div>
-            <div class="invoice-name">${escapeHTML(x.name)}</div>
-            <div class="invoice-client">${escapeHTML(x.client)}</div>
-          </div>
-          <div class="invoice-amount">${money(x.amount)}</div>
-        </div>
-        <div class="invoice-meta">
-          <span class="pill ${status}">${statusLabel(status)}</span>
-          <span class="pill">Оплатить до: ${escapeHTML(x.dueDate || "не указан")}</span>
-        </div>
-        <div class="invoice-actions">
-          <button class="secondary" onclick="selectReminder('${x.id}')">Создать напоминание</button>
-          <button class="secondary" onclick="togglePaid('${x.id}')">${x.paid ? "Вернуть в неоплаченные" : "Отметить оплаченным"}</button>
-          <button class="danger" onclick="deleteInvoice('${x.id}')">Удалить</button>
-        </div>
-      </article>`;
-    }).join("");
-  }
-
-  const select = document.getElementById("reminderInvoice");
-  const previous = select.value;
-  const unpaid = invoices.filter(x => !x.paid);
-  select.innerHTML = unpaid.length
-    ? unpaid.map(x => `<option value="${x.id}">${escapeHTML(x.name)} — ${money(x.amount)}</option>`).join("")
-    : `<option value="">Нет неоплаченных счетов</option>`;
-  if (unpaid.some(x => x.id === previous)) select.value = previous;
-
-  updateUsage();
-}
-
-function updateUsage() {
-  const used = Math.min(reminderUses, FREE_LIMIT);
-  document.getElementById("usageText").textContent =
-    `${used} из ${FREE_LIMIT}`;
-  document.getElementById("usageFill").style.width =
-    `${used / FREE_LIMIT * 100}%`;
-  document.getElementById("usageHint").textContent =
-    reminderUses >= FREE_LIMIT
-      ? "Бесплатный лимит использован. Оформи Pro, когда платёжная система будет подключена."
-      : `Осталось бесплатных созданий: ${FREE_LIMIT - used}.`;
-}
-
-document.getElementById("invoiceForm").addEventListener("submit", event => {
-  event.preventDefault();
-
-  const name = document.getElementById("invoiceName").value.trim();
-  const client = document.getElementById("clientName").value.trim();
-  const amount = Number(document.getElementById("amount").value);
-  const dueDate = document.getElementById("dueDate").value;
-  const email = document.getElementById("clientEmail").value.trim();
-
-  if (!name || !client || !dueDate || !Number.isFinite(amount) || amount <= 0) {
-    notify("Проверь обязательные поля.");
-    return;
-  }
-
-  const invoice = {
-    id: makeId(),
-    name, client, amount, dueDate, email,
-    paid: false,
-    createdAt: new Date().toISOString()
-  };
-
-  invoices.push(invoice);
-  if (!saveInvoices()) {
-    invoices.pop();
-    return;
-  }
-
-  event.target.reset();
-  render();
-  document.getElementById("reminderInvoice").value = invoice.id;
-  notify("Счёт сохранён.");
+["posterName","posterMessage","posterOccasion"].forEach(id=>{
+  $(id).addEventListener("input",updatePoster);
+  $(id).addEventListener("change",updatePoster);
 });
 
-function makeId() {
-  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-  return Date.now().toString(36) + Math.random().toString(36).slice(2);
-}
-
-function selectReminder(id) {
-  document.getElementById("reminderInvoice").value = id;
-  document.getElementById("workspace").scrollIntoView({ behavior: "smooth" });
-  document.getElementById("reminderTone").focus();
-}
-
-function togglePaid(id) {
-  const item = invoices.find(x => x.id === id);
-  if (!item) return;
-  item.paid = !item.paid;
-  if (!saveInvoices()) {
-    item.paid = !item.paid;
-    return;
-  }
-  render();
-  notify(item.paid ? "Счёт отмечен как оплаченный." : "Счёт снова ожидает оплаты.");
-}
-
-function deleteInvoice(id) {
-  const item = invoices.find(x => x.id === id);
-  if (!item) return;
-  if (!confirm(`Удалить счёт «${item.name}»? Это действие нельзя отменить.`)) return;
-  const old = invoices;
-  invoices = invoices.filter(x => x.id !== id);
-  if (!saveInvoices()) {
-    invoices = old;
-    return;
-  }
-  render();
-  notify("Счёт удалён.");
-}
-
-function generateReminder() {
-  if (reminderUses >= FREE_LIMIT) {
-    showModal("pro");
-    return;
-  }
-
-  const id = document.getElementById("reminderInvoice").value;
-  const item = invoices.find(x => x.id === id);
-  if (!item) {
-    notify("Сначала добавь неоплаченный счёт.");
-    return;
-  }
-
-  const tone = document.getElementById("reminderTone").value;
-  const subject = `Напоминание об оплате: ${item.name}`;
-  let message = "";
-
-  if (tone === "friendly") {
-    message = `Привет, ${item.client}!\n\nНадеюсь, у тебя всё хорошо. Хотел(а) дружелюбно напомнить о счёте «${item.name}» на сумму ${money(item.amount)} со сроком оплаты ${item.dueDate}.\n\nДай знать, если нужна дополнительная информация. Спасибо!\n\nС уважением`;
-  } else if (tone === "professional") {
-    message = `Здравствуйте, ${item.client}!\n\nНапоминаю об оплате счёта «${item.name}» на сумму ${money(item.amount)}. Срок оплаты: ${item.dueDate}.\n\nБуду признателен(на), если вы сообщите ожидаемую дату оплаты. Если платёж уже произведён, пожалуйста, проигнорируйте это сообщение.\n\nСпасибо.\n\nС уважением`;
-  } else {
-    message = `Здравствуйте, ${item.client}.\n\nПовторно обращаю ваше внимание на неоплаченный счёт «${item.name}» на сумму ${money(item.amount)}, срок оплаты которого — ${item.dueDate}.\n\nПожалуйста, подтвердите статус платежа и сообщите предполагаемую дату оплаты. Если платёж уже отправлен, прошу сообщить об этом.\n\nСпасибо.\n\nС уважением`;
-  }
-
-  document.getElementById("reminderText").value =
-    `Тема: ${subject}\n\n${message}`;
-
-  reminderUses++;
-  saveUsage();
-  updateUsage();
-  notify(`Напоминание создано. Осталось ${Math.max(0, FREE_LIMIT - reminderUses)} бесплатных.`);
-}
-
-document.getElementById("generateReminder")
-  .addEventListener("click", generateReminder);
-
-document.getElementById("copyReminder").addEventListener("click", async () => {
-  const text = document.getElementById("reminderText").value;
-  if (!text) {
-    notify("Сначала создай напоминание.");
-    return;
-  }
-  try {
-    await navigator.clipboard.writeText(text);
-    notify("Текст скопирован.");
-  } catch {
-    const field = document.getElementById("reminderText");
-    field.readOnly = false;
-    field.select();
-    const copied = document.execCommand("copy");
-    field.readOnly = true;
-    notify(copied ? "Текст скопирован." : "Выдели текст и скопируй вручную.");
-  }
+document.querySelectorAll(".style-choice").forEach(button=>{
+ button.addEventListener("click",()=>{
+  selectedStyle=button.dataset.style;
+  document.querySelectorAll(".style-choice").forEach(b=>b.classList.toggle("active",b===button));
+  updatePoster();
+ });
 });
 
-document.getElementById("emailReminder").addEventListener("click", () => {
-  const id = document.getElementById("reminderInvoice").value;
-  const item = invoices.find(x => x.id === id);
-  const text = document.getElementById("reminderText").value;
-  if (!item || !text) {
-    notify("Сначала создай напоминание.");
-    return;
-  }
-  const subject = `Напоминание об оплате: ${item.name}`;
-  const body = text.replace(/^Тема:.*\n\n/, "");
-  const url = "mailto:" + encodeURIComponent(item.email || "") +
-    "?subject=" + encodeURIComponent(subject) +
-    "&body=" + encodeURIComponent(body);
-  window.location.href = url;
+function drawWrappedText(ctx,text,x,y,maxWidth,lineHeight,maxLines=5) {
+ const words = String(text).split(/\s+/);
+ let line = "", lines = [];
+ words.forEach(word=>{
+  const test = line ? line+" "+word : word;
+  if(ctx.measureText(test).width > maxWidth && line) {
+   lines.push(line); line=word;
+  } else line=test;
+ });
+ if(line) lines.push(line);
+ lines=lines.slice(0,maxLines);
+ lines.forEach((l,i)=>ctx.fillText(l,x,y+i*lineHeight));
+}
+
+$("downloadBtn").addEventListener("click",()=>{
+ const canvas=document.createElement("canvas");
+ canvas.width=1200; canvas.height=1600;
+ const ctx=canvas.getContext("2d");
+ const palette=styles[selectedStyle];
+ const grad=ctx.createLinearGradient(0,0,1200,1600);
+ grad.addColorStop(0,palette.bg[0]);
+ grad.addColorStop(.52,palette.bg[1]);
+ grad.addColorStop(1,palette.bg[2]);
+ ctx.fillStyle=grad;ctx.fillRect(0,0,1200,1600);
+
+ const glow=ctx.createRadialGradient(720,540,20,720,540,600);
+ glow.addColorStop(0,"rgba(255,230,190,.20)");
+ glow.addColorStop(1,"rgba(0,0,0,0)");
+ ctx.fillStyle=glow;ctx.fillRect(0,0,1200,1200);
+
+ const color=palette.text;
+ ctx.fillStyle=color;
+ ctx.textBaseline="alphabetic";
+ ctx.font="22px Arial";
+ ctx.textAlign="left";
+ ctx.fillText("KADR STUDIO",90,100);
+ ctx.textAlign="right";
+ ctx.fillText("NO. 001",1110,100);
+ ctx.strokeStyle=color+"55";ctx.lineWidth=2;
+ ctx.beginPath();ctx.moveTo(90,130);ctx.lineTo(1110,130);ctx.stroke();
+
+ ctx.textAlign="center";
+ ctx.font="22px Arial";
+ ctx.letterSpacing="7px";
+ ctx.fillText($("posterOccasion").value,600,400);
+
+ const name=$("posterName").value.trim()||"Твоя история";
+ const words=name.split(/\s+/);
+ let lines=[],line="";
+ const maxWidth=1020;
+ words.forEach(word=>{
+  const test=line?line+" "+word:word;
+  ctx.font="bold 105px Georgia";
+  if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=word;}
+  else line=test;
+ });
+ if(line)lines.push(line);
+ lines=lines.slice(0,3);
+ ctx.fillStyle=color;
+ ctx.font="bold 105px Georgia";
+ let y=650-(lines.length-1)*65;
+ lines.forEach(l=>{ctx.fillText(l,600,y);y+=125;});
+
+ ctx.font="30px Arial";
+ ctx.letterSpacing="0px";
+ const message=$("posterMessage").value.trim();
+ drawWrappedText(ctx,message,600,y+40,850,46,5);
+
+ ctx.strokeStyle=color+"55";
+ ctx.beginPath();ctx.moveTo(90,1440);ctx.lineTo(1110,1440);ctx.stroke();
+ ctx.textAlign="left";ctx.font="20px Arial";
+ ctx.fillText("MADE JUST FOR YOU",90,1490);
+ ctx.textAlign="right";ctx.font="54px Georgia";
+ ctx.fillText("K.",1110,1500);
+
+ const a=document.createElement("a");
+ a.download="kadr-personal-poster.png";
+ a.href=canvas.toDataURL("image/png");
+ a.click();
+ showToast("Постер скачивается в формате PNG.");
 });
 
-document.getElementById("filterStatus").addEventListener("change", render);
-
-function exportCSV() {
-  if (!invoices.length) {
-    notify("Пока нечего экспортировать.");
-    return;
-  }
-
-  const rows = [
-    ["Название", "Клиент", "Email", "Сумма EUR", "Срок оплаты", "Статус"]
-  ];
-  invoices.forEach(x => rows.push([
-    x.name, x.client, x.email || "", Number(x.amount).toFixed(2),
-    x.dueDate, statusLabel(getStatus(x))
-  ]));
-
-  const csv = "\uFEFF" + rows.map(row =>
-    row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(";")
-  ).join("\r\n");
-
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "min-up-invoices.csv";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-  notify("CSV-файл подготовлен.");
+function showToast(message) {
+ const toast=$("toast");
+ toast.textContent=message;toast.classList.add("show");
+ clearTimeout(showToast.timer);
+ showToast.timer=setTimeout(()=>toast.classList.remove("show"),3200);
 }
 
-function loadDemo() {
-  if (invoices.length && !confirm("Добавить демонстрационные счета к существующим?")) return;
-
-  const today = new Date();
-  const addDays = n => {
-    const d = new Date(today);
-    d.setDate(d.getDate() + n);
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().slice(0, 10);
-  };
-
-  invoices.push(
-    { id: makeId(), name: "Дизайн лендинга", client: "North Studio", amount: 850, dueDate: addDays(-5), email: "", paid: false, createdAt: new Date().toISOString() },
-    { id: makeId(), name: "Редизайн логотипа", client: "Mira Creative", amount: 320, dueDate: addDays(7), email: "", paid: false, createdAt: new Date().toISOString() },
-    { id: makeId(), name: "Консультация", client: "Alex Morgan", amount: 150, dueDate: addDays(-2), email: "", paid: true, createdAt: new Date().toISOString() }
-  );
-
-  if (!saveInvoices()) return;
-  render();
-  notify("Примеры добавлены.");
-}
-
-function showModal(type) {
-  lastFocus = document.activeElement;
-  currentModal = type;
-  const title = document.getElementById("modalTitle");
-  const content = document.getElementById("modalContent");
-  const action = document.getElementById("modalAction");
-
-  if (type === "pro") {
-    title.textContent = "Min Up Pro";
-    content.innerHTML = `
-      <p>Ты использовал(а) три бесплатных создания напоминаний.</p>
-      <div class="price">€5 <small>/ месяц — предполагаемая цена</small></div>
-      <ul>
-        <li>Больше шаблонов напоминаний</li>
-        <li>Дополнительные инструменты для счетов</li>
-        <li>Экспорт данных</li>
-      </ul>
-      <p><strong>Важно:</strong> платёжная система и подписка пока не подключены. Сейчас деньги не списываются и оформить платный тариф нельзя. Эта цена — предложение для тестирования, а не активный тариф.</p>`;
-    action.textContent = "Понятно";
-  } else if (type === "privacy") {
-    title.textContent = "Конфиденциальность";
-    content.innerHTML = `
-      <p><strong>Как работает текущая версия</strong></p>
-      <p>Введённые счета и счётчик бесплатных напоминаний сохраняются в локальном хранилище браузера на этом устройстве. В этой версии данные не передаются на сервер Min Up.</p>
-      <p>Экспорт создаёт CSV-файл на твоём устройстве. Кнопка email открывает почтовое приложение; дальнейшая отправка зависит от тебя.</p>
-      <p>Удаление данных на сайте удаляет сохранённые записи из локального хранилища этого браузера. Резервные копии, экспортированные файлы и другие копии автоматически не удаляются.</p>
-      <p><strong>Перед публичным запуском:</strong> этот текст нужно дополнить настоящими данными владельца, контактами, целями и основаниями обработки, сроками хранения, сведениями о поставщиках услуг и правами пользователей. Это не окончательная юридическая политика конфиденциальности.</p>`;
-    action.textContent = "Понятно";
-  } else if (type === "terms") {
-    title.textContent = "Условия использования";
-    content.innerHTML = `
-      <p>Min Up — ранняя версия инструмента для учёта счетов и подготовки текстов напоминаний.</p>
-      <p>Пользователь отвечает за проверку введённых данных, суммы, срока оплаты и содержания сообщений перед отправкой. Приложение не отправляет напоминания автоматически и не гарантирует получение оплаты.</p>
-      <p>Эта версия не предоставляет платную подписку и не принимает платежи.</p>
-      <p><strong>Перед коммерческим запуском:</strong> владелец должен подготовить окончательные условия с указанием продавца, цены, продления и отмены подписки, возвратов, применимого права и обязательных прав потребителей. Этот текст — черновик, а не полные юридические условия.</p>`;
-    action.textContent = "Понятно";
-  }
-
-  document.getElementById("modalBackdrop").classList.add("open");
-  action.focus();
-}
-
-function modalPrimaryAction() {
-  closeModal();
-}
-
-function closeModal() {
-  document.getElementById("modalBackdrop").classList.remove("open");
-  if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
-}
-
-function backdropClose(event) {
-  if (event.target.id === "modalBackdrop") closeModal();
-}
-
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape") closeModal();
+$("orderForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ const ownerEmail="YOUR_EMAIL@example.com";
+ if(ownerEmail==="YOUR_EMAIL@example.com"){
+  showToast("Сначала замени YOUR_EMAIL@example.com в коде на свой email.");
+  return;
+ }
+ const name=$("orderName").value.trim();
+ const email=$("orderEmail").value.trim();
+ const details=$("orderDetails").value.trim();
+ const subject=encodeURIComponent("Новый запрос на дизайн — KADR Studio");
+ const body=encodeURIComponent("Имя: "+name+"\nEmail клиента: "+email+"\n\nЗапрос:\n"+details);
+ window.location.href="mailto:"+ownerEmail+"?subject="+subject+"&body="+body;
 });
 
-function clearAllData() {
-  if (!confirm("Удалить все счета и счётчик бесплатных напоминаний из этого браузера? Это действие нельзя отменить.")) return;
-  try {
-    localStorage.removeItem(DATA_KEY);
-    localStorage.removeItem(USAGE_KEY);
-    invoices = [];
-    reminderUses = 0;
-    document.getElementById("reminderText").value = "";
-    render();
-    notify("Локальные данные удалены.");
-  } catch {
-    notify("Не удалось удалить данные браузера.");
-  }
-}
-
-document.getElementById("dueDate").value = localToday();
-render();
+$("year").textContent=new Date().getFullYear();
+updatePoster();
 </script>
 </body>
 </html>
