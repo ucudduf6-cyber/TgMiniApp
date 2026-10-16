@@ -7,7 +7,7 @@ from database import init_db
 import aiosqlite
 
 logging.basicConfig(level=logging.INFO)
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = os.getenv("8809988539:AAEtJ7IJJMTx1Ibcxi-XeWorIGbjiFEUIrw")
 
 if not TOKEN:
     print("ОШИБКА: Не найден токен бота!")
